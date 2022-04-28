@@ -30,7 +30,7 @@ setup(
     author='Acciarini & Baydin',
     # author_email='',
     packages=find_packages(),
-    install_requires=['torch'],
+    install_requires=['numpy', 'torch'],
     extras_require={'dev': ['pytest']},
     classifiers=['License :: OSI Approved :: GNU General Public License v3 (GPLv3)', 'Programming Language :: Python :: 3']
 )
