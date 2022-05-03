@@ -203,4 +203,3 @@ def sgp4init(
      sgp4(satrec, torch.zeros(1,1));
 
      satrec._init = 'n';
-     return 0

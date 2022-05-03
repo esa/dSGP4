@@ -7,7 +7,7 @@ def gstime(jdut1):
     tut1 = (jdut1 - 2451545.0) / 36525.0;
     temp = -6.2e-6* tut1 * tut1 * tut1 + 0.093104 * tut1 * tut1 + \
          (876600.0*3600 + 8640184.812866) * tut1 + 67310.54841;  #  sec
-    temp = (temp / 240.0) % (2*numpy.pi) # 360/86400 = 1/240, to deg, to rad
+    temp = (temp*(numpy.pi/180.0) / 240.0) % (2*numpy.pi) # 360/86400 = 1/240, to deg, to rad
 
      #  ------------------------ check quadrants ---------------------
     temp=torch.where(temp<0., temp+(2*numpy.pi), temp)
