@@ -7,8 +7,10 @@ import numpy as np
 
 class UtilTestCase(unittest.TestCase):
     def test_sgp4init(self):
+        error_string="Error: deep space propagation not supported (yet). The provided satellite has\
+        an orbital period above 225 minutes. If you want to let us know you need it or you want to \
+        contribute to implement it, open a PR or raise an issue at: https://github.com/kesslerlib/dSGP4."
         whichconst=dsgp4.util.get_gravity_constants("wgs-72")
-        import os
         tles=kessler.tle.load(file_name="tests/TLEs_catalog_tests.txt")
         for tle_sat in tles:
             satrec=sgp4.io.twoline2rv(tle_sat.line1,tle_sat.line2, whichconst=sgp4.earth_gravity.wgs72)
@@ -27,9 +29,6 @@ class UtilTestCase(unittest.TestCase):
                                 xnodeo=satrec.nodeo,
                                 satrec=satrec)
             #I need a try excpet: to exclude the deep space cases
-            error_string="Error: deep space propagation not supported (yet). The provided satellite has\
-            an orbital period above 225 minutes. If you want to let us know you need it or you want to \
-            contribute to implement it, open a PR or raise an issue at: https://github.com/kesslerlib/dSGP4."
             try:
                 whichconst=dsgp4.util.get_gravity_constants("wgs-72")
                 dsgp4.sgp4init(whichconst=whichconst,
