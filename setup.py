@@ -28,9 +28,9 @@ setup(
     version=read_package_variable('__version__'),
     description='Differentiable SGP4 prototype',
     author='Acciarini & Baydin',
-    # author_email='',
+    author_email='giacomo.acciarini@gmail.com',
     packages=find_packages(),
-    install_requires=['numpy', 'torch'],
+    install_requires=['numpy', 'torch', 'sgp4>=2.21', 'kessler @ git+ssh://git@github.com/kesslerlib/kessler-private@v1.1#egg=kessler'],
     extras_require={'dev': ['pytest']},
     classifiers=['License :: OSI Approved :: GNU General Public License v3 (GPLv3)', 'Programming Language :: Python :: 3']
 )
