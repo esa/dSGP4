@@ -30,7 +30,8 @@ setup(
     author='Acciarini & Baydin',
     author_email='giacomo.acciarini@gmail.com',
     packages=find_packages(),
-    install_requires=['numpy', 'torch', 'sgp4>=2.21', 'kessler @ git+ssh://git@github.com/kesslerlib/kessler-private@v1.1#egg=kessler'],
+    install_requires=['numpy', 'torch', 'sgp4>=2.21', 'kessler'],
+    dependency_links=['git+ssh://git@github.com/kesslerlib/kessler-private.git#egg=kessler'],
     extras_require={'dev': ['pytest']},
     classifiers=['License :: OSI Approved :: GNU General Public License v3 (GPLv3)', 'Programming Language :: Python :: 3']
 )
