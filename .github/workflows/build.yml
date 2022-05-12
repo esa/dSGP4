@@ -1,5 +1,10 @@
 name: build
 
+env:
+  # Use the same ssh-agent socket value across all jobs
+  # Useful when a GH action is using SSH behind-the-scenes
+  SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+
 on:
   push:
     branches: [ master ]
