@@ -12,32 +12,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Setup SSH
-      uses: webfactory/ssh-agent@v0.5.0
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-    - name: Set up Python 3.7
-      uses: actions/setup-python@master
-      with:
-        python-version: 3.7
-    - uses: actions/checkout@master
-    - name:  Clone repository
-      run: |
-        git clone git@github.com:kesslerlib/kessler-private.git
-        cd kessler-private
-        python -m pip install --upgrade pip
-        pip install .
-    - name: Install
-      run: |
-        python -m pip install --upgrade pip
-        pip install torch==1.11.0+cpu torchvision==0.12.0+cpu torchaudio==0.11.0+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
-        pip install .[dev]
-    - name: Test
-      run: |
-        coverage run -m pytest
-        coverage xml
-    - name: Codecov
-      uses: codecov/codecov-action@v2
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        verbose: true
+      - uses: actions/checkout@v1
+      -   name: Setup SSH Keys and known_hosts
+          env:
+              SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+          run: |
+              ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+              ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
+      -   name: Some task that fetches dependencies
+          env:
+              SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+          run: ./fetch-deps.sh
+      - name: Set up Python 3.7
+        uses: actions/setup-python@master
+        with:
+          python-version: 3.7
+      - uses: actions/checkout@master
+      - name:  Clone repository
+        run: |
+          git clone git@github.com:kesslerlib/kessler-private.git
+          cd kessler-private
+          python -m pip install --upgrade pip
+          pip install .
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch==1.11.0+cpu torchvision==0.12.0+cpu torchaudio==0.11.0+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
+          pip install .[dev]
+      - name: Test
+        run: |
+          coverage run -m pytest
+          coverage xml
+      - name: Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true
