@@ -18,12 +18,12 @@ def sgp4(satrec, tsince):
         - state (``torch.tensor``): a 2x3 tensor, where the first row represents the spacecraft
                                     position (in km) and the second the spacecraft velocity (in km/s)
     """
-    mrt = torch.zeros(tsince.size());
-    temp4 = torch.ones(tsince.size())*1.5e-12;
-    x2o3  = torch.tensor(2.0 / 3.0);
+    mrt = torch.zeros(tsince.size(), requires_grad=True);
+    temp4 = torch.ones(tsince.size(), requires_grad=True)*1.5e-12;
+    x2o3  = torch.tensor(2.0 / 3.0, requires_grad=True);
     #  sgp4fix identify constants and allow alternate values
     # tumin, mu, radiusearthkm, xke, j2, j3, j4, j3oj2 = whichconst
-    vkmpersec    = torch.ones(tsince.size())*(satrec._radiusearthkm * satrec._xke/60.0);
+    vkmpersec    = torch.ones(tsince.size(), requires_grad=True)*(satrec._radiusearthkm * satrec._xke/60.0);
 
     #  --------------------- clear sgp4 error flag -----------------
     satrec._t    = tsince.clone();
@@ -219,4 +219,4 @@ def sgp4(satrec, tsince):
     #                             ' the satellite has decayed'.format(mrt))
     #     satrec._error = 6;
     #     return false, false
-    return torch.cat((r.swapaxes(0,2),v.swapaxes(0,2)),1)#torch.stack(list(r)+list(v)).reshape(2,3);
+    return torch.transpose(torch.stack((r.squeeze(),v.squeeze()),1),0,-1)#torch.cat((r.swapaxes(0,2),v.swapaxes(0,2)),1)#torch.stack(list(r)+list(v)).reshape(2,3);

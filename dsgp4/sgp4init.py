@@ -40,18 +40,18 @@ def sgp4init(
         * `5` -> epoch elements are sub-orbital
         * `6` -> satellite has decayed
      """
-     temp4    =   torch.tensor(1.5e-12);
+     temp4    =   torch.tensor(1.5e-12, requires_grad=True);
 
      #  ----------- set all near earth variables to zero ------------
-     satrec._isimp   = torch.tensor(0);   satrec._method = 'n';                 satrec._aycof    = torch.tensor(0.0);
-     satrec._con41   = torch.tensor(0.0); satrec._cc1    = torch.tensor(0.0); satrec._cc4      = torch.tensor(0.0);
-     satrec._cc5     = torch.tensor(0.0); satrec._d2     = torch.tensor(0.0); satrec._d3       = torch.tensor(0.0);
-     satrec._d4      = torch.tensor(0.0); satrec._delmo  = torch.tensor(0.0); satrec._eta      = torch.tensor(0.0);
-     satrec._argpdot = torch.tensor(0.0); satrec._omgcof = torch.tensor(0.0); satrec._sinmao   = torch.tensor(0.0);
-     satrec._t       = torch.tensor(0.0); satrec._t2cof  = torch.tensor(0.0); satrec._t3cof    = torch.tensor(0.0);
-     satrec._t4cof   = torch.tensor(0.0); satrec._t5cof  = torch.tensor(0.0); satrec._x1mth2   = torch.tensor(0.0);
-     satrec._x7thm1  = torch.tensor(0.0); satrec._mdot   = torch.tensor(0.0); satrec._nodedot  = torch.tensor(0.0);
-     satrec._xlcof   = torch.tensor(0.0); satrec._xmcof  = torch.tensor(0.0); satrec._nodecf   = torch.tensor(0.0);
+     satrec._isimp   = torch.tensor(0);   satrec._method = 'n';                 satrec._aycof    = torch.tensor(0.0, requires_grad=True);
+     satrec._con41   = torch.tensor(0.0, requires_grad=True); satrec._cc1    = torch.tensor(0.0, requires_grad=True); satrec._cc4      = torch.tensor(0.0, requires_grad=True);
+     satrec._cc5     = torch.tensor(0.0, requires_grad=True); satrec._d2     = torch.tensor(0.0, requires_grad=True); satrec._d3       = torch.tensor(0.0, requires_grad=True);
+     satrec._d4      = torch.tensor(0.0, requires_grad=True); satrec._delmo  = torch.tensor(0.0, requires_grad=True); satrec._eta      = torch.tensor(0.0, requires_grad=True);
+     satrec._argpdot = torch.tensor(0.0, requires_grad=True); satrec._omgcof = torch.tensor(0.0, requires_grad=True); satrec._sinmao   = torch.tensor(0.0, requires_grad=True);
+     satrec._t       = torch.tensor(0.0, requires_grad=True); satrec._t2cof  = torch.tensor(0.0, requires_grad=True); satrec._t3cof    = torch.tensor(0.0, requires_grad=True);
+     satrec._t4cof   = torch.tensor(0.0, requires_grad=True); satrec._t5cof  = torch.tensor(0.0, requires_grad=True); satrec._x1mth2   = torch.tensor(0.0, requires_grad=True);
+     satrec._x7thm1  = torch.tensor(0.0, requires_grad=True); satrec._mdot   = torch.tensor(0.0, requires_grad=True); satrec._nodedot  = torch.tensor(0.0, requires_grad=True);
+     satrec._xlcof   = torch.tensor(0.0, requires_grad=True); satrec._xmcof  = torch.tensor(0.0, requires_grad=True); satrec._nodecf   = torch.tensor(0.0, requires_grad=True);
 
      #  ------------------------ earth constants -----------------------
      #  sgp4fix identify constants and allow alternate values
@@ -78,12 +78,12 @@ def sgp4init(
      satrec._nodeo   = xnodeo.clone();
 
     # single averaged mean elements
-     satrec._am = torch.tensor(0.0)
-     satrec._em = torch.tensor(0.0)
-     satrec._im = torch.tensor(0.0)
-     satrec._Om = torch.tensor(0.0)
-     satrec._mm = torch.tensor(0.0)
-     satrec._nm = torch.tensor(0.0)
+     satrec._am = torch.tensor(0.0, requires_grad=True)
+     satrec._em = torch.tensor(0.0, requires_grad=True)
+     satrec._im = torch.tensor(0.0, requires_grad=True)
+     satrec._Om = torch.tensor(0.0, requires_grad=True)
+     satrec._mm = torch.tensor(0.0, requires_grad=True)
+     satrec._nm = torch.tensor(0.0, requires_grad=True)
 
      ss     = 78.0 / satrec._radiusearthkm + 1.0;
 

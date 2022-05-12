@@ -1,6 +1,49 @@
 import numpy
 import torch
+
 torch.set_default_dtype(torch.float64)
+
+def propagate(x, tle_sat):
+    """
+    This function takes a tensor of inputs and a TLE, and returns the corresponding state.
+    It can be used to take the gradient of the state w.r.t. the inputs.
+
+    Args:
+        - x (``torch.tensor``): input of tensors, with the following values (x[0:9] have the same units as the ones in the TLE):
+                                    - x[0]: bstar
+                                    - x[1]: ndot
+                                    - x[2]: nddot
+                                    - x[3]: ecco
+                                    - x[4]: argpo
+                                    - x[5]: inclo
+                                    - x[6]: mo
+                                    - x[7]: kozai
+                                    - x[8]: nodeo
+                                    - x[9]: propagation time, in minutes
+        - tle_sat (``kessler.tle.TLE``): TLE object to be propagated
+
+    Returns:
+        - state (``torch.tensor``): (2x3) tensor representing position and velocity in km and km/s.
+    """
+    whichconst=get_gravity_constants("wgs-72")
+    from .sgp4init import sgp4init
+    from .sgp4 import sgp4
+    sgp4init(whichconst=whichconst,
+                        opsmode='i',
+                        satn=tle_sat.satellite_catalog_number,
+                        epoch=(tle_sat._jdsatepoch+tle_sat._jdsatepochF)-2433281.,
+                        xbstar=x[0],
+                        xndot=x[1],
+                        xnddot=x[2],
+                        xecco=x[3],
+                        xargpo=x[4],
+                        xinclo=x[5],
+                        xmo=x[6],
+                        xno_kozai=x[7],
+                        xnodeo=x[8],
+                        satrec=tle_sat)
+    state=sgp4(tle_sat, x[9]*torch.ones(1,1))
+    return state
 
 def gstime(jdut1):
     deg2rad=numpy.pi/180.
