@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@master
     - name: Setup SSH
       uses: MrSquaare/ssh-setup-action@v1
       with:
