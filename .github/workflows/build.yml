@@ -1,0 +1,61 @@
+name: build
+
+env:
+  # Use the same ssh-agent socket value across all jobs
+  # Useful when a GH action is using SSH behind-the-scenes
+  SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ '**' ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      # Start ssh-agent but set it to use the same ssh_auth_sock value.
+      # The agent will be running in all steps after this, so it
+      # should be one of the first.
+      - name: Set up Python 3.7
+        uses: actions/setup-python@master
+        with:
+          python-version: 3.7
+      - name: Setup SSH passphrase
+        env:
+          SSH_PASSPHRASE: ${{secrets.SSH_PASSPHRASE}}
+          SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+        run: |
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          echo 'echo $SSH_PASSPHRASE' > ~/.ssh_askpass && chmod +x ~/.ssh_askpass
+          echo "$SSH_PRIVATE_KEY" | tr -d '\r' | DISPLAY=None SSH_ASKPASS=~/.ssh_askpass ssh-add - >/dev/null
+          git clone git@github.com:kesslerlib/kessler-private.git
+          cd kessler-private
+          python -m pip install --upgrade pip
+          pip install .
+      - uses: actions/checkout@master
+      - name:  Clone repository
+        run: |
+          git clone git@github.com:kesslerlib/kessler-private.git
+          cd kessler-private
+          python -m pip install --upgrade pip
+          pip install .
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch==1.11.0+cpu torchvision==0.12.0+cpu torchaudio==0.11.0+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
+          pip install .[dev]
+      - name: Test
+        run: |
+          coverage run -m pytest
+          coverage xml
+      - name: Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true

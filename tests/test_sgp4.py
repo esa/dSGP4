@@ -7,11 +7,12 @@ import sgp4.io
 import torch
 import unittest
 
+error_string="Error: deep space propagation not supported (yet). The provided satellite has \
+an orbital period above 225 minutes. If you want to let us know you need it or you want to \
+contribute to implement it, open a PR or raise an issue at: https://github.com/kesslerlib/dSGP4."
+
 class UtilTestCase(unittest.TestCase):
     def test_sgp4(self):
-        error_string="Error: deep space propagation not supported (yet). The provided satellite has\
-        an orbital period above 225 minutes. If you want to let us know you need it or you want to \
-        contribute to implement it, open a PR or raise an issue at: https://github.com/kesslerlib/dSGP4."
         lines=file.splitlines()
         #I randomly select 50 indexes out of 500 satellites
         indexes=random.sample(list(range(1,len(lines),3)), 50)
@@ -80,6 +81,7 @@ class UtilTestCase(unittest.TestCase):
             tles.append(kessler.tle.TLE(data))
 
         #I filter out deep space and error cases:
+        whichconst=dsgp4.util.get_gravity_constants("wgs-72")
         tles_filtered=[]
         for idx, tle_satellite in enumerate(tles):
             try:
@@ -99,8 +101,8 @@ class UtilTestCase(unittest.TestCase):
                                 satrec=tle_satellite)
                 if tle_satellite._error==0:
                     tles_filtered.append(tle_satellite)
-            except:
-                continue
+            except Exception as e:
+                self.assertTrue((str(e).split()==error_string.split()))
 
         for tle in tles_filtered:
             satrec=sgp4.io.twoline2rv(tle.line1,tle.line2, whichconst=sgp4.earth_gravity.wgs72)
