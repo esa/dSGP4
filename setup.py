@@ -32,6 +32,6 @@ setup(
     packages=find_packages(),
     install_requires=['numpy', 'torch', 'kessler'],
     dependency_links=['git+ssh://git@github.com/kesslerlib/kessler-private.git#egg=kessler'],
-    extras_require={'dev': ['pytest', 'sgp4>=2.21']},
+    extras_require={'dev': ['pytest', 'coverage', 'pytest-xdist', 'sgp4>=2.21']},
     classifiers=['License :: OSI Approved :: GNU General Public License v3 (GPLv3)', 'Programming Language :: Python :: 3']
 )
