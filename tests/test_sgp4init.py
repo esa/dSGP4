@@ -4,6 +4,7 @@ import dsgp4
 import sgp4
 import sgp4.io
 import numpy as np
+import random
 
 class UtilTestCase(unittest.TestCase):
     def test_sgp4init(self):
