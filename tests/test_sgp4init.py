@@ -42,7 +42,7 @@ class UtilTestCase(unittest.TestCase):
             try:
                 whichconst=dsgp4.util.get_gravity_constants("wgs-72")
                 dsgp4.sgp4init(whichconst=whichconst,
-                                    opsmode=tle_sat._opsmode,
+                                    opsmode='i',
                                     satn=tle_sat.satellite_catalog_number,
                                     epoch=(tle_sat._jdsatepoch+tle_sat._jdsatepochF)-2433281.5,
                                     xbstar=tle_sat._bstar,
