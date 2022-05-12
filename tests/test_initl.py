@@ -8,7 +8,7 @@ import random
 
 class UtilTestCase(unittest.TestCase):
     def test_initl(self):
-        error_string="Error: deep space propagation not supported (yet). The provided satellite has\
+        error_string="Error: deep space propagation not supported (yet). The provided satellite has \
         an orbital period above 225 minutes. If you want to let us know you need it or you want to \
         contribute to implement it, open a PR or raise an issue at: https://github.com/kesslerlib/dSGP4."
         lines=file.splitlines()

@@ -7,6 +7,9 @@ import sgp4.io
 import torch
 import unittest
 
+error_string="Error: deep space propagation not supported (yet). The provided satellite has \
+an orbital period above 225 minutes. If you want to let us know you need it or you want to \
+contribute to implement it, open a PR or raise an issue at: https://github.com/kesslerlib/dSGP4."
 
 class UtilTestCase(unittest.TestCase):
     def test_velocity(self):
@@ -29,7 +32,7 @@ class UtilTestCase(unittest.TestCase):
         for idx, tle_satellite in enumerate(tles):
             try:
                 dsgp4.sgp4init(whichconst=whichconst,
-                                opsmode=tle_satellite._opsmode,
+                                opsmode='i',
                                 satn=tle_satellite.satellite_catalog_number,
                                 epoch=(tle_satellite._jdsatepoch+tle_satellite._jdsatepochF)-2433281.5,
                                 xbstar=tle_satellite._bstar,
@@ -44,8 +47,8 @@ class UtilTestCase(unittest.TestCase):
                                 satrec=tle_satellite)
                 if tle_satellite._error==0:
                     tles_filtered.append(tle_satellite)
-            except:
-                continue
+            except Exception as e:
+                self.assertTrue((str(e).split()==error_string.split()))
 
         for tle in tles_filtered[:50]:
             fun=lambda xx: dsgp4.util.propagate(xx,tle)
@@ -100,7 +103,7 @@ class UtilTestCase(unittest.TestCase):
         for idx, tle_satellite in enumerate(tles):
             try:
                 dsgp4.sgp4init(whichconst=whichconst,
-                                opsmode=tle_satellite._opsmode,
+                                opsmode='i',
                                 satn=tle_satellite.satellite_catalog_number,
                                 epoch=(tle_satellite._jdsatepoch+tle_satellite._jdsatepochF)-2433281.5,
                                 xbstar=tle_satellite._bstar,
@@ -115,8 +118,8 @@ class UtilTestCase(unittest.TestCase):
                                 satrec=tle_satellite)
                 if tle_satellite._error==0:
                     tles_filtered.append(tle_satellite)
-            except:
-                continue
+            except Exception as e:
+                self.assertTrue((str(e).split()==error_string.split()))
 
         for tle in tles_filtered[:50]:
             fun=lambda xx: dsgp4.util.propagate(xx,tle)
