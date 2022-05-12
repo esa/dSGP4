@@ -14,8 +14,10 @@ class UtilTestCase(unittest.TestCase):
         #velocity outputed by the propagator. This is not a mathematical guarantee or anything,
         #just a 'reasonable' check to make:
         lines=file.splitlines()
+        #I randomly select 50 indexes out of 500 satellites
+        indexes=random.sample(list(range(1,len(lines),3)), 50)
         tles=[]
-        for i in range(1,len(lines),3):
+        for i in indexes:
             data=[]
             data.append(lines[i])
             data.append(lines[i+1])
@@ -83,8 +85,10 @@ class UtilTestCase(unittest.TestCase):
 
     def test_input_gradients(self):
         lines=file.splitlines()
+        #I randomly select 50 indexes out of 500 satellites
+        indexes=random.sample(list(range(1,len(lines),3)), 50)
         tles=[]
-        for i in range(1,len(lines),3):
+        for i in indexes:
             data=[]
             data.append(lines[i])
             data.append(lines[i+1])
