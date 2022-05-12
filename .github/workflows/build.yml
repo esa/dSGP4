@@ -12,13 +12,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Clone repository
+      uses: actions/checkout@master
     - name: Setup SSH
       uses: MrSquaare/ssh-setup-action@v1
       with:
           host: github.com
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-    - name: Clone repository
-      uses: actions/checkout@master
     - name: Set up Python 3.7
       uses: actions/setup-python@master
       with:
