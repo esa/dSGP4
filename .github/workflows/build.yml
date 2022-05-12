@@ -18,13 +18,14 @@ jobs:
       with:
         python-version: 3.7
     - name: Setup SSH
-      uses: actions/ssh-setup-action@v1
+      uses: MrSquaare/ssh-setup-action@v1
       with:
           host: github.com
           private-key: ${{ secrets.SSH_PRIVATE_KEY }}
     - name: Clone repository
       run: |
         git clone git@github.com:kesslerlib/kessler-private.git
+        cd kessler-private
         python -m pip install --upgrade pip
         pip install .
     - name: Install
