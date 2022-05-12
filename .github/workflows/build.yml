@@ -16,7 +16,7 @@ jobs:
       uses: MrSquaare/ssh-setup-action@v1
       with:
           host: github.com
-          private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
     - name: Clone repository
       uses: actions/checkout@master
     - name: Set up Python 3.7
