@@ -22,8 +22,8 @@ jobs:
       uses: actions/setup-python@master
       with:
         python-version: 3.7
+    - uses: actions/checkout@master
     - name:  Clone repository
-      uses: actions/checkout@master
       run: |
         git clone git@github.com:kesslerlib/kessler-private.git
         cd kessler-private
