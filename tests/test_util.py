@@ -5,7 +5,6 @@ import unittest
 
 class UtilTestCase(unittest.TestCase):
     def test_earth_gravity_constants(self):
-        ['wgs-72','wgs-84','wgs-72old']
         out=dsgp4.util.get_gravity_constants("wgs-72")
         tumin,mu,radiusearthkm,xke,j2,j3,j4,j3oj2=out
         self.assertAlmostEqual(float(tumin),sgp4.earth_gravity.wgs72.tumin,places=10)
