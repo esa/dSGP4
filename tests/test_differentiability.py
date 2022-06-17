@@ -51,7 +51,6 @@ class UtilTestCase(unittest.TestCase):
                 self.assertTrue((str(e).split()==error_string.split()))
 
         for tle in tles_filtered[:50]:
-            fun=lambda xx: dsgp4.util.propagate(xx,tle)
             time=random.random()*30
 
             x0=torch.tensor([tle._bstar,
@@ -62,29 +61,32 @@ class UtilTestCase(unittest.TestCase):
                             tle._inclo,
                             tle._mo,
                             tle._no_kozai,
-                            tle._nodeo,
-                            time],requires_grad=True)
-            x1=x0.clone().detach().requires_grad_(True)
-            x2=x0.clone().detach().requires_grad_(True)
-            r_x=fun(x0)[0][0]
-            r_x.backward()
-            gradient_rx=x0.grad
-            r_y=fun(x1)[0][1]
-            r_y.backward()
-            gradient_ry=x1.grad
-            r_z=fun(x2)[0][2]
-            r_z.backward()
-            gradient_rz=x2.grad
+                            tle._nodeo])
+            t=torch.tensor(time,requires_grad=True)
+            fun=lambda tt: dsgp4.util.propagate(x0,tle,tt)
 
-            v_x=fun(x0)[1][0]
-            v_y=fun(x1)[1][1]
-            v_z=fun(x2)[1][2]
+
+            t1=dsgp4.util.clone_w_grad(t)
+            t2=dsgp4.util.clone_w_grad(t)
+            r_x=fun(t)[0][0]
+            r_x.backward()
+            gradient_rx=t.grad
+            r_y=fun(t1)[0][1]
+            r_y.backward()
+            gradient_ry=t1.grad
+            r_z=fun(t2)[0][2]
+            r_z.backward()
+            gradient_rz=t2.grad
+
+            v_x=fun(t2)[1][0]
+            v_y=fun(t2)[1][1]
+            v_z=fun(t2)[1][2]
 
             #the gradient is w.r.t. the input time, that is in minutes, so it
             #will be a km/min, which we multiply by 60 to get km/s, as per SGP4 output:
-            self.assertAlmostEqual(gradient_rx[-1].detach().numpy(),v_x.detach().numpy()*60,places=0)
-            self.assertAlmostEqual(gradient_ry[-1].detach().numpy(),v_y.detach().numpy()*60,places=0)
-            self.assertAlmostEqual(gradient_rz[-1].detach().numpy(),v_z.detach().numpy()*60,places=0)
+            self.assertAlmostEqual(gradient_rx.detach().numpy(),v_x.detach().numpy()*60,places=0)
+            self.assertAlmostEqual(gradient_ry.detach().numpy(),v_y.detach().numpy()*60,places=0)
+            self.assertAlmostEqual(gradient_rz.detach().numpy(),v_z.detach().numpy()*60,places=0)
 
     def test_input_gradients(self):
         lines=file.splitlines()
@@ -122,8 +124,8 @@ class UtilTestCase(unittest.TestCase):
                 self.assertTrue((str(e).split()==error_string.split()))
 
         for tle in tles_filtered[:50]:
-            fun=lambda xx: dsgp4.util.propagate(xx,tle)
             time=random.random()*30
+            fun=lambda xx: dsgp4.util.propagate(xx,tle,time)
             #I create 6 copies of the inputs to be used for each function (three
             #position and three velocity coordinates)
             x0=torch.tensor([tle._bstar,
@@ -136,11 +138,11 @@ class UtilTestCase(unittest.TestCase):
                             tle._no_kozai,
                             tle._nodeo,
                             time],requires_grad=True)
-            x1=x0.clone().detach().requires_grad_(True)
-            x2=x0.clone().detach().requires_grad_(True)
-            x3=x0.clone().detach().requires_grad_(True)
-            x4=x0.clone().detach().requires_grad_(True)
-            x5=x0.clone().detach().requires_grad_(True)
+            x1=dsgp4.util.clone_w_grad(x0)
+            x2=dsgp4.util.clone_w_grad(x0)
+            x3=dsgp4.util.clone_w_grad(x0)
+            x4=dsgp4.util.clone_w_grad(x0)
+            x5=dsgp4.util.clone_w_grad(x0)
             #I compute all the gradients at the prescribed input points:
             r_x=fun(x0)[0][0]
             r_x.backward()
