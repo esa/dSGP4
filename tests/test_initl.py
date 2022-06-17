@@ -73,6 +73,15 @@ class UtilTestCase(unittest.TestCase):
                 self.assertAlmostEqual(satrec_gsto, float(tle_sat_gsto))
             except Exception as e:
                 self.assertTrue((str(e).split()==error_string.split()))
+
+    def test_coverage(self):
+        tle=kessler.tle.TLE(file.splitlines()[1:4])
+        whichconst=dsgp4.util.get_gravity_constants("wgs-72")
+        tumin, mu, radiusearthkm, xke, j2, j3, j4, j3oj2=whichconst
+        satrec_tumin, satrec_mu, satrec_radiusearthkm, satrec_xke, satrec_j2, satrec_j3, satrec_j4, satrec_j3oj2=sgp4.earth_gravity.wgs72
+        #I run the opsmode=='a'
+        dsgp4.initl(xke, j2, tle._ecco, (tle._jdsatepoch+tle._jdsatepochF)-2433281.5, tle._inclo, tle._no_kozai, 'n', 'a')
+
 file="""
 0 COSMOS 2251 DEB
 1 34427U 93036RU  22068.94647328  .00008100  00000-0  11455-2 0  9999
