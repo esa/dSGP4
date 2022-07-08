@@ -6,14 +6,16 @@ from .sgp4 import sgp4
 from . import util
 torch.set_default_dtype(torch.float64)
 
-def initial_guess(tle_0,tsince):
+def initial_guess(tle_0, new_date, target_state=None):
     """
     This method takes an initial TLE and the time at which we want to propagate it, and returns
     a set of parameter related to an initial guess useful to find the TLE observation that corresponds to the propagated state
 
     Args:
         - tle_0 (``kessler.tle.TLE``): starting TLE at time0
-        - tsince (``float``): time to propagate the starting TLE, in minutes
+        - new_date (``datetime.datetime``): new date of the TLE, as a datetime object
+        - target_state (``torch.tensor``): a 2x3 tensor for the position and velocity of the state. If None, then this is computed
+                                           by propagating `tle_0` at the `new_date`.
 
     Returns:
         - y0 (``torch.tensor``): initial guess for the TLE elements. In particular, y0 contains
@@ -34,14 +36,14 @@ def initial_guess(tle_0,tsince):
         - tle_elements_0 (``dict``): dictionary used to construct `new_tle`
 
     """
-    x=tsince*torch.ones(1,1,requires_grad=True)#torch.rand(1,1, requires_grad=True)
-    target_state=sgp4(tle_0, x)
+    if target_state is None:
+        tsince=(new_date-tle_0._epoch).total_seconds()/60
+        x=tsince*torch.ones(1,1,requires_grad=True)#torch.rand(1,1, requires_grad=True)
+        target_state=sgp4(tle_0, x)
     #print(target_state.size(), target_state)
     tle_elements_0=kessler.util.from_cartesian_to_tle_elements(target_state.detach().numpy()*1e3)
     #you need to transform it to the appropriate units
     xpdotp=1440.0 / (2.0 *np.pi)
-    min_to_day=1440
-    new_date=util.from_year_day_to_date(tle_0.epoch_year,tle_0.epoch_days)+datetime.timedelta(days=tsince/min_to_day)
     tle_elements_0['epoch_year']=new_date.year
     tle_elements_0['epoch_days']=kessler.util.from_datetime_to_fractional_day(new_date)
     #tle_elements_0['no_kozai']=tle_elements_0['mean_motion']/(np.pi/43200.0)/xpdotp
@@ -113,14 +115,15 @@ def update_TLE(old_tle,y0):
     tle_elements['element_number']=old_tle.element_number
     return kessler.tle.TLE(tle_elements)
 
-def newton_method(tle_0, tsince, new_tol=1e-12,max_iter=50):
+def newton_method(tle_0, new_date, target_state=None, new_tol=1e-12,max_iter=50):
     """
     This method performs Newton method starting from an initial TLE and a given propagation time. The objective
     is to find a TLE that accurately reconstructs the propagated state, at observation time.
 
     Args:
         - tle_0 (``kessler.tle.TLE``): starting TLE (i.e., TLE at a given initial time)
-        - tsince (``float``): time at which we want the state to be propagated, and we want the TLE at that time
+        - new_date (``datetime.datetime``): time (as a datetime object) at which we want the state to be propagated, and we want the TLE at that time
+        - target_state (``torch.tensor``): 2x3 tensor representing target state. If None, then this is directly computed by propagating the TLE at `new_date`
         - new_tol (``float``): newton tolerance
         - max_iter (``int``): maximum iterations for Newton's method
 
@@ -132,8 +135,7 @@ def newton_method(tle_0, tsince, new_tol=1e-12,max_iter=50):
     """
     i=0
     tol=1e9
-
-    y0, state_target, next_tle, tle_elements_0=initial_guess(tle_0,tsince)
+    y0, state_target, next_tle, tle_elements_0=initial_guess(tle_0=tle_0,new_date=new_date,target_state=target_state)
     #print(y0,states)
     #newton iterations:
     while i<max_iter and tol>new_tol:
