@@ -32,7 +32,7 @@ def propagate(x, tle_sat, tsince):
     sgp4init(whichconst=whichconst,
                         opsmode='i',
                         satn=tle_sat.satellite_catalog_number,
-                        epoch=(tle_sat._jdsatepoch+tle_sat._jdsatepochF)-2433281.,
+                        epoch=(tle_sat._jdsatepoch+tle_sat._jdsatepochF)-2433281.5,
                         xbstar=x[0],
                         xndot=x[1],
                         xnddot=x[2],
