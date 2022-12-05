@@ -6,7 +6,7 @@ from .sgp4 import sgp4
 from . import util
 torch.set_default_dtype(torch.float64)
 
-def initial_guess(tle_0, new_date, target_state=None):
+def initial_guess(tle_0, time_mjd, target_state=None):
     """
     This method takes an initial TLE and the time at which we want to propagate it, and returns
     a set of parameter related to an initial guess useful to find the TLE observation that corresponds to the propagated state
@@ -36,8 +36,10 @@ def initial_guess(tle_0, new_date, target_state=None):
         - tle_elements_0 (``dict``): dictionary used to construct `new_tle`
 
     """
+    new_date=kessler.util.from_mjd_to_datetime(time_mjd)
     if target_state is None:
-        tsince=(new_date-tle_0._epoch).total_seconds()/60
+        #print(kessler.util.from_datetime_to_mjd(new_date), kessler.util.from_datetime_to_mjd(tle_0._epoch))
+        tsince=(time_mjd-kessler.util.from_datetime_to_mjd(tle_0._epoch))*1440.
         x=tsince*torch.ones(1,1,requires_grad=True)#torch.rand(1,1, requires_grad=True)
         target_state=sgp4(tle_0, x)
     #print(target_state.size(), target_state)
@@ -113,9 +115,10 @@ def update_TLE(old_tle,y0):
     tle_elements['international_designator']=old_tle.international_designator
     tle_elements['revolution_number_at_epoch']=old_tle.revolution_number_at_epoch
     tle_elements['element_number']=old_tle.element_number
-    return kessler.tle.TLE(tle_elements)
+    old_tle.update(tle_elements)
+    return old_tle
 
-def newton_method(tle_0, new_date, target_state=None, new_tol=1e-12,max_iter=50):
+def newton_method(tle_0, time_mjd, target_state=None, new_tol=1e-12,max_iter=50):
     """
     This method performs Newton method starting from an initial TLE and a given propagation time. The objective
     is to find a TLE that accurately reconstructs the propagated state, at observation time.
@@ -135,13 +138,12 @@ def newton_method(tle_0, new_date, target_state=None, new_tol=1e-12,max_iter=50)
     """
     i=0
     tol=1e9
-    y0, state_target, next_tle, tle_elements_0=initial_guess(tle_0=tle_0,new_date=new_date,target_state=target_state)
+    y0, state_target, next_tle, tle_elements_0=initial_guess(tle_0=tle_0,time_mjd=time_mjd,target_state=target_state)
     #print(y0,states)
     #newton iterations:
     while i<max_iter and tol>new_tol:
         #print(f"y0: {y0}")
-
-        propagate=lambda x: util.propagate(x,next_tle,0.)
+        propagate=lambda x: util.propagate(x,next_tle,(time_mjd-kessler.util.from_datetime_to_mjd(next_tle._epoch))*1440.)
         y1=util.clone_w_grad(y0)
         y2=util.clone_w_grad(y0)
         y3=util.clone_w_grad(y0)
