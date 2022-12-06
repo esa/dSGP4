@@ -115,8 +115,7 @@ def update_TLE(old_tle,y0):
     tle_elements['international_designator']=old_tle.international_designator
     tle_elements['revolution_number_at_epoch']=old_tle.revolution_number_at_epoch
     tle_elements['element_number']=old_tle.element_number
-    old_tle.update(tle_elements)
-    return old_tle
+    return kessler.tle.TLE(tle_elements)
 
 def newton_method(tle_0, time_mjd, target_state=None, new_tol=1e-12,max_iter=50):
     """
