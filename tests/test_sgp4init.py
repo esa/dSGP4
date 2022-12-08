@@ -3,6 +3,7 @@ import unittest
 import dsgp4
 import sgp4
 import sgp4.io
+import sgp4.earth_gravity
 import numpy as np
 import random
 

@@ -1,5 +1,6 @@
 import dsgp4
 import sgp4
+import sgp4.earth_gravity
 import unittest
 
 

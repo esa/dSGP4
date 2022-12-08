@@ -4,6 +4,7 @@ import numpy as np
 import random
 import sgp4
 import sgp4.io
+import sgp4.earth_gravity
 import torch
 import unittest
 
