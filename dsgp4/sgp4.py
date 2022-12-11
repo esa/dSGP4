@@ -64,7 +64,6 @@ def sgp4(satrec, tsince):
     nm    = satrec._no_unkozai.clone();
     em    = satrec._ecco.clone();
     inclm = satrec._inclo.clone();
-
 #     satrec._error=torch.where(nm<=0,2,0)
     #satrec._error_message=torch.where(nm<=0., ('mean motion {0:f} is less than zero'.format(nm)), )
     satrec._error=torch.any(nm<=0)*2
@@ -80,7 +79,8 @@ def sgp4(satrec, tsince):
     em = em - tempe;
      #  fix tolerance for error recognition
      #  sgp4fix am is fixed from the previous nm check
-    satrec._error=torch.any((em>=1.0) | (em<-0.001))*1
+    if satrec._error==0.:
+        satrec._error=torch.any((em>=1.0) | (em<-0.001))*1
 #     if em >= 1.0 or em < -0.001:  # || (am < 0.95)
 #         satrec._error_message = ('mean eccentricity {0:f} not within'
 #                                 ' range 0.0 <= e < 1.0'.format(em))
@@ -154,7 +154,8 @@ def sgp4(satrec, tsince):
     esine = axnl*sineo1 - aynl*coseo1;
     el2   = axnl*axnl + aynl*aynl;
     pl    = am*(1.0-el2);
-    satrec._error=torch.any(pl<0.)*4
+    if satrec._error==0.:
+        satrec._error=torch.any(pl<0.)*4
      #if pl < 0.0:
 
     # satrec._error_message = ('semilatus rectum {0:f} is less than zero'
@@ -212,7 +213,8 @@ def sgp4(satrec, tsince):
           (mvt * uz + rvdot * vz) * vkmpersec))
 
      #  sgp4fix for decaying satellites
-    satrec._error=torch.any(mrt<1.0)*6
+    if satrec._error==0.:
+        satrec._error=torch.any(mrt<1.0)*6
      #if mrt < 1.0:
 
     #     satrec._error_message = ('mrt {0:f} is less than 1.0 indicating'

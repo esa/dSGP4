@@ -115,6 +115,7 @@ def update_TLE(old_tle,y0):
     tle_elements['international_designator']=old_tle.international_designator
     tle_elements['revolution_number_at_epoch']=old_tle.revolution_number_at_epoch
     tle_elements['element_number']=old_tle.element_number
+#    kessler.util.lpop_init(tle)
     return kessler.tle.TLE(tle_elements)
 
 def newton_method(tle_0, time_mjd, target_state=None, new_tol=1e-12,max_iter=50):
@@ -173,11 +174,14 @@ def newton_method(tle_0, time_mjd, target_state=None, new_tol=1e-12,max_iter=50)
         #we remove the first three columns (they are all zeros):
         DF=DF[:,3:]
         DF=DF[:,:-1]
-        dY=-np.matmul(np.matmul(np.linalg.inv(np.matmul(DF.T,DF)),DF.T),F)
+        dY=-np.matmul(np.matmul(np.linalg.pinv(np.matmul(DF.T,DF)),DF.T),F)
+        #we make sure the eccentricity does not go to negative values:
+        if float(y0[3])+dY[0]<0:
+            dY[0]=-float(y0[3])*0.9999
         dY=torch.tensor([0.,0.,0.]+list(dY)+[0.], requires_grad=True)
         if tol<new_tol:
-            print(f"F(y): {np.linalg.norm(F)}")
-            print(f"Solution found, at iter: {i}")
+#            print(f"F(y): {np.linalg.norm(F)}")
+#            print(f"Solution found, at iter: {i}")
             return next_tle, y0#+dY
         else:
             #Newton update:
@@ -185,4 +189,5 @@ def newton_method(tle_0, time_mjd, target_state=None, new_tol=1e-12,max_iter=50)
             y0=torch.tensor([float(el1)+float(el2) for el1, el2 in zip(list(y0),list(dY))],requires_grad=True)
             next_tle=update_TLE(next_tle, y0)
         i+=1
+#    print("Solution not found, returning best found so far")
     return next_tle, y0
