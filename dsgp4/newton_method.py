@@ -3,6 +3,7 @@ import torch
 import kessler
 import datetime
 from .sgp4 import sgp4
+from .sgp4init import sgp4init
 from . import util
 torch.set_default_dtype(torch.float64)
 
@@ -38,6 +39,21 @@ def initial_guess(tle_0, time_mjd, target_state=None):
     """
     new_date=kessler.util.from_mjd_to_datetime(time_mjd)
     if target_state is None:
+        whichconst=util.get_gravity_constants("wgs-72")
+        sgp4init(whichconst=whichconst,
+                            opsmode=tle_0._opsmode,
+                            satn=tle_0.satellite_catalog_number,
+                            epoch=(tle_0._jdsatepoch+tle_0._jdsatepochF)-2433281.5,
+                            xbstar=tle_0._bstar,
+                            xndot=tle_0._ndot,
+                            xnddot=tle_0._nddot,
+                            xecco=tle_0._ecco,
+                            xargpo=tle_0._argpo,
+                            xinclo=tle_0._inclo,
+                            xmo=tle_0._mo,
+                            xno_kozai=tle_0._no_kozai,
+                            xnodeo=tle_0._nodeo,
+                            satrec=tle_0)
         #print(kessler.util.from_datetime_to_mjd(new_date), kessler.util.from_datetime_to_mjd(tle_0._epoch))
         tsince=(time_mjd-kessler.util.from_datetime_to_mjd(tle_0._epoch))*1440.
         x=tsince*torch.ones(1,1,requires_grad=True)#torch.rand(1,1, requires_grad=True)
@@ -180,8 +196,8 @@ def newton_method(tle_0, time_mjd, target_state=None, new_tol=1e-12,max_iter=50)
             dY[0]=-float(y0[3])*0.9999
         dY=torch.tensor([0.,0.,0.]+list(dY)+[0.], requires_grad=True)
         if tol<new_tol:
-#            print(f"F(y): {np.linalg.norm(F)}")
-#            print(f"Solution found, at iter: {i}")
+            print(f"F(y): {np.linalg.norm(F)}")
+            print(f"Solution found, at iter: {i}")
             return next_tle, y0#+dY
         else:
             #Newton update:
@@ -189,5 +205,6 @@ def newton_method(tle_0, time_mjd, target_state=None, new_tol=1e-12,max_iter=50)
             y0=torch.tensor([float(el1)+float(el2) for el1, el2 in zip(list(y0),list(dY))],requires_grad=True)
             next_tle=update_TLE(next_tle, y0)
         i+=1
-#    print("Solution not found, returning best found so far")
+    print("Solution not found, returning best found so far")
+    print(f"F(y): {np.linalg.norm(F)}")
     return next_tle, y0
