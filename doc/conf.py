@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = "dSGP4"
+project = "dsgp4"
 copyright = "2022, 2023, Giacomo Acciarini and Atılım Güneş Baydin and Dario Izzo"
 author = "Giacomo Acciarini, Atılım Güneş Baydin, Dario Izzo"
 
@@ -77,9 +77,9 @@ html_theme_options = {
 
 nb_execution_mode = "force"
 
-#nb_execution_excludepatterns = [
-#    ".ipynb",
-#]
+nb_execution_excludepatterns = [
+    ".ipynb",
+]
 
 latex_engine = "xelatex"
 
