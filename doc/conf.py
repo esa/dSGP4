@@ -65,7 +65,7 @@ html_static_path = ["_static"]
 
 html_theme_options = {
     "repository_url": "https://esa.github.io/dSGP4/",
-    "repository_branch": "main",
+    "repository_branch": "master",
     "path_to_docs": "doc",
     "use_repository_button": True,
     "use_issues_button": True,
@@ -73,6 +73,7 @@ html_theme_options = {
         "binderhub_url": "https://mybinder.org",
         "notebook_interface": "jupyterlab",
     },
+    "repository_provider":"github",
 }
 
 nb_execution_mode = "force"
