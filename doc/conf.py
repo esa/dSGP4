@@ -17,14 +17,14 @@
 
 # -- Project information -----------------------------------------------------
 
-project = "dSGP4"
+project = "dsgp4"
 copyright = "2022, 2023, Giacomo Acciarini and Atılım Güneş Baydin and Dario Izzo"
 author = "Giacomo Acciarini, Atılım Güneş Baydin, Dario Izzo"
 
 # The full version, including alpha/beta/rc tags
-import dSGP4
+import dsgp4
 
-release = dSGP4.__version__
+release = dsgp4.__version__
 
 
 # -- General configuration ---------------------------------------------------
@@ -32,14 +32,15 @@ release = dSGP4.__version__
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["myst_nb", "sphinx.ext.intersphinx"]
+extensions = ["myst_nb","sphinx.ext.autodoc", "sphinx.ext.doctest"]#, "sphinx.ext.intersphinx"]
 
-intersphinx_mapping = {
-    "hy": ("https://esa.github.io/dSGP4/", None),
-    "numpy": ("https://numpy.org/doc/stable/", None),
-    "python": ("https://docs.python.org/3", None),
-    "matplotlib": ("https://matplotlib.org/stable/", None),
-    }
+#intersphinx_mapping = {
+#    "numpy": ("https://numpy.org/doc/stable/", None),
+#    "python": ("https://docs.python.org/3", None),
+#    "matplotlib": ("https://matplotlib.org/stable/", None),
+#    }
+
+autoclass_content = 'both'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -65,22 +66,23 @@ html_static_path = ["_static"]
 #html_logo = "images/white_logo.png"
 
 html_theme_options = {
-    "repository_url": "https://esa.github.io/dSGP4/",
-    "repository_branch": "main",
+    "repository_url": "https://github.com/esa/dSGP4/",
+    "repository_branch": "master",
     "path_to_docs": "doc",
     "use_repository_button": True,
     "use_issues_button": True,
     "launch_buttons": {
         "binderhub_url": "https://mybinder.org",
         "notebook_interface": "jupyterlab",
-    },
+        "home_page_in_toc":True,
+    }
 }
 
 nb_execution_mode = "force"
 
-#nb_execution_excludepatterns = [
-#    ".ipynb",
-#]
+nb_execution_excludepatterns = [
+    ".ipynb",
+]
 
 latex_engine = "xelatex"
 
