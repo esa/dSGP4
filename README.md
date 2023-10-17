@@ -1,5 +1,6 @@
 # dSGP4
 [![build](https://github.com/esa/dSGP4/actions/workflows/build.yml/badge.svg)](https://github.com/esa/dSGP4/actions/workflows/build.yml)
+[![codecov](https://codecov.io/gh/esa/dSGP4/graph/badge.svg?token=K3py7YT8UR)](https://codecov.io/gh/esa/dSGP4)
 
 Differentiable SGP4.
 <!-- PROJECT LOGO -->
