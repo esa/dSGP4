@@ -24,7 +24,7 @@ author = "Giacomo Acciarini, Atılım Güneş Baydin, Dario Izzo"
 # The full version, including alpha/beta/rc tags
 import dsgp4
 
-release = dSGP4.__version__
+release = dsgp4.__version__
 
 
 # -- General configuration ---------------------------------------------------
