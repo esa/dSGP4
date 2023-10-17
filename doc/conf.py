@@ -35,7 +35,6 @@ release = dsgp4.__version__
 extensions = ["myst_nb", "sphinx.ext.intersphinx"]
 
 intersphinx_mapping = {
-    "dsgp4": ("https://esa.github.io/dSGP4/", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
     "python": ("https://docs.python.org/3", None),
     "matplotlib": ("https://matplotlib.org/stable/", None),
