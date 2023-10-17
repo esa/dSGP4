@@ -22,10 +22,10 @@ jobs:
       # Start ssh-agent but set it to use the same ssh_auth_sock value.
       # The agent will be running in all steps after this, so it
       # should be one of the first.
-      - name: Set up Python 3.7
+      - name: Set up Python 3.10
         uses: actions/setup-python@master
         with:
-          python-version: 3.7
+          python-version: 3.10
       - name: Setup SSH passphrase
         env:
           SSH_PASSPHRASE: ${{secrets.SSH_PASSPHRASE}}
@@ -59,3 +59,8 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
+      - name: Upload to github pages 🚀
+        if: ${{ github.event_name == 'push' }}
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: doc/_build/html # The folder the action should deploy.
