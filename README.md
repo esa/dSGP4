@@ -27,7 +27,6 @@ Differentiable SGP4.
 
 ## Installation, documentation, and examples
 
-https://readthedocs.org/projects/dsgp4/
 
 ## Authors:
 * [Giacomo Acciarini](https://www.esa.int/gsp/ACT/team/giacomo_acciarini/)
