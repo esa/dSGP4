@@ -22,7 +22,7 @@ copyright = "2022, 2023, Giacomo Acciarini and Atılım Güneş Baydin and Dario
 author = "Giacomo Acciarini, Atılım Güneş Baydin, Dario Izzo"
 
 # The full version, including alpha/beta/rc tags
-import dSGP4
+import dsgp4
 
 release = dSGP4.__version__
 
