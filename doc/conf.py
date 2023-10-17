@@ -32,13 +32,15 @@ release = dsgp4.__version__
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["myst_nb"]#, "sphinx.ext.intersphinx"]
+extensions = ["myst_nb","sphinx.ext.autodoc", "sphinx.ext.doctest"]#, "sphinx.ext.intersphinx"]
 
 #intersphinx_mapping = {
 #    "numpy": ("https://numpy.org/doc/stable/", None),
 #    "python": ("https://docs.python.org/3", None),
 #    "matplotlib": ("https://matplotlib.org/stable/", None),
 #    }
+
+autoclass_content = 'both'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -64,7 +66,7 @@ html_static_path = ["_static"]
 #html_logo = "images/white_logo.png"
 
 html_theme_options = {
-    "repository_url": "https://esa.github.io/dSGP4/",
+    "repository_url": "https://github.com/esa/dSGP4/",
     "repository_branch": "master",
     "path_to_docs": "doc",
     "use_repository_button": True,
@@ -72,8 +74,8 @@ html_theme_options = {
     "launch_buttons": {
         "binderhub_url": "https://mybinder.org",
         "notebook_interface": "jupyterlab",
-    },
-    "repository_provider":"github",
+        "home_page_in_toc":True,
+    }
 }
 
 nb_execution_mode = "force"
