@@ -165,7 +165,6 @@ def sgp4init(
                               2.0 * temp3 * (3.0 - 7.0 * cosio2)) * cosio;
          xpidot            =  satrec._argpdot+ satrec._nodedot;
          satrec._omgcof   = satrec._bstar * cc3 * satrec._argpo.cos();
-         satrec._xmcof    = 0.0;
          if satrec._ecco > 1.0e-4:
              satrec._xmcof = -x2o3 * coef * satrec._bstar / eeta;
          satrec._nodecf = 3.5 * omeosq * xhdot1 * satrec._cc1;
