@@ -125,15 +125,18 @@
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="capabilities.html">Capabilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="credits.html">Credits</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="tutorials.html">Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/gradient_based_optimization.html">Gradient Based Optimization</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="notebooks/gradient_based_optimization.html">Problem description</a></li>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="simple">
+</ul>
+</li>
 </ul>
 
     </div>
@@ -352,9 +355,6 @@ document.write(`
 <section id="dependencies">
 <span id="installation-deps"></span><h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this heading">#</a></h2>
 <p>dSGP4 has the following Python dependencies:</p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://numpy.org/">NumPy</a> (<strong>mandatory</strong>),</p></li>
-</ul>
 </section>
 <section id="packages">
 <h2>Packages<a class="headerlink" href="#packages" title="Permalink to this heading">#</a></h2>
@@ -373,53 +373,14 @@ document.write(`
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/esa/dSGP4
 </pre></div>
 </div>
-<p>We follow the usual PR-based development workflow, thus dSGP4’s <code class="docutils literal notranslate"><span class="pre">main</span></code>
+<p>We follow the usual PR-based development workflow, thus dSGP4’s <code class="docutils literal notranslate"><span class="pre">master</span></code>
 branch is normally kept in a working state.</p>
-<p>After downloading and/or unpacking heyoka.py’s
-source code, go to heyoka.py’s
-source tree, create a <code class="docutils literal notranslate"><span class="pre">build</span></code> directory and <code class="docutils literal notranslate"><span class="pre">cd</span></code> into it. E.g.,
-on a Unix-like system:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>/path/to/heyoka.py
-<span class="gp">$ </span>mkdir<span class="w"> </span>build
-<span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>build
-</pre></div>
-</div>
-<p>Once you are in the <code class="docutils literal notranslate"><span class="pre">build</span></code> directory, you must configure your build
-using <code class="docutils literal notranslate"><span class="pre">cmake</span></code>. There are various useful CMake variables you can set,
-such as:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">CMAKE_BUILD_TYPE</span></code>: the build type (<code class="docutils literal notranslate"><span class="pre">Release</span></code>, <code class="docutils literal notranslate"><span class="pre">Debug</span></code>, etc.),
-defaults to <code class="docutils literal notranslate"><span class="pre">Release</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">CMAKE_PREFIX_PATH</span></code>: additional paths that will be searched by CMake
-when looking for dependencies.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">HEYOKA_PY_INSTALL_PATH</span></code>: the path into which the heyoka.py module
-will be installed. If left empty (the default), heyoka.py will be installed
-in the global modules directory of your Python installation.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">HEYOKA_PY_ENABLE_IPO</span></code>: set this flag to <code class="docutils literal notranslate"><span class="pre">ON</span></code> to compile heyoka.py
-with link-time optimisations. Requires compiler support,
-defaults to <code class="docutils literal notranslate"><span class="pre">OFF</span></code>.</p></li>
-</ul>
-<p>Please consult <a class="reference external" href="https://cmake.org/cmake/help/latest/">CMake’s documentation</a>
-for more details about CMake’s variables and options.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">HEYOKA_PY_INSTALL_PATH</span></code> option is particularly important. If you
-want to install heyoka.py locally instead of globally (which is in general
-a good idea), you can set this variable to the output of
-<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">site</span> <span class="pre">--user-site</span></code>.</p>
-<p>After configuring the build with CMake, we can then proceed to actually
-building heyoka.py:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cmake<span class="w"> </span>--build<span class="w"> </span>.
-</pre></div>
-</div>
-<p>Finally, we can install heyoka.py with the command:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cmake<span class="w">  </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>install
-</pre></div>
-</div>
 </section>
 <section id="verifying-the-installation">
 <h2>Verifying the installation<a class="headerlink" href="#verifying-the-installation" title="Permalink to this heading">#</a></h2>
 <p>You can verify that dSGP4 was successfully compiled and
 installed by running the tests. To do so, you must first install the
-optional dependencies (see <a class="reference internal" href="#installation-deps"><span class="std std-ref">Dependencies</span></a>), then run the</p>
+optional dependencies.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pytest
 </pre></div>
 </div>
@@ -428,7 +389,7 @@ your dSGP4 installation is ready for use.</p>
 </section>
 <section id="getting-help">
 <h2>Getting help<a class="headerlink" href="#getting-help" title="Permalink to this heading">#</a></h2>
-<p>If you run into troubles installing heyoka.py, please do not hesitate
+<p>If you run into troubles installing dsgp4, please do not hesitate
 to contact us by opening an issue report on <a class="reference external" href="https://github.com/esa/dSGP4/issues">github</a>.</p>
 </section>
 </section>
