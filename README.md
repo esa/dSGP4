@@ -12,7 +12,7 @@ Differentiable SGP4.
   <p align="center">
     Differentiable SGP4
     <br />
-    <a href="https://esa.github.io/dSGP4/"><strong>Explore the docs »</strong></a>
+    <a href="https://esa.github.io/dSGP4"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://github.com/esa/dSGP4/issues/new/choose">Report bug</a>
