@@ -1,12 +1,13 @@
 import torch
 import numpy 
 
-# This should be the default and renamed to sgp4. When we are sure it works, we can remove the old sgp4.
 def sgp4_batched(satrec, tsince):
     """
-    This function represents the SGP4 propagator. Having created the TLE object, and
-    initialized the propagator (using `kessler.sgp4.sgp4init`), one can use this method
-    to propagate the TLE at future times. The method returns the satellite position and velocity
+    This function represents the batch SGP4 propagator. 
+    It resembles `sgp4`, but accepts batches of TLEs.
+    Having created the TLE object, and initialized the propagator (using `kessler.sgp4.sgp4init`), 
+    one can use this method to propagate the TLE at future times. 
+    The method returns the satellite position and velocity
     in km and km/s, respectively, after `tsince` minutes.
 
     Args:
@@ -14,7 +15,7 @@ def sgp4_batched(satrec, tsince):
         - tsince (``torch.tensor``): time to propagate, since the TLE epoch, in minutes
 
     Returns:
-        - state (``torch.tensor``): a 2x3 tensor, where the first row represents the spacecraft
+        - batch_state (``torch.tensor``): a batch of 2x3 tensors, where the first row represents the spacecraft
                                     position (in km) and the second the spacecraft velocity (in km/s)
     """
 
