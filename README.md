@@ -33,7 +33,7 @@ Differentiable SGP4.
 * [Atılım Güneş Baydin](http://gbaydin.github.io/)
 * [Dario Izzo](https://www.esa.int/gsp/ACT/team/dario_izzo/)
 
-The project originated after the work of the authors at the University of Oxford.
+The project originated after the work of the authors at the [University of Oxford OX4AI Lab](https://oxai4science.github.io/).
 
 ## Acknowledgements:
 
