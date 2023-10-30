@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       # Start ssh-agent but set it to use the same ssh_auth_sock value.
       # The agent will be running in all steps after this, so it
       # should be one of the first.
@@ -60,7 +60,7 @@ jobs:
           coverage run -m pytest
           coverage xml
       - name: Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
