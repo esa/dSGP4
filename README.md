@@ -7,7 +7,7 @@ Differentiable SGP4.
 <br />
 <p align="center">
   <a href="https://github.com/esa/dSGP4">
-    <img src="doc/images/white_logo.png" alt="Logo" width="280">
+    <img src="doc/_static/logo_dsgp4.png" alt="Logo" width="280">
   </a>
   <p align="center">
     Differentiable SGP4
