@@ -1,4 +1,3 @@
-import math
 import datetime
 import numpy as np
 import copy
@@ -7,7 +6,7 @@ import torch
 from . import util
 
 from sgp4.earth_gravity import wgs84
-torch.set_default_dtype(torch.float64)
+#torch.set_default_dtype(torch.float64)
 
 MU_EARTH = wgs84.mu*1e9
 
@@ -209,8 +208,8 @@ def load_from_data(data, opsmode='i'):
     line1.append(str(data['classification'])[0] + ' ')
     line1.append(str(data['international_designator']).ljust(8, ' ')[:8] + ' ')
     line1.append(str(data['epoch_year'])[-2:].zfill(2) + '{:012.8f}'.format(data['epoch_days']) + ' ')
-    line1.append('{0: 8.8f}'.format(data['mean_motion_first_derivative'] * (1.86624e9 / math.pi)).replace('0', '', 1) + ' ')
-    line1.append('{0: 4.4e}'.format((data['mean_motion_second_derivative'] * (5.3747712e13 / math.pi)) * 10).replace(".", '').replace('e+00', '-0').replace('e-0', '-').replace('e+0', '+') + ' ')
+    line1.append('{0: 8.8f}'.format(data['mean_motion_first_derivative'] * (1.86624e9 / np.pi)).replace('0', '', 1) + ' ')
+    line1.append('{0: 4.4e}'.format((data['mean_motion_second_derivative'] * (5.3747712e13 / np.pi)) * 10).replace(".", '').replace('e+00', '-0').replace('e-0', '-').replace('e+0', '+') + ' ')
     line1.append('{0: 4.4e}'.format(data['b_star'] * 10).replace('.', '').replace('e+0', '+').replace('e-0', '-') + ' ')
     line1.append('{} '.format(data['ephemeris_type']) + str(data['element_number']).rjust(4, ' '))
     line1 = ''.join(line1)
@@ -234,12 +233,12 @@ def load_from_data(data, opsmode='i'):
 
     line2 = ['2 ']
     line2.append(str(data['satellite_catalog_number']).zfill(5)[:5] + ' ')
-    line2.append('{0:8.4f}'.format(data['inclination'] * (180 / math.pi)).rjust(8, ' ') + ' ')
-    line2.append('{0:8.4f}'.format(data['raan'] * (180 / math.pi)).rjust(8, ' ') + ' ')
+    line2.append('{0:8.4f}'.format(data['inclination'] * (180 / np.pi)).rjust(8, ' ') + ' ')
+    line2.append('{0:8.4f}'.format(data['raan'] * (180 / np.pi)).rjust(8, ' ') + ' ')
     line2.append(str(round(float(data['eccentricity']) * 1e7)).rjust(7, '0')[:7] + ' ')
-    line2.append('{0:8.4f}'.format(data['argument_of_perigee'] * (180 / math.pi)).rjust(8, ' ') + ' ')
-    line2.append('{0:8.4f}'.format(data['mean_anomaly'] * (180 / math.pi)).rjust(8, ' ') + ' ')
-    line2.append('{0:11.8f}'.format(data['mean_motion'] * 43200.0 / math.pi).rjust(8, ' '))
+    line2.append('{0:8.4f}'.format(data['argument_of_perigee'] * (180 / np.pi)).rjust(8, ' ') + ' ')
+    line2.append('{0:8.4f}'.format(data['mean_anomaly'] * (180 / np.pi)).rjust(8, ' ') + ' ')
+    line2.append('{0:11.8f}'.format(data['mean_motion'] * 43200.0 / np.pi).rjust(8, ' '))
     line2.append(str(data['revolution_number_at_epoch']).rjust(5))
     line2 = ''.join(line2)
     line2 += str(compute_checksum(line2))
@@ -423,9 +422,9 @@ class TLE():
 
     def __getattr__(self, attr):
         if attr == '_data' or attr == '_lines':
-            return super().__getattr__(index)
+            return super().__getattr__(attr)
         elif attr in self._data.keys():
             return self[attr]
         else:
-            return super().__getattr__(index)
+            return super().__getattr__(attr)
 

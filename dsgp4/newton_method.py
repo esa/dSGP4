@@ -5,7 +5,7 @@ from .sgp4 import sgp4
 from .sgp4init import sgp4init
 from . import util
 from .tle import TLE
-torch.set_default_dtype(torch.float64)
+#torch.set_default_dtype(torch.float64)
 
 def initial_guess(tle_0, time_mjd, target_state=None):
     """

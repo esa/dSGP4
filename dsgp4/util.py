@@ -2,7 +2,7 @@ import datetime
 import numpy as np
 import torch
 
-torch.set_default_dtype(torch.float64)
+#torch.set_default_dtype(torch.float64)
 
 def get_gravity_constants(gravity_constant_name):
     if gravity_constant_name == 'wgs-72old':
