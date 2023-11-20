@@ -1,5 +1,4 @@
 import dsgp4
-import kessler
 import numpy as np
 import sgp4
 import sgp4.io
@@ -11,7 +10,7 @@ class UtilTestCase(unittest.TestCase):
     def test_initl(self):
         error_string="Error: deep space propagation not supported (yet). The provided satellite has \
         an orbital period above 225 minutes. If you want to let us know you need it or you want to \
-        contribute to implement it, open a PR or raise an issue at: https://github.com/kesslerlib/dSGP4."
+        contribute to implement it, open a PR or raise an issue at: https://github.com/esa/dSGP4."
         lines=file.splitlines()
         #I randomly select 50 indexes out of 500 satellites
         indexes=random.sample(list(range(1,len(lines),3)), 50)
@@ -21,10 +20,10 @@ class UtilTestCase(unittest.TestCase):
             data.append(lines[i])
             data.append(lines[i+1])
             data.append(lines[i+2])
-            tles.append(kessler.tle.TLE(data))
-        whichconst=dsgp4.util.get_gravity_constants("wgs-72")
+            tles.append(dsgp4.tle.TLE(data))
+        whichconst=dsgp4.util.get_gravity_constants("wgs-84")
         tumin, mu, radiusearthkm, xke, j2, j3, j4, j3oj2=whichconst
-        satrec_tumin, satrec_mu, satrec_radiusearthkm, satrec_xke, satrec_j2, satrec_j3, satrec_j4, satrec_j3oj2=sgp4.earth_gravity.wgs72
+        satrec_tumin, satrec_mu, satrec_radiusearthkm, satrec_xke, satrec_j2, satrec_j3, satrec_j4, satrec_j3oj2=sgp4.earth_gravity.wgs84
         self.assertAlmostEqual(satrec_tumin,float(tumin))
         self.assertAlmostEqual(satrec_mu,float(mu))
         self.assertAlmostEqual(satrec_radiusearthkm,float(radiusearthkm))
@@ -34,7 +33,7 @@ class UtilTestCase(unittest.TestCase):
         self.assertAlmostEqual(satrec_j4,float(j4))
         self.assertAlmostEqual(satrec_j3oj2,float(j3oj2))
         for tle_sat in tles:
-            satrec=sgp4.io.twoline2rv(tle_sat.line1,tle_sat.line2, whichconst=sgp4.earth_gravity.wgs72)
+            satrec=sgp4.io.twoline2rv(tle_sat.line1,tle_sat.line2, whichconst=sgp4.earth_gravity.wgs84)
             (
             satrec_no_unkozai,
             satrec_method,
@@ -76,10 +75,10 @@ class UtilTestCase(unittest.TestCase):
                 self.assertTrue((str(e).split()==error_string.split()))
 
     def test_coverage(self):
-        tle=kessler.tle.TLE(file.splitlines()[1:4])
-        whichconst=dsgp4.util.get_gravity_constants("wgs-72")
+        tle=dsgp4.tle.TLE(file.splitlines()[1:4])
+        whichconst=dsgp4.util.get_gravity_constants("wgs-84")
         tumin, mu, radiusearthkm, xke, j2, j3, j4, j3oj2=whichconst
-        satrec_tumin, satrec_mu, satrec_radiusearthkm, satrec_xke, satrec_j2, satrec_j3, satrec_j4, satrec_j3oj2=sgp4.earth_gravity.wgs72
+        satrec_tumin, satrec_mu, satrec_radiusearthkm, satrec_xke, satrec_j2, satrec_j3, satrec_j4, satrec_j3oj2=sgp4.earth_gravity.wgs84
         #I run the opsmode=='a'
         dsgp4.initl(xke, j2, tle._ecco, (tle._jdsatepoch+tle._jdsatepochF)-2433281.5, tle._inclo, tle._no_kozai, 'n', 'a')
 

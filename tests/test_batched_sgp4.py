@@ -1,5 +1,4 @@
 import dsgp4
-import kessler
 import numpy as np
 import random
 import sgp4
@@ -10,7 +9,7 @@ import unittest
 
 error_string="Error: deep space propagation not supported (yet). The provided satellite has \
 an orbital period above 225 minutes. If you want to let us know you need it or you want to \
-contribute to implement it, open a PR or raise an issue at: https://github.com/kesslerlib/dSGP4."
+contribute to implement it, open a PR or raise an issue at: https://github.com/esa/dSGP4."
 
 class UtilTestCase(unittest.TestCase):
     def test_sgp4_batched(self):
@@ -26,7 +25,7 @@ class UtilTestCase(unittest.TestCase):
             data.append(lines[i])
             data.append(lines[i+1])
             data.append(lines[i+2])
-            tle=kessler.tle.TLE(data)
+            tle=dsgp4.tle.TLE(data)
             try:
                 dsgp4.sgp4init(whichconst=whichconst,
                                         opsmode=tle._opsmode,
@@ -41,7 +40,7 @@ class UtilTestCase(unittest.TestCase):
                                         xmo=tle._mo,
                                         xno_kozai=tle._no_kozai,
                                         xnodeo=tle._nodeo,
-                                        satrec=tle)
+                                        satellite=tle)
                 tsinces=torch.rand(100)*100
                 tles_batch+=[tle]*len(tsinces)
                 tsinces_batch+=[tsinces]

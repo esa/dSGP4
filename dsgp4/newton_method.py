@@ -1,10 +1,10 @@
 import numpy as np
 import torch
-import kessler
 import datetime
 from .sgp4 import sgp4
 from .sgp4init import sgp4init
 from . import util
+from .tle import TLE
 torch.set_default_dtype(torch.float64)
 
 def initial_guess(tle_0, time_mjd, target_state=None):
@@ -13,7 +13,7 @@ def initial_guess(tle_0, time_mjd, target_state=None):
     a set of parameter related to an initial guess useful to find the TLE observation that corresponds to the propagated state
 
     Args:
-        - tle_0 (``kessler.tle.TLE``): starting TLE at time0
+        - tle_0 (``dsgp4.tle.TLE``): starting TLE at time0
         - new_date (``datetime.datetime``): new date of the TLE, as a datetime object
         - target_state (``torch.tensor``): a 2x3 tensor for the position and velocity of the state. If None, then this is computed
                                            by propagating `tle_0` at the `new_date`.
@@ -33,13 +33,13 @@ def initial_guess(tle_0, time_mjd, target_state=None):
         - target_state (``torch.tensor``): this expresses the cartesian state as position & velocity in km & km/s, at the propagated time.
                                             The objective of the Newton method is to find the TLE observation that corresponds to that, at the propagated
                                             time.
-        - new_tle (``kessler.tle.TLE``): TLE constructed with `y0`, in order to find the TLE that corresponds to `target_state`
+        - new_tle (``dsgp4.tle.TLE``): TLE constructed with `y0`, in order to find the TLE that corresponds to `target_state`
         - tle_elements_0 (``dict``): dictionary used to construct `new_tle`
 
     """
-    new_date=kessler.util.from_mjd_to_datetime(time_mjd)
+    new_date=util.from_mjd_to_datetime(time_mjd)
     if target_state is None:
-        whichconst=util.get_gravity_constants("wgs-72")
+        whichconst=util.get_gravity_constants("wgs-84")
         sgp4init(whichconst=whichconst,
                             opsmode=tle_0._opsmode,
                             satn=tle_0.satellite_catalog_number,
@@ -53,17 +53,16 @@ def initial_guess(tle_0, time_mjd, target_state=None):
                             xmo=tle_0._mo,
                             xno_kozai=tle_0._no_kozai,
                             xnodeo=tle_0._nodeo,
-                            satrec=tle_0)
-        #print(kessler.util.from_datetime_to_mjd(new_date), kessler.util.from_datetime_to_mjd(tle_0._epoch))
-        tsince=(time_mjd-kessler.util.from_datetime_to_mjd(tle_0._epoch))*1440.
+                            satellite=tle_0)
+        tsince=(time_mjd-util.from_datetime_to_mjd(tle_0._epoch))*1440.
         x=tsince*torch.ones(1,1,requires_grad=True)#torch.rand(1,1, requires_grad=True)
         target_state=sgp4(tle_0, x)
     #print(target_state.size(), target_state)
-    tle_elements_0=kessler.util.from_cartesian_to_tle_elements(target_state.detach().numpy()*1e3)
+    tle_elements_0=util.from_cartesian_to_tle_elements(target_state.detach().numpy()*1e3)
     #you need to transform it to the appropriate units
     xpdotp=1440.0 / (2.0 *np.pi)
     tle_elements_0['epoch_year']=new_date.year
-    tle_elements_0['epoch_days']=kessler.util.from_datetime_to_fractional_day(new_date)
+    tle_elements_0['epoch_days']=util.from_datetime_to_fractional_day(new_date)
     #tle_elements_0['no_kozai']=tle_elements_0['mean_motion']/(np.pi/43200.0)/xpdotp
     #tle_elements_0['inclo']=tle_elements_0['inclination']
     #tle_elements_0['nodeo']=tle_elements_0['raan']
@@ -79,8 +78,7 @@ def initial_guess(tle_0, time_mjd, target_state=None):
     tle_elements_0['element_number']=tle_0.element_number
     tle_elements_0['b_star']=tle_0.b_star
     tle_elements_0['revolution_number_at_epoch']=tle_0.revolution_number_at_epoch
-    new_tle=kessler.tle.TLE(tle_elements_0)
-    #print(tle_0,new_tle)
+    new_tle=TLE(tle_elements_0)
     y0=torch.tensor([new_tle._bstar,
                      new_tle._ndot,
                      new_tle._nddot,
@@ -99,11 +97,11 @@ def update_TLE(old_tle,y0):
     is useful while doing Newton iterations.
 
     Args:
-        - old_tle (``kessler.tle.TLE``): TLE corresponding to previous guess
+        - old_tle (``dsgp4.tle.TLE``): TLE corresponding to previous guess
         - y0 (``torch.tensor``): initial guess (see the docstrings for `initial_guess` to know the content of `y0`)
 
     Returns:
-        - new_tle (``kessler.tle.TLE``): updated TLE
+        - new_tle (``dsgp4.tle.TLE``): updated TLE
 
     """
     tle_elements={}
@@ -131,8 +129,7 @@ def update_TLE(old_tle,y0):
     tle_elements['international_designator']=old_tle.international_designator
     tle_elements['revolution_number_at_epoch']=old_tle.revolution_number_at_epoch
     tle_elements['element_number']=old_tle.element_number
-#    kessler.util.lpop_init(tle)
-    return kessler.tle.TLE(tle_elements)
+    return TLE(tle_elements)
 
 def newton_method(tle_0, time_mjd, target_state=None, new_tol=1e-12,max_iter=50):
     """
@@ -140,14 +137,14 @@ def newton_method(tle_0, time_mjd, target_state=None, new_tol=1e-12,max_iter=50)
     is to find a TLE that accurately reconstructs the propagated state, at observation time.
 
     Args:
-        - tle_0 (``kessler.tle.TLE``): starting TLE (i.e., TLE at a given initial time)
+        - tle_0 (``dsgp4.tle.TLE``): starting TLE (i.e., TLE at a given initial time)
         - new_date (``datetime.datetime``): time (as a datetime object) at which we want the state to be propagated, and we want the TLE at that time
         - target_state (``torch.tensor``): 2x3 tensor representing target state. If None, then this is directly computed by propagating the TLE at `new_date`
         - new_tol (``float``): newton tolerance
         - max_iter (``int``): maximum iterations for Newton's method
 
     Returns:
-        - tle (``kessler.tle.TLE``): found TLE
+        - tle (``dsgp4.tle.TLE``): found TLE
         - y (``torch.tensor``): returns the solution that satisfied F(y)=0 (with a given tolerance)
                                 or (in case no convergence is reached within the tolerance) the best
                                 guess found in `max_iter` iterations
@@ -159,7 +156,7 @@ def newton_method(tle_0, time_mjd, target_state=None, new_tol=1e-12,max_iter=50)
     #newton iterations:
     while i<max_iter and tol>new_tol:
         #print(f"y0: {y0}")
-        propagate=lambda x: util.propagate(x,next_tle,(time_mjd-kessler.util.from_datetime_to_mjd(next_tle._epoch))*1440.)
+        propagate=lambda x: util.propagate(x,next_tle,(time_mjd-util.from_datetime_to_mjd(next_tle._epoch))*1440.)
         y1=util.clone_w_grad(y0)
         y2=util.clone_w_grad(y0)
         y3=util.clone_w_grad(y0)

@@ -1,4 +1,3 @@
-import kessler
 import unittest
 import dsgp4
 import sgp4
@@ -11,7 +10,7 @@ class UtilTestCase(unittest.TestCase):
     def test_sgp4init(self):
         error_string="Error: deep space propagation not supported (yet). The provided satellite has \
         an orbital period above 225 minutes. If you want to let us know you need it or you want to \
-        contribute to implement it, open a PR or raise an issue at: https://github.com/kesslerlib/dSGP4."
+        contribute to implement it, open a PR or raise an issue at: https://github.com/esa/dSGP4."
         lines=file.splitlines()
         #I randomly select 50 indexes out of 500 satellites
         indexes=random.sample(list(range(1,len(lines),3)), 50)
@@ -21,11 +20,11 @@ class UtilTestCase(unittest.TestCase):
             data.append(lines[i])
             data.append(lines[i+1])
             data.append(lines[i+2])
-            tles.append(kessler.tle.TLE(data))
-        whichconst=dsgp4.util.get_gravity_constants("wgs-72")
+            tles.append(dsgp4.tle.TLE(data))
+        whichconst=dsgp4.util.get_gravity_constants("wgs-84")
         for tle_sat in tles:
-            satrec=sgp4.io.twoline2rv(tle_sat.line1,tle_sat.line2, whichconst=sgp4.earth_gravity.wgs72)
-            sgp4.propagation.sgp4init(whichconst=sgp4.earth_gravity.wgs72,
+            satrec=sgp4.io.twoline2rv(tle_sat.line1,tle_sat.line2, whichconst=sgp4.earth_gravity.wgs84)
+            sgp4.propagation.sgp4init(whichconst=sgp4.earth_gravity.wgs84,
                                 opsmode='i',
                                 satn=satrec.satnum,
                                 epoch=(satrec.jdsatepoch+satrec.jdsatepochF)-2433281.5,
@@ -41,7 +40,7 @@ class UtilTestCase(unittest.TestCase):
                                 satrec=satrec)
             #I need a try excpet: to exclude the deep space cases
             try:
-                whichconst=dsgp4.util.get_gravity_constants("wgs-72")
+                whichconst=dsgp4.util.get_gravity_constants("wgs-84")
                 dsgp4.sgp4init(whichconst=whichconst,
                                     opsmode=tle_sat._opsmode,
                                     satn=tle_sat.satellite_catalog_number,
@@ -55,7 +54,7 @@ class UtilTestCase(unittest.TestCase):
                                     xmo=tle_sat._mo,
                                     xno_kozai=tle_sat._no_kozai,
                                     xnodeo=tle_sat._nodeo,
-                                    satrec=tle_sat)
+                                    satellite=tle_sat)
                 self.assertAlmostEqual(satrec.isimp,float(tle_sat._isimp))
                 self.assertTrue(satrec.method==tle_sat._method)
                 self.assertAlmostEqual(satrec.aycof , float(tle_sat._aycof))

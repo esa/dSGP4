@@ -1,5 +1,4 @@
 import dsgp4
-import kessler
 import numpy as np
 import random
 import sgp4
@@ -9,7 +8,7 @@ import unittest
 
 error_string="Error: deep space propagation not supported (yet). The provided satellite has \
 an orbital period above 225 minutes. If you want to let us know you need it or you want to \
-contribute to implement it, open a PR or raise an issue at: https://github.com/kesslerlib/dSGP4."
+contribute to implement it, open a PR or raise an issue at: https://github.com/esa/dSGP4."
 
 class UtilTestCase(unittest.TestCase):
     def test_velocity(self):
@@ -25,7 +24,7 @@ class UtilTestCase(unittest.TestCase):
             data.append(lines[i])
             data.append(lines[i+1])
             data.append(lines[i+2])
-            tles.append(kessler.tle.TLE(data))
+            tles.append(dsgp4.tle.TLE(data))
         whichconst=dsgp4.util.get_gravity_constants("wgs-72")
         #I filter out deep space and error cases:
         tles_filtered=[]
@@ -44,7 +43,7 @@ class UtilTestCase(unittest.TestCase):
                                 xmo=tle_satellite._mo,
                                 xno_kozai=tle_satellite._no_kozai,
                                 xnodeo=tle_satellite._nodeo,
-                                satrec=tle_satellite)
+                                satellite=tle_satellite)
                 if tle_satellite._error==0:
                     tles_filtered.append(tle_satellite)
             except Exception as e:
@@ -98,7 +97,7 @@ class UtilTestCase(unittest.TestCase):
             data.append(lines[i])
             data.append(lines[i+1])
             data.append(lines[i+2])
-            tles.append(kessler.tle.TLE(data))
+            tles.append(dsgp4.tle.TLE(data))
         whichconst=dsgp4.util.get_gravity_constants("wgs-72")
         #I filter out deep space and error cases:
         tles_filtered=[]
@@ -117,7 +116,7 @@ class UtilTestCase(unittest.TestCase):
                                 xmo=tle_satellite._mo,
                                 xno_kozai=tle_satellite._no_kozai,
                                 xnodeo=tle_satellite._nodeo,
-                                satrec=tle_satellite)
+                                satellite=tle_satellite)
                 if tle_satellite._error==0:
                     tles_filtered.append(tle_satellite)
             except Exception as e:

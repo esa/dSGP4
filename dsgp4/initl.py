@@ -12,20 +12,14 @@ def initl(
        opsmode,
        ):
 
-     #  ----------------------- earth constants ----------------------
-     #  sgp4fix identify constants and allow alternate values
-	 #  only xke and j2 are used here so pass them in directly
-     #  tumin, mu, radiusearthkm, xke, j2, j3, j4, j3oj2 = whichconst
      x2o3   = torch.tensor(2.0 / 3.0);
 
-     #  ------------- calculate auxillary epoch quantities ----------
      eccsq  = ecco * ecco;
      omeosq = 1.0 - eccsq;
      rteosq = omeosq.sqrt();
      cosio  = inclo.cos();
      cosio2 = cosio * cosio;
 
-     #  ------------------ un-kozai the mean motion -----------------
      ak    = torch.pow(xke / no, x2o3);
      d1    = 0.75 * j2 * (3.0 * cosio2 - 1.0) / (rteosq * omeosq);
      del_  = d1 / (ak * ak);
@@ -44,11 +38,8 @@ def initl(
      rp    = ao * (1.0 - ecco);
      method = 'n';
 
-     #  sgp4fix modern approach to finding sidereal time
      if opsmode == 'a':
-
-         #  sgp4fix use old way of finding gst
-         #  count integer number of days from 0 jan 1970
+         #  gst time
          ts70  = epoch - 7305.0;
          ds70 = torch.floor_divide(ts70 + 1.0e-8,1);
          tfrac = ts70 - ds70;

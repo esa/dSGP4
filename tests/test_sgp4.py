@@ -1,5 +1,4 @@
 import dsgp4
-import kessler
 import numpy as np
 import random
 import sgp4
@@ -10,7 +9,7 @@ import unittest
 
 error_string="Error: deep space propagation not supported (yet). The provided satellite has \
 an orbital period above 225 minutes. If you want to let us know you need it or you want to \
-contribute to implement it, open a PR or raise an issue at: https://github.com/kesslerlib/dSGP4."
+contribute to implement it, open a PR or raise an issue at: https://github.com/esa/dSGP4."
 
 class UtilTestCase(unittest.TestCase):
     def test_sgp4(self):
@@ -23,10 +22,10 @@ class UtilTestCase(unittest.TestCase):
             data.append(lines[i])
             data.append(lines[i+1])
             data.append(lines[i+2])
-            tles.append(kessler.tle.TLE(data))
+            tles.append(dsgp4.tle.TLE(data))
         for tle_sat in tles:
-            satrec=sgp4.io.twoline2rv(tle_sat.line1,tle_sat.line2, whichconst=sgp4.earth_gravity.wgs72)
-            sgp4.propagation.sgp4init(whichconst=sgp4.earth_gravity.wgs72,
+            satrec=sgp4.io.twoline2rv(tle_sat.line1,tle_sat.line2, whichconst=sgp4.earth_gravity.wgs84)
+            sgp4.propagation.sgp4init(whichconst=sgp4.earth_gravity.wgs84,
                                 opsmode='i',
                                 satn=tles[0].satellite_catalog_number,
                                 epoch=(satrec.jdsatepoch+satrec.jdsatepochF)-2433281.5,
@@ -41,7 +40,7 @@ class UtilTestCase(unittest.TestCase):
                                 xnodeo=satrec.nodeo,
                                 satrec=satrec)
             try:
-                whichconst=dsgp4.util.get_gravity_constants("wgs-72")
+                whichconst=dsgp4.util.get_gravity_constants("wgs-84")
                 dsgp4.sgp4init(whichconst=whichconst,
                                     opsmode=tle_sat._opsmode,
                                     satn=tle_sat.satellite_catalog_number,
@@ -55,7 +54,7 @@ class UtilTestCase(unittest.TestCase):
                                     xmo=tle_sat._mo,
                                     xno_kozai=tle_sat._no_kozai,
                                     xnodeo=tle_sat._nodeo,
-                                    satrec=tle_sat)
+                                    satellite=tle_sat)
                 for _ in range(50):
                     tsince=random.uniform(-100.,100.)
                     satrec_state=sgp4.propagation.sgp4(satrec, tsince)
@@ -79,10 +78,10 @@ class UtilTestCase(unittest.TestCase):
             data.append(lines[i])
             data.append(lines[i+1])
             data.append(lines[i+2])
-            tles.append(kessler.tle.TLE(data))
+            tles.append(dsgp4.tle.TLE(data))
 
         #I filter out deep space and error cases:
-        whichconst=dsgp4.util.get_gravity_constants("wgs-72")
+        whichconst=dsgp4.util.get_gravity_constants("wgs-84")
         tles_filtered=[]
         for idx, tle_satellite in enumerate(tles):
             try:
@@ -99,14 +98,14 @@ class UtilTestCase(unittest.TestCase):
                                 xmo=tle_satellite._mo,
                                 xno_kozai=tle_satellite._no_kozai,
                                 xnodeo=tle_satellite._nodeo,
-                                satrec=tle_satellite)
+                                satellite=tle_satellite)
                 if tle_satellite._error==0:
                     tles_filtered.append(tle_satellite)
             except Exception as e:
                 self.assertTrue((str(e).split()==error_string.split()))
 
         for tle in tles_filtered:
-            satrec=sgp4.io.twoline2rv(tle.line1,tle.line2, whichconst=sgp4.earth_gravity.wgs72)
+            satrec=sgp4.io.twoline2rv(tle.line1,tle.line2, whichconst=sgp4.earth_gravity.wgs84)
             tsinces=torch.rand(100,)*10
             satrec_states=np.stack([np.array(sgp4.propagation.sgp4(satrec, t)) for t in tsinces.detach().numpy()])
             self.assertTrue(np.allclose(dsgp4.sgp4(tle,tsinces).detach().numpy(),satrec_states))
