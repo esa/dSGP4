@@ -1,4 +1,4 @@
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 
 from .sgp4 import sgp4
 from .initl import initl
