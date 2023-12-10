@@ -2,7 +2,6 @@ import numpy
 import torch
 from .initl import initl
 from .sgp4 import sgp4
-#torch.set_default_dtype(torch.float64)
 
 def sgp4init(
        whichconst,   opsmode,  satn, epoch,

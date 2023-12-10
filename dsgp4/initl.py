@@ -3,8 +3,6 @@ import torch
 
 from . import util
 
-torch.set_default_dtype(torch.float64)
-
 def initl(
        xke, j2,
        ecco,   epoch,  inclo,   no,

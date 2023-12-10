@@ -25,7 +25,7 @@ class UtilTestCase(unittest.TestCase):
             data.append(lines[i+1])
             data.append(lines[i+2])
             tles.append(dsgp4.tle.TLE(data))
-        whichconst=dsgp4.util.get_gravity_constants("wgs-72")
+        whichconst=dsgp4.util.get_gravity_constants("wgs-84")
         #I filter out deep space and error cases:
         tles_filtered=[]
         for idx, tle_satellite in enumerate(tles):
@@ -98,7 +98,7 @@ class UtilTestCase(unittest.TestCase):
             data.append(lines[i+1])
             data.append(lines[i+2])
             tles.append(dsgp4.tle.TLE(data))
-        whichconst=dsgp4.util.get_gravity_constants("wgs-72")
+        whichconst=dsgp4.util.get_gravity_constants("wgs-84")
         #I filter out deep space and error cases:
         tles_filtered=[]
         for idx, tle_satellite in enumerate(tles):

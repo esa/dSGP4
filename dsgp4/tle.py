@@ -4,11 +4,8 @@ import copy
 import torch
 
 from . import util
-
-from sgp4.earth_gravity import wgs84
-#torch.set_default_dtype(torch.float64)
-
-MU_EARTH = wgs84.mu*1e9
+_, MU_EARTH, _, _, _, _, _, _=util.get_gravity_constants('wgs-84')
+MU_EARTH = MU_EARTH*1e9
 
 # This function is from python-sgp4 released under MIT License, (c) 2012–2016 Brandon Rhodes
 def compute_checksum(line):
