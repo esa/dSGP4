@@ -16,12 +16,33 @@ Packages
 conda
 ^^^^^
 
-coming soon
+First, we add `conda-forge` channel to the channels:
+.. code-block:: console
+   
+   $ conda config --add channels conda-forge
+   $ conda config --set channel_priority strict
+
+Now, we can install `dsgp4` either through `conda`:
+.. code-block:: console
+   
+   $ conda install dsgp4
+
+or `mamba`:
+
+.. code-block:: console
+   
+   $ mamba install dsgp4
+
+
 
 pip
 ^^^
 
-coming soon
+`dsgp4` is available on [Pypi](https://pypi.org/project/dsgp4/). You can install it via `pip` as:
+
+.. code-block:: console
+   
+   $ pip install dsgp4
 
 Installation from source
 ------------------------
