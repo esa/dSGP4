@@ -17,12 +17,14 @@ conda
 ^^^^^
 
 First, we add `conda-forge` channel to the channels:
+
 .. code-block:: console
-   
+
    $ conda config --add channels conda-forge
    $ conda config --set channel_priority strict
 
 Now, we can install `dsgp4` either through `conda`:
+
 .. code-block:: console
    
    $ conda install dsgp4

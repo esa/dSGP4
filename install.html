@@ -369,17 +369,15 @@ document.write(`
 <h2>Packages<a class="headerlink" href="#packages" title="Permalink to this heading">#</a></h2>
 <section id="conda">
 <h3>conda<a class="headerlink" href="#conda" title="Permalink to this heading">#</a></h3>
-<p>First, we add <cite>conda-forge</cite> channel to the channels:
-.. code-block:: console</p>
-<blockquote>
-<div><p>$ conda config –add channels conda-forge
-$ conda config –set channel_priority strict</p>
-</div></blockquote>
-<p>Now, we can install <cite>dsgp4</cite> either through <cite>conda</cite>:
-.. code-block:: console</p>
-<blockquote>
-<div><p>$ conda install dsgp4</p>
-</div></blockquote>
+<p>First, we add <cite>conda-forge</cite> channel to the channels:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>conda<span class="w"> </span>config<span class="w"> </span>--add<span class="w"> </span>channels<span class="w"> </span>conda-forge
+<span class="gp">$ </span>conda<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>channel_priority<span class="w"> </span>strict
+</pre></div>
+</div>
+<p>Now, we can install <cite>dsgp4</cite> either through <cite>conda</cite>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>conda<span class="w"> </span>install<span class="w"> </span>dsgp4
+</pre></div>
+</div>
 <p>or <cite>mamba</cite>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mamba<span class="w"> </span>install<span class="w"> </span>dsgp4
 </pre></div>
