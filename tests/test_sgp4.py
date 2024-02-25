@@ -161,7 +161,8 @@ class UtilTestCase(unittest.TestCase):
         for tle in tles:
             results_dsgp4.append(dsgp4.sgp4(tle, tsinces).numpy().reshape(5,6))    
         results_dsgp4=np.stack(results_dsgp4) 
-        
+        self.assertTrue(np.allclose(results_dsgp4,space_track_results[:,:,1:],atol=1e-3))
+
 
 
 
