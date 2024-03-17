@@ -157,7 +157,6 @@ def from_year_day_to_date(y,d):
     return (datetime.datetime(y, 1, 1) + datetime.timedelta(d - 1))
 
 def gstime(jdut1):
-    deg2rad=np.pi/180.
     tut1 = (jdut1 - 2451545.0) / 36525.0
     temp = -6.2e-6* tut1 * tut1 * tut1 + 0.093104 * tut1 * tut1 + \
          (876600.0*3600 + 8640184.812866) * tut1 + 67310.54841  #  sec

@@ -26,67 +26,32 @@ class UtilTestCase(unittest.TestCase):
             data.append(lines[i+1])
             data.append(lines[i+2])
             tles.append(dsgp4.tle.TLE(data))
-        whichconst=dsgp4.util.get_gravity_constants("wgs-84")
         #I filter out deep space and error cases:
         tles_filtered=[]
-        for idx, tle_satellite in enumerate(tles):
+        for tle_satellite in tles:
             try:
-                dsgp4.sgp4init(whichconst=whichconst,
-                                opsmode=tle_satellite._opsmode,
-                                satn=tle_satellite.satellite_catalog_number,
-                                epoch=(tle_satellite._jdsatepoch+tle_satellite._jdsatepochF)-2433281.5,
-                                xbstar=tle_satellite._bstar,
-                                xndot=tle_satellite._ndot,
-                                xnddot=tle_satellite._nddot,
-                                xecco=tle_satellite._ecco,
-                                xargpo=tle_satellite._argpo,
-                                xinclo=tle_satellite._inclo,
-                                xmo=tle_satellite._mo,
-                                xno_kozai=tle_satellite._no_kozai,
-                                xnodeo=tle_satellite._nodeo,
-                                satellite=tle_satellite)
+                dsgp4.initialize_tle(tle_satellite, gravity_constant_name="wgs-84");
                 if tle_satellite._error==0:
                     tles_filtered.append(tle_satellite)
             except Exception as e:
                 self.assertTrue((str(e).split()==error_string.split()))
 
         for tle in tles_filtered[:50]:
-            time=random.random()*30
-
-            x0=torch.tensor([tle._bstar,
-                            tle._ndot,
-                            tle._nddot,
-                            tle._ecco,
-                            tle._argpo,
-                            tle._inclo,
-                            tle._mo,
-                            tle._no_kozai,
-                            tle._nodeo])
-            t=torch.tensor(time,requires_grad=True)
-            fun=lambda tt: _propagate(x0,tle,tt)
-
-
-            t1=dsgp4.util.clone_w_grad(t)
-            t2=dsgp4.util.clone_w_grad(t)
-            r_x=fun(t)[0][0]
-            r_x.backward()
-            gradient_rx=t.grad
-            r_y=fun(t1)[0][1]
-            r_y.backward()
-            gradient_ry=t1.grad
-            r_z=fun(t2)[0][2]
-            r_z.backward()
-            gradient_rz=t2.grad
-
-            v_x=fun(t2)[1][0]
-            v_y=fun(t2)[1][1]
-            v_z=fun(t2)[1][2]
-
+            time=torch.tensor(random.random()*30,requires_grad=True)
+            state_teme = dsgp4.propagate(tle, 
+                                         time,
+                                         initialized=False)
+            partial_derivatives = torch.zeros_like(state_teme)
+            for i in [0,1]:
+                for j in [0,1,2]:
+                    time.grad=None
+                    state_teme[i,j].backward(torch.ones_like(time),retain_graph=True)
+                    partial_derivatives[i,j] = time.grad
             #the gradient is w.r.t. the input time, that is in minutes, so it
             #will be a km/min, which we multiply by 60 to get km/s, as per SGP4 output:
-            self.assertAlmostEqual(gradient_rx.detach().numpy(),v_x.detach().numpy()*60,places=0)
-            self.assertAlmostEqual(gradient_ry.detach().numpy(),v_y.detach().numpy()*60,places=0)
-            self.assertAlmostEqual(gradient_rz.detach().numpy(),v_z.detach().numpy()*60,places=0)
+            self.assertAlmostEqual(partial_derivatives[0,0].detach().numpy(),state_teme[1,0].detach().numpy()*60,places=1)
+            self.assertAlmostEqual(partial_derivatives[0,1].detach().numpy(),state_teme[1,1].detach().numpy()*60,places=1)
+            self.assertAlmostEqual(partial_derivatives[0,2].detach().numpy(),state_teme[1,2].detach().numpy()*60,places=1)
 
     def test_input_gradients(self):
         lines=file.splitlines()
@@ -99,32 +64,29 @@ class UtilTestCase(unittest.TestCase):
             data.append(lines[i+1])
             data.append(lines[i+2])
             tles.append(dsgp4.tle.TLE(data))
-        whichconst=dsgp4.util.get_gravity_constants("wgs-84")
         #I filter out deep space and error cases:
         tles_filtered=[]
-        for idx, tle_satellite in enumerate(tles):
+        tles_elements=[]
+        for tle_satellite in tles:
             try:
-                dsgp4.sgp4init(whichconst=whichconst,
-                                opsmode=tle_satellite._opsmode,
-                                satn=tle_satellite.satellite_catalog_number,
-                                epoch=(tle_satellite._jdsatepoch+tle_satellite._jdsatepochF)-2433281.5,
-                                xbstar=tle_satellite._bstar,
-                                xndot=tle_satellite._ndot,
-                                xnddot=tle_satellite._nddot,
-                                xecco=tle_satellite._ecco,
-                                xargpo=tle_satellite._argpo,
-                                xinclo=tle_satellite._inclo,
-                                xmo=tle_satellite._mo,
-                                xno_kozai=tle_satellite._no_kozai,
-                                xnodeo=tle_satellite._nodeo,
-                                satellite=tle_satellite)
+                el=dsgp4.initialize_tle(tle_satellite, gravity_constant_name="wgs-84", with_grad=True);
                 if tle_satellite._error==0:
                     tles_filtered.append(tle_satellite)
+                    tles_elements.append(el)
             except Exception as e:
                 self.assertTrue((str(e).split()==error_string.split()))
 
-        for tle in tles_filtered[:50]:
-            time=random.random()*30
+        for idx,tle in enumerate(tles_filtered[:50]):
+            time=torch.tensor(random.random()*30)
+            #I propagate:
+            state_teme = dsgp4.propagate(tle,time)
+            #let's now construct the partials:s
+            partial_derivatives = torch.zeros((6,9))
+            for i in range(6):
+                tles_elements[idx].grad=None
+                state_teme.flatten()[i].backward(retain_graph=True)
+                partial_derivatives[i,:] = tles_elements[idx].grad
+            #now, let's compare with finite differences:
             fun=lambda xx: _propagate(xx,tle,time)
             #I create 6 copies of the inputs to be used for each function (three
             #position and three velocity coordinates)
@@ -138,40 +100,14 @@ class UtilTestCase(unittest.TestCase):
                             tle._no_kozai,
                             tle._nodeo,
                             time],requires_grad=True)
-            x1=dsgp4.util.clone_w_grad(x0)
-            x2=dsgp4.util.clone_w_grad(x0)
-            x3=dsgp4.util.clone_w_grad(x0)
-            x4=dsgp4.util.clone_w_grad(x0)
-            x5=dsgp4.util.clone_w_grad(x0)
-            #I compute all the gradients at the prescribed input points:
-            r_x=fun(x0)[0][0]
-            r_x.backward()
-            gradient_rx=x0.grad
-            r_y=fun(x1)[0][1]
-            r_y.backward()
-            gradient_ry=x1.grad
-            r_z=fun(x2)[0][2]
-            r_z.backward()
-            gradient_rz=x2.grad
-            v_x=fun(x3)[1][0]
-            v_x.backward()
-            gradient_vx=x3.grad
-            v_y=fun(x4)[1][1]
-            v_y.backward()
-            gradient_vy=x4.grad
-            v_z=fun(x5)[1][2]
-            v_z.backward()
-            gradient_vz=x5.grad
-            #finite differences:
-            gradient_finite_diff_rx=torch.zeros(gradient_rx.size())
-            gradient_finite_diff_ry=torch.zeros(gradient_ry.size())
-            gradient_finite_diff_rz=torch.zeros(gradient_rz.size())
-            gradient_finite_diff_vx=torch.zeros(gradient_vx.size())
-            gradient_finite_diff_vy=torch.zeros(gradient_vy.size())
-            gradient_finite_diff_vz=torch.zeros(gradient_vz.size())
-
+            gradient_finite_diff_rx=torch.zeros((9,))
+            gradient_finite_diff_ry=torch.zeros((9,))
+            gradient_finite_diff_rz=torch.zeros((9,))
+            gradient_finite_diff_vx=torch.zeros((9,))
+            gradient_finite_diff_vy=torch.zeros((9,))
+            gradient_finite_diff_vz=torch.zeros((9,))
             dh=1e-8
-            for i in range(len(gradient_rx)):
+            for i in range(9):
                 xnew=x0.clone()
                 xnew[i]=x0[i]+dh
                 gradient_finite_diff_rx[i]=(fun(xnew)[0][0]- fun(x0)[0][0])/dh
@@ -180,12 +116,12 @@ class UtilTestCase(unittest.TestCase):
                 gradient_finite_diff_vx[i]=(fun(xnew)[1][0] - fun(x0)[1][0])/dh
                 gradient_finite_diff_vy[i]=(fun(xnew)[1][1] - fun(x0)[1][1])/dh
                 gradient_finite_diff_vz[i]=(fun(xnew)[1][2] - fun(x0)[1][2])/dh
-                self.assertAlmostEqual(gradient_finite_diff_rx[i].detach().numpy(), gradient_rx[i].detach().numpy(), places=1)
-                self.assertAlmostEqual(gradient_finite_diff_ry[i].detach().numpy(), gradient_ry[i].detach().numpy(), places=1)
-                self.assertAlmostEqual(gradient_finite_diff_rz[i].detach().numpy(), gradient_rz[i].detach().numpy(), places=1)
-                self.assertAlmostEqual(gradient_finite_diff_vx[i].detach().numpy(), gradient_vx[i].detach().numpy(), places=1)
-                self.assertAlmostEqual(gradient_finite_diff_vy[i].detach().numpy(), gradient_vy[i].detach().numpy(), places=1)
-                self.assertAlmostEqual(gradient_finite_diff_vz[i].detach().numpy(), gradient_vz[i].detach().numpy(), places=1)
+                self.assertAlmostEqual(gradient_finite_diff_rx[i].detach().numpy(), partial_derivatives[0,i].detach().numpy(), places=1)
+                self.assertAlmostEqual(gradient_finite_diff_ry[i].detach().numpy(), partial_derivatives[1,i].detach().numpy(), places=1)
+                self.assertAlmostEqual(gradient_finite_diff_rz[i].detach().numpy(), partial_derivatives[2,i].detach().numpy(), places=1)
+                self.assertAlmostEqual(gradient_finite_diff_vx[i].detach().numpy(), partial_derivatives[3,i].detach().numpy(), places=1)
+                self.assertAlmostEqual(gradient_finite_diff_vy[i].detach().numpy(), partial_derivatives[4,i].detach().numpy(), places=1)
+                self.assertAlmostEqual(gradient_finite_diff_vz[i].detach().numpy(), partial_derivatives[5,i].detach().numpy(), places=1)
 
 file="""
 0 COSMOS 2251 DEB

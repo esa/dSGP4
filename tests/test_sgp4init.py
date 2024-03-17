@@ -21,7 +21,6 @@ class UtilTestCase(unittest.TestCase):
             data.append(lines[i+1])
             data.append(lines[i+2])
             tles.append(dsgp4.tle.TLE(data))
-        whichconst=dsgp4.util.get_gravity_constants("wgs-84")
         for tle_sat in tles:
             satrec=sgp4.io.twoline2rv(tle_sat.line1,tle_sat.line2, whichconst=sgp4.earth_gravity.wgs84)
             sgp4.propagation.sgp4init(whichconst=sgp4.earth_gravity.wgs84,
@@ -40,21 +39,7 @@ class UtilTestCase(unittest.TestCase):
                                 satrec=satrec)
             #I need a try excpet: to exclude the deep space cases
             try:
-                whichconst=dsgp4.util.get_gravity_constants("wgs-84")
-                dsgp4.sgp4init(whichconst=whichconst,
-                                    opsmode=tle_sat._opsmode,
-                                    satn=tle_sat.satellite_catalog_number,
-                                    epoch=(tle_sat._jdsatepoch+tle_sat._jdsatepochF)-2433281.5,
-                                    xbstar=tle_sat._bstar,
-                                    xndot=tle_sat._ndot,
-                                    xnddot=tle_sat._nddot,
-                                    xecco=tle_sat._ecco,
-                                    xargpo=tle_sat._argpo,
-                                    xinclo=tle_sat._inclo,
-                                    xmo=tle_sat._mo,
-                                    xno_kozai=tle_sat._no_kozai,
-                                    xnodeo=tle_sat._nodeo,
-                                    satellite=tle_sat)
+                dsgp4.initialize_tle(tle_sat, gravity_constant_name="wgs-84")
                 self.assertAlmostEqual(satrec.isimp,float(tle_sat._isimp))
                 self.assertTrue(satrec.method==tle_sat._method)
                 self.assertAlmostEqual(satrec.aycof , float(tle_sat._aycof))

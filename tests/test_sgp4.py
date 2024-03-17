@@ -40,21 +40,7 @@ class UtilTestCase(unittest.TestCase):
                                 xnodeo=satrec.nodeo,
                                 satrec=satrec)
             try:
-                whichconst=dsgp4.util.get_gravity_constants("wgs-84")
-                dsgp4.sgp4init(whichconst=whichconst,
-                                    opsmode=tle_sat._opsmode,
-                                    satn=tle_sat.satellite_catalog_number,
-                                    epoch=(tle_sat._jdsatepoch+tle_sat._jdsatepochF)-2433281.5,
-                                    xbstar=tle_sat._bstar,
-                                    xndot=tle_sat._ndot,
-                                    xnddot=tle_sat._nddot,
-                                    xecco=tle_sat._ecco,
-                                    xargpo=tle_sat._argpo,
-                                    xinclo=tle_sat._inclo,
-                                    xmo=tle_sat._mo,
-                                    xno_kozai=tle_sat._no_kozai,
-                                    xnodeo=tle_sat._nodeo,
-                                    satellite=tle_sat)
+                dsgp4.initialize_tle(tle_sat, gravity_constant_name="wgs-84");
                 for _ in range(50):
                     tsince=random.uniform(-100.,100.)
                     satrec_state=sgp4.propagation.sgp4(satrec, tsince)
@@ -81,24 +67,10 @@ class UtilTestCase(unittest.TestCase):
             tles.append(dsgp4.tle.TLE(data))
 
         #I filter out deep space and error cases:
-        whichconst=dsgp4.util.get_gravity_constants("wgs-84")
         tles_filtered=[]
-        for idx, tle_satellite in enumerate(tles):
+        for tle_satellite in tles:
             try:
-                dsgp4.sgp4init(whichconst=whichconst,
-                                opsmode=tle_satellite._opsmode,
-                                satn=tle_satellite.satellite_catalog_number,
-                                epoch=(tle_satellite._jdsatepoch+tle_satellite._jdsatepochF)-2433281.5,
-                                xbstar=tle_satellite._bstar,
-                                xndot=tle_satellite._ndot,
-                                xnddot=tle_satellite._nddot,
-                                xecco=tle_satellite._ecco,
-                                xargpo=tle_satellite._argpo,
-                                xinclo=tle_satellite._inclo,
-                                xmo=tle_satellite._mo,
-                                xno_kozai=tle_satellite._no_kozai,
-                                xnodeo=tle_satellite._nodeo,
-                                satellite=tle_satellite)
+                dsgp4.initialize_tle(tle_satellite, gravity_constant_name="wgs-84");
                 if tle_satellite._error==0:
                     tles_filtered.append(tle_satellite)
             except Exception as e:
@@ -139,27 +111,13 @@ class UtilTestCase(unittest.TestCase):
             data.append(lines[i+1])
             data.append(lines[i+2])
             tles.append(dsgp4.tle.TLE(data))
-            whichconst=dsgp4.util.get_gravity_constants("wgs-72")
-            dsgp4.sgp4init(whichconst=whichconst,
-                                opsmode=tles[-1]._opsmode,
-                                satn=tles[-1].satellite_catalog_number,
-                                epoch=(tles[-1]._jdsatepoch+tles[-1]._jdsatepochF)-2433281.5,
-                                xbstar=tles[-1]._bstar,
-                                xndot=tles[-1]._ndot,
-                                xnddot=tles[-1]._nddot,
-                                xecco=tles[-1]._ecco,
-                                xargpo=tles[-1]._argpo,
-                                xinclo=tles[-1]._inclo,
-                                xmo=tles[-1]._mo,
-                                xno_kozai=tles[-1]._no_kozai,
-                                xnodeo=tles[-1]._nodeo,
-                                satellite=tles[-1])
+            dsgp4.initialize_tle(tles[-1], gravity_constant_name="wgs-72");
 
         #we are now ready to collect the results of the dSGP4 propagation for the same tsince values
         tsinces=torch.tensor([0.,360.,720.,1080.,1440.])
         results_dsgp4=[]
         for tle in tles:
-            results_dsgp4.append(dsgp4.sgp4(tle, tsinces).numpy().reshape(5,6))    
+            results_dsgp4.append(dsgp4.propagate(tle, tsinces).numpy().reshape(5,6))    
         results_dsgp4=np.stack(results_dsgp4) 
         self.assertTrue(np.allclose(results_dsgp4,space_track_results[:,:,1:],atol=1e-6))
 
