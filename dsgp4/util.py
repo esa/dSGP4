@@ -35,47 +35,116 @@ def get_gravity_constants(gravity_constant_name):
 
     return torch.tensor(tumin), torch.tensor(mu), torch.tensor(radiusearthkm), torch.tensor(xke), torch.tensor(j2), torch.tensor(j3), torch.tensor(j4), torch.tensor(j3oj2)
 
-def propagate(x, tle_sat, tsince, gravity_constant_name="wgs-84"):
+def propagate_batch(tles, tsinces, initialized=True):
     """
-    This function takes a tensor of inputs and a TLE, and returns the corresponding state.
-    It can be used to take the gradient of the state w.r.t. the inputs.
+    This function takes a list of TLEs and a tensor of times (which must be of same length), and returns the corresponding states.
 
     Args:
-        - x (``torch.tensor``): input of tensors, with the following values (x[0:9] have the same units as the ones in the TLE):
-                                    - x[0]: bstar
-                                    - x[1]: ndot
-                                    - x[2]: nddot
-                                    - x[3]: ecco
-                                    - x[4]: argpo
-                                    - x[5]: inclo
-                                    - x[6]: mo
-                                    - x[7]: kozai
-                                    - x[8]: nodeo
-        - tle_sat (``dsgp4.tle.TLE``): TLE object to be propagated
-        - tsince (``float``): propagation time in minutes
+        - tle_sat (``list``): list of TLE objects or TLE object to be propagated
+        - tsince (``torch.tensor``): propagation time in minutes (it has to be a tensor of the same size of the list, in case a list of TLEs is passed)
+        - initialized (``bool``): whether the TLEs have been initialized or not (default: True)
+
+    Returns:
+        - state (``torch.tensor``): (Nx2x3) tensor representing position and velocity in km and km/s, where the first dimension is the batch size.
+    """
+    from .sgp4_batched import sgp4_batched
+    if not initialized:
+        initialize_tle(tles)
+    state=sgp4_batched(tles, tsinces)
+    return state
+
+def propagate(tle, tsinces, initialized=True):
+    """
+    This function takes a tensor of inputs and a TLE, and returns the corresponding state.
+    In particular, multiple behaviors are supported:
+    - if a single TLE is provided, then the function returns the state of the satellite at the requested time(s)
+    - if a list of TLEs is provided, then the function returns the state of each satellite at the requested times
+
+    In the second case, the length of the list of TLEs must be equal to the length of the tensor of times.
+
+    Args:
+        - tle_sat (``list`` or ``dsgp4.tle.TLE``): list of TLE objects or TLE object to be propagated
+        - tsince (``torch.tensor``): propagation time in minutes (it has to be a tensor of the same size of the list, in case a list of TLEs is passed)
+        - initialized (``bool``): whether the TLEs have been initialized or not (default: True)
 
     Returns:
         - state (``torch.tensor``): (2x3) tensor representing position and velocity in km and km/s.
     """
-    from .sgp4init import sgp4init
     from .sgp4 import sgp4
-    whichconst=get_gravity_constants(gravity_constant_name)
-    sgp4init(whichconst=whichconst,
-                        opsmode='i',
-                        satn=tle_sat.satellite_catalog_number,
-                        epoch=(tle_sat._jdsatepoch+tle_sat._jdsatepochF)-2433281.5,
-                        xbstar=x[0],
-                        xndot=x[1],
-                        xnddot=x[2],
-                        xecco=x[3],
-                        xargpo=x[4],
-                        xinclo=x[5],
-                        xmo=x[6],
-                        xno_kozai=x[7],
-                        xnodeo=x[8],
-                        satellite=tle_sat)
-    state=sgp4(tle_sat, tsince*torch.ones(1,1))
+    if not initialized:
+        initialize_tle(tle)
+    state=sgp4(tle, tsinces)
     return state
+
+def initialize_tle(tles,gravity_constant_name="wgs-84",with_grad=False):
+    """
+    This function takes a single `dsgp4.tle.TLE` object or a list of `dsgp4.tle.TLE` objects and initializes the SGP4 propagator.
+    This is a necessary step to be ran before propagating TLEs (e.g. before calling `propagate` function).
+
+    Args:
+        - tles (``dsgp4.tle.TLE`` or ``list`` of ``dsgp4.tle.TLE``): TLE object or list of TLE objects to be initialized
+        - gravity_constant_name (``str``): name of the gravity constant to be used (default: "wgs-84")    
+        - with_grad (``bool``): whether to use gradients or not (default: False)
+    
+    Returns:
+        - tle_elements (``torch.tensor``): tensor of TLE parameters (especially useful to retrieve gradients, when `with_grad` is `True`)
+    """
+    from .sgp4init import sgp4init
+    whichconst=get_gravity_constants(gravity_constant_name)
+    if isinstance(tles,list):
+        tle_elements=[]#torch.zeros((len(tles),9),requires_grad=with_grad)
+        for i, tle in enumerate(tles):      
+            x=torch.tensor([tle._bstar,
+                        tle._ndot,
+                        tle._nddot,
+                        tle._ecco,
+                        tle._argpo,
+                        tle._inclo,
+                        tle._mo,
+                        tle._no_kozai,
+                        tle._nodeo
+                        ],requires_grad=with_grad)
+            sgp4init(whichconst=whichconst,
+                                opsmode='i',
+                                satn=tle.satellite_catalog_number,
+                                epoch=(tle._jdsatepoch+tle._jdsatepochF)-2433281.5,
+                                xbstar=x[0],
+                                xndot=x[1],
+                                xnddot=x[2],
+                                xecco=x[3],
+                                xargpo=x[4],
+                                xinclo=x[5],
+                                xmo=x[6],
+                                xno_kozai=x[7],
+                                xnodeo=x[8],
+                                satellite=tle)
+            tle_elements.append(x)
+    else:
+        tle_elements=torch.tensor([tles._bstar,
+                                    tles._ndot,
+                                    tles._nddot,
+                                    tles._ecco,
+                                    tles._argpo,
+                                    tles._inclo,
+                                    tles._mo,
+                                    tles._no_kozai,
+                                    tles._nodeo
+                                    ],requires_grad=with_grad)
+        sgp4init(whichconst=whichconst,
+                            opsmode='i',
+                            satn=tles.satellite_catalog_number,
+                            epoch=(tles._jdsatepoch+tles._jdsatepochF)-2433281.5,
+                            xbstar=tle_elements[0],
+                            xndot=tle_elements[1],
+                            xnddot=tle_elements[2],
+                            xecco=tle_elements[3],
+                            xargpo=tle_elements[4],
+                            xinclo=tle_elements[5],
+                            xmo=tle_elements[6],
+                            xno_kozai=tle_elements[7],
+                            xnodeo=tle_elements[8],
+                            satellite=tles)
+    return tle_elements
 
 def from_year_day_to_date(y,d):
     return (datetime.datetime(y, 1, 1) + datetime.timedelta(d - 1))

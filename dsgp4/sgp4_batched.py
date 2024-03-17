@@ -18,7 +18,8 @@ def sgp4_batched(satellite, tsince):
         - batch_state (``torch.tensor``): a batch of 2x3 tensors, where the first row represents the spacecraft
                                     position (in km) and the second the spacecraft velocity (in km/s)
     """
-
+    if not hasattr(satellite[0], '_radiusearthkm'):
+        raise AttributeError('It looks like the satellite has not been initialized. Please use the `initialize_tle` method or directly `sgp4init` to initialize the satellite. Otherwise, if you are propagating, another option is to use `dsgp4.propagate` and pass `initialized=True` in the arguments.')
     if not isinstance(satellite, list):
         raise ValueError("satellite should be a list of TLE objects.")
     if not torch.is_tensor(tsince):
@@ -26,7 +27,7 @@ def sgp4_batched(satellite, tsince):
     if tsince.ndim!=1:
         raise ValueError("tsince should be a one dimensional tensor.")
     if len(tsince)!=len(satellite):
-        raise ValueError("tsince and satellite shall be of same length.")
+        raise ValueError("in batch mode, tsince and satellite shall be of same length.")
     
     batch_size = len(satellite)
         
