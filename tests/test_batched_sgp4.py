@@ -11,6 +11,8 @@ error_string="Error: deep space propagation not supported (yet). The provided sa
 an orbital period above 225 minutes. If you want to let us know you need it or you want to \
 contribute to implement it, open a PR or raise an issue at: https://github.com/esa/dSGP4."
 
+error_string_isimp="isimp == 1 not supported in batch mode."
+
 class UtilTestCase(unittest.TestCase):
     def test_sgp4_batched(self):
         lines=file.splitlines()
@@ -34,7 +36,7 @@ class UtilTestCase(unittest.TestCase):
                     tsinces_batch+=[tsinces]
                     out_non_batched+=[dsgp4.propagate(tle,tsinces)]
             except Exception as e:
-                    self.assertTrue((str(e).split()==error_string.split()))
+                    self.assertTrue((str(e).split()==error_string.split()) or ((str(e).split()==error_string_isimp.split())))
         tsinces_batch=torch.cat(tsinces_batch)
         out_non_batched=torch.cat(out_non_batched)
         #we batch propagate all TLEs at all required times:

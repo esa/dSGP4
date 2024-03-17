@@ -1,6 +1,6 @@
 import numpy
 import torch
-torch.set_default_dtype(torch.float64)
+from .tle import TLE
 
 #@torch.jit.script
 def sgp4(satellite, tsince):
@@ -19,6 +19,8 @@ def sgp4(satellite, tsince):
                                     position (in km) and the second the spacecraft velocity (in km/s). Reference frame is TEME.
     """
     #quick check to see if the satellite has been initialized
+    if not isinstance(satellite, TLE):
+        raise TypeError('The satellite object should be a dsgp4.tle.TLE object.')
     if not hasattr(satellite, '_radiusearthkm'):
         raise AttributeError('It looks like the satellite has not been initialized. Please use the `initialize_tle` method or directly `sgp4init` to initialize the satellite. Otherwise, if you are propagating, another option is to use `dsgp4.propagate` and pass `initialized=True` in the arguments.')
     #in case an int, float or list are passed, convert them to torch.tensor

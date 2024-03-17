@@ -1,6 +1,5 @@
 import numpy as np
 import torch
-import datetime
 from .sgp4 import sgp4
 from .sgp4init import sgp4init
 from . import util
