@@ -1,4 +1,4 @@
-dSGP4 Documentation
+$\partial\textrm{SGP4}$ Documentation
 ================================
 
 **dsgp4** is a differentiable SGP4 program written leveraging the [PyTorch](https://pytorch.org/) machine learning framework: this enables features like automatic differentiation and batch propagation (across different TLEs) that were not previously available in the original implementation.

@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = "dsgp4"
-copyright = "2022, 2023, Giacomo Acciarini and Atılım Güneş Baydin and Dario Izzo"
+copyright = "2022, 2023, 2024, Giacomo Acciarini and Atılım Güneş Baydin and Dario Izzo"
 author = "Giacomo Acciarini, Atılım Güneş Baydin, Dario Izzo"
 
 # The full version, including alpha/beta/rc tags
