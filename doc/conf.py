@@ -81,7 +81,8 @@ html_theme_options = {
 nb_execution_mode = "force"
 
 nb_execution_excludepatterns = [
-    "gradient_based_optimization.ipynb"
+    "gradient_based_optimization.ipynb",
+    "tle_propagation.ipynb"
 ]
 
 latex_engine = "xelatex"
