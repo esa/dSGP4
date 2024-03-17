@@ -5,6 +5,7 @@ import sgp4
 import sgp4.io
 import torch
 import unittest
+from dsgp4.newton_method import _propagate
 
 error_string="Error: deep space propagation not supported (yet). The provided satellite has \
 an orbital period above 225 minutes. If you want to let us know you need it or you want to \
@@ -62,7 +63,7 @@ class UtilTestCase(unittest.TestCase):
                             tle._no_kozai,
                             tle._nodeo])
             t=torch.tensor(time,requires_grad=True)
-            fun=lambda tt: dsgp4.util.propagate(x0,tle,tt)
+            fun=lambda tt: _propagate(x0,tle,tt)
 
 
             t1=dsgp4.util.clone_w_grad(t)
@@ -124,7 +125,7 @@ class UtilTestCase(unittest.TestCase):
 
         for tle in tles_filtered[:50]:
             time=random.random()*30
-            fun=lambda xx: dsgp4.util.propagate(xx,tle,time)
+            fun=lambda xx: _propagate(xx,tle,time)
             #I create 6 copies of the inputs to be used for each function (three
             #position and three velocity coordinates)
             x0=torch.tensor([tle._bstar,
