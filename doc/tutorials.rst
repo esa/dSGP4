@@ -24,4 +24,3 @@ for more complex tasks.
   :maxdepth: 1
 
   notebooks/gradient_based_optimization.ipynb
-  
