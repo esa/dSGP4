@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Similarity Transformation - from Cartesian to TLE Covariance &#8212; dsgp4 0.1.0 documentation</title>
+    <title>Similarity Transformation - from Cartesian to TLE Covariance &#8212; dsgp4 0.1.1 documentation</title>
   
   
   
@@ -410,13 +410,13 @@ document.write(`
 <li><p>first convert the RTN covariance into TEME</p></li>
 <li><p>then leverage <code class="docutils literal notranslate"><span class="pre">dsgp4</span></code> to transform the covariance matrix from position and velocity coordinates to TLE elements, leveraging the similarity transformation:</p></li>
 </ul>
-<div class="amsmath math notranslate nohighlight" id="equation-4d24aa31-f00e-4a8a-b4e4-f2afc327b049">
-<span class="eqno">(1)<a class="headerlink" href="#equation-4d24aa31-f00e-4a8a-b4e4-f2afc327b049" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-1eac0572-ec36-4443-9b25-01e65b1034b6">
+<span class="eqno">(1)<a class="headerlink" href="#equation-1eac0572-ec36-4443-9b25-01e65b1034b6" title="Permalink to this equation">#</a></span>\[\begin{equation}
 P_{y} = m P_x m^T\text{,}
 \end{equation}\]</div>
 <p>where:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-7243e22d-4a5b-48a8-b629-f45af65fe598">
-<span class="eqno">(2)<a class="headerlink" href="#equation-7243e22d-4a5b-48a8-b629-f45af65fe598" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-4da32ab0-0c83-4397-ad0d-c7a05936f0d1">
+<span class="eqno">(2)<a class="headerlink" href="#equation-4da32ab0-0c83-4397-ad0d-c7a05936f0d1" title="Permalink to this equation">#</a></span>\[\begin{equation}
 m_{ij}=\dfrac{\partial y_i}{\partial x_j}
 \end{equation}\]</div>
 <ul class="simple">
