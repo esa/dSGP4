@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Covariance Propagation &#8212; dsgp4 0.1.1 documentation</title>
+    <title>Covariance Propagation &#8212; dsgp4 0.1.2 documentation</title>
   
   
   
@@ -382,8 +382,8 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="covariance-propagation">
 <h1>Covariance Propagation<a class="headerlink" href="#covariance-propagation" title="Permalink to this heading">#</a></h1>
 <p>In this notebook, we discuss how to use <code class="docutils literal notranslate"><span class="pre">dsgp4</span></code> to apply the first order approximation for propagating a covariance matrix:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-7fbf6fda-9643-450e-851d-d34a2ef64f07">
-<span class="eqno">(1)<a class="headerlink" href="#equation-7fbf6fda-9643-450e-851d-d34a2ef64f07" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-57c54a31-d506-4c9d-96ec-dc086ca7d8df">
+<span class="eqno">(1)<a class="headerlink" href="#equation-57c54a31-d506-4c9d-96ec-dc086ca7d8df" title="Permalink to this equation">#</a></span>\[\begin{equation}
 P_{\pmb{x}_f}=\dfrac{\partial \pmb{x}}{\partial \textrm{TLE}_0}  P_{\textrm{TLE}_{0}}\dfrac{\partial \pmb{x}}{\partial \textrm{TLE}_0}^T\text{,}
 \end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\textrm{TLE}_0\)</span> is the initial TLE, at time <span class="math notranslate nohighlight">\(t_0\)</span>, and <span class="math notranslate nohighlight">\(\pmb{x}\)</span> is the state vector in Cartesian TEME, at a certain propagation time <span class="math notranslate nohighlight">\(t_f\)</span>.</p>
