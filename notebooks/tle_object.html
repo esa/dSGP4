@@ -1,0 +1,690 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>TLE Object &#8212; dsgp4 0.1.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/tle_object';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Propagate TLEs with \(\partial\textrm{SGP4}\)" href="tle_propagation.html" />
+    <link rel="prev" title="Tutorials" href="../tutorials.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo_dsgp4.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/logo_dsgp4.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../capabilities.html">Capabilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../tutorials.html">Tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">TLE Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tle_propagation.html">Propagate TLEs with <span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgp4_partial_derivatives.html"><span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span> Autodiff Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="covariance_transformation.html">Similarity Transformation - from Cartesian to TLE Covariance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="covariance_propagation.html">Covariance Propagation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gradient_based_optimization.html">Gradient Based Optimization</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="simple">
+</ul>
+</li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/esa/dSGP4/master?urlpath=lab/tree/doc/notebooks/tle_object.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/esa/dSGP4" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/esa/dSGP4/issues/new?title=Issue%20on%20page%20%2Fnotebooks/tle_object.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/tle_object.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>TLE Object</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-tle-from-str">Load TLE from <code class="docutils literal notranslate"><span class="pre">str</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-tle-from-dic">Load TLE from <code class="docutils literal notranslate"><span class="pre">dic</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-tles-from-file">Load TLEs from file:</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="tle-object">
+<h1>TLE Object<a class="headerlink" href="#tle-object" title="Permalink to this heading">#</a></h1>
+<p>In this notebook we will discuss the usage of the TLE object: this allows the user to create a TLE object from a string or file.</p>
+<p>The TLE class then allows easy manipulation and update of the TLE values, as well as the interface with the dSGP4 propagator (for a tutorial on the propagation see: ).</p>
+<section id="imports">
+<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dsgp4</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="load-tle-from-str">
+<h2>Load TLE from <code class="docutils literal notranslate"><span class="pre">str</span></code><a class="headerlink" href="#load-tle-from-str" title="Permalink to this heading">#</a></h2>
+<p>Here, we show how to load TLEs from a list of strings:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#let us assume we have the following two lines for the TLE, plus the first line that indicates the satellite name:</span>
+<span class="n">tle_lines</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">tle_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;0 TIMATION 1&#39;</span><span class="p">)</span>
+<span class="n">tle_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;1  2847U 67053E   24063.46171465  .00000366  00000-0  27411-3 0  9994&#39;</span><span class="p">)</span>
+<span class="n">tle_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;2  2847  69.9643 216.8651 0003597  77.7866 282.3646 14.02285835897007&#39;</span><span class="p">)</span>
+
+<span class="c1">#let us construct the TLE object</span>
+<span class="n">tle</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">tle</span><span class="o">.</span><span class="n">TLE</span><span class="p">(</span><span class="n">tle_lines</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tle</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TLE(
+0 TIMATION 1
+1  2847U 67053E   24063.46171465  .00000366  00000-0  27411-3 0  9994
+2  2847  69.9643 216.8651 0003597  77.7866 282.3646 14.02285835897007
+)
+</pre></div>
+</div>
+</div>
+</div>
+<p>All right, we can now access the TLE info as if it was a dictionary, or as attributes of the class:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#let&#39;s print all TLE elements:</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;TLE elements:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Satellite catalog number: </span><span class="si">{</span><span class="n">tle</span><span class="o">.</span><span class="n">satellite_catalog_number</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Classification: </span><span class="si">{</span><span class="n">tle</span><span class="o">.</span><span class="n">classification</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;International designator: </span><span class="si">{</span><span class="n">tle</span><span class="o">.</span><span class="n">international_designator</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch year: </span><span class="si">{</span><span class="n">tle</span><span class="o">.</span><span class="n">epoch_year</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch day: </span><span class="si">{</span><span class="n">tle</span><span class="o">.</span><span class="n">epoch_days</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;First time derivative of the mean motion: </span><span class="si">{</span><span class="n">tle</span><span class="o">.</span><span class="n">_ndot</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Second time derivative of the mean motion: </span><span class="si">{</span><span class="n">tle</span><span class="o">.</span><span class="n">_nddot</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BSTAR drag term: </span><span class="si">{</span><span class="n">tle</span><span class="o">.</span><span class="n">_bstar</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Element set number: </span><span class="si">{</span><span class="n">tle</span><span class="o">.</span><span class="n">element_number</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Inclination [rad]: </span><span class="si">{</span><span class="n">tle</span><span class="o">.</span><span class="n">_inclo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Right ascension of the ascending node [rad]: </span><span class="si">{</span><span class="n">tle</span><span class="o">.</span><span class="n">_nodeo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Eccentricity [-]: </span><span class="si">{</span><span class="n">tle</span><span class="o">.</span><span class="n">_ecco</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Argument of perigee [rad]: </span><span class="si">{</span><span class="n">tle</span><span class="o">.</span><span class="n">_argpo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Right ascension of ascending node [rad]: </span><span class="si">{</span><span class="n">tle</span><span class="o">.</span><span class="n">_nodeo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean anomaly [rad]: </span><span class="si">{</span><span class="n">tle</span><span class="o">.</span><span class="n">_mo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean motion [rad/min]: </span><span class="si">{</span><span class="n">tle</span><span class="o">.</span><span class="n">_no_kozai</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TLE elements:
+Satellite catalog number: 2847
+Classification: U
+International designator: 67053E
+Epoch year: 2024
+Epoch day: 63.46171465
+First time derivative of the mean motion: 1.1090112955380637e-11
+Second time derivative of the mean motion: 0.0
+BSTAR drag term: 0.00027411000000000004
+Element set number: 999
+Inclination [rad]: 1.2211073938530685
+Right ascension of the ascending node [rad]: 3.785010027666755
+Eccentricity [-]: 0.0003597
+Argument of perigee [rad]: 1.3576322839318213
+Right ascension of ascending node [rad]: 3.785010027666755
+Mean anomaly [rad]: 4.928191961076781
+Mean motion [rad/min]: 0.061186262187069844
+</pre></div>
+</div>
+</div>
+</div>
+<p>We also have access to a few perhaps handy methods:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#let&#39;s first define the Earth radius according to WSG-84:</span>
+<span class="n">r_earth</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">get_gravity_constants</span><span class="p">(</span><span class="s1">&#39;wgs-84&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">*</span><span class="mf">1e3</span>
+
+<span class="c1">#let&#39;s extract the semi-major axis:</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Semi-major axis [km]: </span><span class="si">{</span><span class="n">tle</span><span class="o">.</span><span class="n">semi_major_axis</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">*</span><span class="mf">1e-3</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1">#let&#39;s extract the TLE apogee &amp; perigee altitudes:</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Apogee radius [km]: </span><span class="si">{</span><span class="n">tle</span><span class="o">.</span><span class="n">apogee_alt</span><span class="p">(</span><span class="n">r_earth</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">*</span><span class="mf">1e-3</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Perigee radius [km]: </span><span class="si">{</span><span class="n">tle</span><span class="o">.</span><span class="n">perigee_alt</span><span class="p">(</span><span class="n">r_earth</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">*</span><span class="mf">1e-3</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Semi-major axis [km]: 7264.027802311157
+Apogee radius [km]: 888.5036731116484
+Perigee radius [km]: 883.2779315106654
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="load-tle-from-dic">
+<h2>Load TLE from <code class="docutils literal notranslate"><span class="pre">dic</span></code><a class="headerlink" href="#load-tle-from-dic" title="Permalink to this heading">#</a></h2>
+<p>Here, we show how to load TLEs from a dictionary. First, let’s define the TLE elements in a dictionary:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tle_dictionary</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">satellite_catalog_number</span><span class="o">=</span><span class="mi">43437</span><span class="p">,</span>
+                    <span class="n">classification</span><span class="o">=</span><span class="s1">&#39;U&#39;</span><span class="p">,</span>
+                    <span class="n">international_designator</span><span class="o">=</span><span class="s1">&#39;18100A&#39;</span><span class="p">,</span>
+                    <span class="n">epoch_year</span><span class="o">=</span><span class="mi">2020</span><span class="p">,</span>
+                    <span class="n">epoch_days</span><span class="o">=</span><span class="mf">143.90384230</span><span class="p">,</span>
+                    <span class="n">ephemeris_type</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                    <span class="n">element_number</span><span class="o">=</span><span class="mi">9996</span><span class="p">,</span>
+                    <span class="n">revolution_number_at_epoch</span><span class="o">=</span><span class="mi">56353</span><span class="p">,</span>
+                    <span class="n">mean_motion</span><span class="o">=</span><span class="mf">0.0011</span><span class="p">,</span>
+                    <span class="n">mean_motion_first_derivative</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                    <span class="n">mean_motion_second_derivative</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                    <span class="n">eccentricity</span><span class="o">=</span><span class="mf">0.0221</span><span class="p">,</span>
+                    <span class="n">inclination</span><span class="o">=</span><span class="mf">1.7074</span><span class="p">,</span>
+                    <span class="n">argument_of_perigee</span><span class="o">=</span><span class="mf">2.1627</span><span class="p">,</span>
+                    <span class="n">raan</span><span class="o">=</span><span class="mf">4.3618</span><span class="p">,</span>
+                    <span class="n">mean_anomaly</span><span class="o">=</span><span class="mf">4.5224</span><span class="p">,</span>
+                    <span class="n">b_star</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#now the same API as above applies:</span>
+<span class="n">tle</span> <span class="o">=</span> <span class="n">dsgp4</span><span class="o">.</span><span class="n">tle</span><span class="o">.</span><span class="n">TLE</span><span class="p">(</span><span class="n">tle_dictionary</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tle</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TLE(
+1 43437U 18100A   20143.90384230  .00000000  00000-0  10000-3 0 99960
+2 43437  97.8268 249.9127 0221000 123.9136 259.1144 15.12608579563539
+)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="load-tles-from-file">
+<h2>Load TLEs from file:<a class="headerlink" href="#load-tles-from-file" title="Permalink to this heading">#</a></h2>
+<p>Here, we load the TLEs directly from file. We assume the user has downloaded the TLE data, for instance from <a class="reference external" href="https://www.space-track.org/">Space-Track</a>, and has placed such data in the <code class="docutils literal notranslate"><span class="pre">example.tle</span></code> file.</p>
+<p>Then, we can simply load all TLEs using <code class="docutils literal notranslate"><span class="pre">dsgp4</span></code>. This will construct a list of TLE objects:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The TLE file can or cannot contain the extra descriptive line that specifies the TLE name. The following lines will should either way.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tles</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">tle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;example.tle&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tles</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[TLE(
+0 COSMOS 2251 DEB
+1 34454U 93036SX  22068.91971155  .00000319  00000-0  11812-3 0  9996
+2 34454  74.0583 280.7094 0037596 327.9100  31.9764 14.35844873683320
+), TLE(
+0 COSMOS 2251 DEB
+1 34456U 93036SZ  22068.85349922  .00005488  00000-0  13805-2 0  9997
+2 34456  74.0462 226.5559 0056524 251.9784 107.5213 14.50477917685046
+), TLE(
+0 COSMOS 2251 DEB
+1 34457U 93036TA  22068.86184197  .00003162  00000-0  55362-3 0  9992
+2 34457  74.0015 304.7929 0101048  52.3409  79.2774 14.64945713693281
+)]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../tutorials.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Tutorials</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="tle_propagation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Propagate TLEs with <span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span></p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-tle-from-str">Load TLE from <code class="docutils literal notranslate"><span class="pre">str</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-tle-from-dic">Load TLE from <code class="docutils literal notranslate"><span class="pre">dic</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-tles-from-file">Load TLEs from file:</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Giacomo Acciarini, Atılım Güneş Baydin, Dario Izzo
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022, 2023, 2024, Giacomo Acciarini and Atılım Güneş Baydin and Dario Izzo.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

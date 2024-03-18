@@ -3,7 +3,7 @@
 API
 ====
 
-dSGP4 API
+$\partial\textrm{SGP4}$ API
 
 .. toctree::
    :maxdepth: 2

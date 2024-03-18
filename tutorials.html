@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Tutorials &#8212; dsgp4 0.0.3 documentation</title>
+    <title>Tutorials &#8212; dsgp4 0.1.0 documentation</title>
   
   
   
@@ -47,7 +47,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Gradient Based Optimization" href="notebooks/gradient_based_optimization.html" />
+    <link rel="next" title="TLE Object" href="notebooks/tle_object.html" />
     <link rel="prev" title="Credits" href="credits.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -140,6 +140,11 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/tle_object.html">TLE Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/tle_propagation.html">Propagate TLEs with <span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/sgp4_partial_derivatives.html"><span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span> Autodiff Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/covariance_transformation.html">Similarity Transformation - from Cartesian to TLE Covariance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/covariance_propagation.html">Covariance Propagation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="notebooks/gradient_based_optimization.html">Gradient Based Optimization</a></li>
 </ul>
 </li>
@@ -357,6 +362,13 @@ document.write(`
 <section id="basics">
 <h2>Basics<a class="headerlink" href="#basics" title="Permalink to this heading">#</a></h2>
 <p>These tutorials include some basic examples on how to use dSGP4 for simple tasks.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/tle_object.html">TLE Object</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/tle_propagation.html">Propagate TLEs with <span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/sgp4_partial_derivatives.html"><span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span> Autodiff Support</a></li>
+</ul>
+</div>
 </section>
 <section id="advanced">
 <h2>Advanced<a class="headerlink" href="#advanced" title="Permalink to this heading">#</a></h2>
@@ -364,6 +376,8 @@ document.write(`
 for more complex tasks.</p>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/covariance_transformation.html">Similarity Transformation - from Cartesian to TLE Covariance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/covariance_propagation.html">Covariance Propagation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks/gradient_based_optimization.html">Gradient Based Optimization</a></li>
 </ul>
 </div>
@@ -392,11 +406,11 @@ for more complex tasks.</p>
       </div>
     </a>
     <a class="right-next"
-       href="notebooks/gradient_based_optimization.html"
+       href="notebooks/tle_object.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Gradient Based Optimization</p>
+        <p class="prev-next-title">TLE Object</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -443,7 +457,7 @@ By Giacomo Acciarini, Atılım Güneş Baydin, Dario Izzo
     
   <p class="copyright">
     
-      © Copyright 2022, 2023, Giacomo Acciarini and Atılım Güneş Baydin and Dario Izzo.
+      © Copyright 2022, 2023, 2024, Giacomo Acciarini and Atılım Güneş Baydin and Dario Izzo.
       <br/>
     
   </p>

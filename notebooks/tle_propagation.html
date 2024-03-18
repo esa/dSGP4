@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Gradient Based Optimization &#8212; dsgp4 0.1.0 documentation</title>
+    <title>Propagate TLEs with \(\partial\textrm{SGP4}\) &#8212; dsgp4 0.1.0 documentation</title>
   
   
   
@@ -46,11 +46,11 @@
     <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/gradient_based_optimization';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/tle_propagation';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="API" href="../api.html" />
-    <link rel="prev" title="Covariance Propagation" href="covariance_propagation.html" />
+    <link rel="next" title="\(\partial\textrm{SGP4}\) Autodiff Support" href="sgp4_partial_derivatives.html" />
+    <link rel="prev" title="TLE Object" href="tle_object.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -143,11 +143,11 @@
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../tutorials.html">Tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="tle_object.html">TLE Object</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tle_propagation.html">Propagate TLEs with <span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span></a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Propagate TLEs with <span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span></a></li>
 <li class="toctree-l2"><a class="reference internal" href="sgp4_partial_derivatives.html"><span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span> Autodiff Support</a></li>
 <li class="toctree-l2"><a class="reference internal" href="covariance_transformation.html">Similarity Transformation - from Cartesian to TLE Covariance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="covariance_propagation.html">Covariance Propagation</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Gradient Based Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gradient_based_optimization.html">Gradient Based Optimization</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="simple">
@@ -207,7 +207,7 @@
       
       
       
-      <li><a href="https://mybinder.org/v2/gh/esa/dSGP4/master?urlpath=lab/tree/doc/notebooks/gradient_based_optimization.ipynb" target="_blank"
+      <li><a href="https://mybinder.org/v2/gh/esa/dSGP4/master?urlpath=lab/tree/doc/notebooks/tle_propagation.ipynb" target="_blank"
    class="btn btn-sm dropdown-item"
    title="Launch onBinder"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -255,7 +255,7 @@
       
       
       
-      <li><a href="https://github.com/esa/dSGP4/issues/new?title=Issue%20on%20page%20%2Fnotebooks/gradient_based_optimization.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/esa/dSGP4/issues/new?title=Issue%20on%20page%20%2Fnotebooks/tle_propagation.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -285,7 +285,7 @@
       
       
       
-      <li><a href="../_sources/notebooks/gradient_based_optimization.ipynb" target="_blank"
+      <li><a href="../_sources/notebooks/tle_propagation.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -367,7 +367,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Gradient Based Optimization</h1>
+    <h1>Propagate TLEs with \partial\textrm{SGP4}</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -377,7 +377,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-description">Problem description:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#single-tle-propagation">Single TLE propagation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-tle-propagation">Batch TLE propagation</a></li>
 </ul>
             </nav>
         </div>
@@ -389,103 +390,119 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="gradient-based-optimization">
-<h1>Gradient Based Optimization<a class="headerlink" href="#gradient-based-optimization" title="Permalink to this heading">#</a></h1>
-<section id="problem-description">
-<h2>Problem description:<a class="headerlink" href="#problem-description" title="Permalink to this heading">#</a></h2>
-<p>We have a TLE at a given time, which we call TLE<span class="math notranslate nohighlight">\(_{0}\)</span>, and we look for a TLE at a future observation time (<span class="math notranslate nohighlight">\(t_{obs}\)</span>): TLE<span class="math notranslate nohighlight">\(_{t}\)</span>.</p>
-<p>We can propagate the state from <span class="math notranslate nohighlight">\(t_0 \rightarrow t_{obs}\)</span>, and obtain the state at <span class="math notranslate nohighlight">\(t_{obs}\)</span>. In general, we define the state (i.e., position and velocity), as:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-232b793f-e679-47a6-b965-81d5dec85f9c">
-<span class="eqno">(1)<a class="headerlink" href="#equation-232b793f-e679-47a6-b965-81d5dec85f9c" title="Permalink to this equation">#</a></span>\[\begin{equation}
-\vec{x}(t)=[x(t), y(t), z(t), \dot{x}(t), \dot{y}(t), \dot{z}(t)]^T
-\end{equation}\]</div>
-<p>We then have: TLE<span class="math notranslate nohighlight">\(_0\)</span>, <span class="math notranslate nohighlight">\(\vec{x}(t_0)\)</span>, and <span class="math notranslate nohighlight">\(\vec{x}(t_{obs})\)</span>, but we want to find TLE<span class="math notranslate nohighlight">\(_{obs}\)</span>. That is, the TLE at the observation time, that when propagated with SGP4 at its time, it corresponds to that <span class="math notranslate nohighlight">\(\vec{x}(t_{obs})\)</span>. In general, this means that we are able to invert from the state to the TLE, at any given time.</p>
-<p>In order to do this, we formulate the problem as looking for the minimum of a function of a free variables vector (i.e., <span class="math notranslate nohighlight">\(\vec{y}\)</span>) <span class="math notranslate nohighlight">\(F(\vec{y})\)</span>, where this function defines the difference between the given state propagated from TLE<span class="math notranslate nohighlight">\(_0\)</span> at <span class="math notranslate nohighlight">\(t_{obs}\)</span>, and the state generated from the free variables that make a TLE which is then propagated at its current time: TLE<span class="math notranslate nohighlight">\((\vec{y})(t_{0}\rightarrow t_{obs})\)</span>. So we can reformulate the problem as:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-b3c88eef-9876-4834-95e9-530f01faa828">
-<span class="eqno">(2)<a class="headerlink" href="#equation-b3c88eef-9876-4834-95e9-530f01faa828" title="Permalink to this equation">#</a></span>\[\begin{align}
-\textrm{given}: &amp; \ \textrm{TLE}_0, \vec{x}_0\\
-\textrm{find}: &amp; \ \vec{y}\\
-\textrm{that minimize}: &amp; F(\vec{y})=|SGP4(\textrm{TLE}(\vec{y}),t_{obs})-\vec{x}(t_{obs})| =|\vec{\tilde{x}}(t_{obs})-\vec{x}(t_{obs})|
-\end{align}\]</div>
-<p>We can do this via Newton method, by updating an initial guess <span class="math notranslate nohighlight">\(y_{0}\)</span> until convergence. Where the update is done as follows:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-9dbf8d28-579a-4332-a2d1-43860ceb4de8">
-<span class="eqno">(3)<a class="headerlink" href="#equation-9dbf8d28-579a-4332-a2d1-43860ceb4de8" title="Permalink to this equation">#</a></span>\[\begin{equation}
-y_{k+1}=y_{k}-DF^{-1}(y_k)F(y_k)
-\end{equation}\]</div>
-<p>with <span class="math notranslate nohighlight">\(DF\)</span> the Jacobian of <span class="math notranslate nohighlight">\(F\)</span> with respect to <span class="math notranslate nohighlight">\(y_k\)</span>. We can easily see that this Jacobian is made of the following elements:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-903d7443-63e1-4751-9980-234d835c9195">
-<span class="eqno">(4)<a class="headerlink" href="#equation-903d7443-63e1-4751-9980-234d835c9195" title="Permalink to this equation">#</a></span>\[\begin{equation}
-DF_{ij}=\dfrac{\partial \tilde{x}_{i}}{\partial y_{j}}|_{y_k}
-\end{equation}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\tilde{x}_{i} \in [\tilde{x}_1,\tilde{x}_2,\tilde{x}_3,\tilde{x}_4,\tilde{x}_5,\tilde{x}_6]=[\tilde{x},\tilde{y},\tilde{z},\tilde{\dot{x}},\tilde{\dot{y}},\tilde{\dot{z}}]\)</span>; and <span class="math notranslate nohighlight">\(y_i \in [no_{kozai}, ecco, inclo, mo, argpo, nodeo, n_{dot},n_{ddot},B^*]\)</span>.</p>
-<p>Since we built a differentiable SGP4, we can compute the gradient of the state w.r.t. the TLE inputs quite easily. Furthermore, the initial guess (<span class="math notranslate nohighlight">\(y_{0}\)</span>) will be found by the simple inversion from Cartesian to Keplerian, which does not correctly invert from state to TLE, but it is good as initial approximation.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="propagate-tles-with-partial-textrm-sgp4">
+<h1>Propagate TLEs with <span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span><a class="headerlink" href="#propagate-tles-with-partial-textrm-sgp4" title="Permalink to this heading">#</a></h1>
+<p>In this notebook, we show how to use <span class="math notranslate nohighlight">\(\partial \textrm{SGP4}\)</span> for the propagation of two-line elements (TLE) data</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dsgp4</span>
-<span class="n">tles</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">tle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="s2">&quot;example.tle&quot;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+</div>
+<section id="single-tle-propagation">
+<h2>Single TLE propagation<a class="headerlink" href="#single-tle-propagation" title="Permalink to this heading">#</a></h2>
+<p>First, we tackle the case in which we have a given TLE, and we would like to propagate it at future time(s).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#we load all TLEs:</span>
+<span class="n">tles</span> <span class="o">=</span> <span class="n">dsgp4</span><span class="o">.</span><span class="n">tle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;example.tle&quot;</span><span class="p">)</span>
+<span class="c1">#we only extract the first one:</span>
+<span class="n">my_tle</span> <span class="o">=</span> <span class="n">tles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#we initialize the TLEs</span>
-<span class="n">dsgp4</span><span class="o">.</span><span class="n">initialize_tle</span><span class="p">(</span><span class="n">tles</span><span class="p">);</span>
-<span class="c1">#we extract one:</span>
-<span class="n">my_tle</span><span class="o">=</span><span class="n">tles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#when I propagate to zero, I expect the returned TLE to be identical to my_tle:</span>
-<span class="n">found_tle</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">newton_method</span><span class="p">(</span><span class="n">tle_0</span><span class="o">=</span><span class="n">my_tle</span><span class="p">,</span><span class="n">time_mjd</span><span class="o">=</span><span class="n">my_tle</span><span class="o">.</span><span class="n">date_mjd</span><span class="p">,</span><span class="n">new_tol</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">,</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">my_tle</span><span class="p">,</span><span class="n">found_tle</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#we always have to initialize the TLE before we can use it. If that does not, it can be directly initialized during propagation (with a small performance penalty):</span>
+<span class="n">dsgp4</span><span class="o">.</span><span class="n">initialize_tle</span><span class="p">(</span><span class="n">my_tle</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>F(y): 2.7582159128252637e-14
-Solution found, at iter: 5
-TLE(
-0 COSMOS 2251 DEB
-1 34454U 93036SX  22068.91971155  .00000319  00000-0  11812-3 0  9996
-2 34454  74.0583 280.7094 0037596 327.9100  31.9764 14.35844873683320
-) TLE(
-1 34454U 93036SX  22068.91971967  .00000319  00000-0  11812-3 0  9997
-2 34454  74.0583 280.7094 0037596 327.9100  31.9764 14.35844873683320
-)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor([1.1812e-04, 9.6660e-12, 0.0000e+00, 3.7596e-03, 5.7231e+00, 1.2926e+00,
+        5.5809e-01, 6.2651e-02, 4.8993e+00])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In case the TLE has not been initialized, it is also possible to call the propagate method, and let it initialize it. For that, it is enough to pass the boolean flag <code class="docutils literal notranslate"><span class="pre">initialized</span></code> as <code class="docutils literal notranslate"><span class="pre">False</span></code> (otherwise, it defaults as <code class="docutils literal notranslate"><span class="pre">True</span></code>)</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#I propagate for 1 day:</span>
+<span class="n">tsinces</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">24</span><span class="o">*</span><span class="mi">60</span><span class="p">,</span><span class="mi">10000</span><span class="p">)</span>
+<span class="n">state_teme</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="n">my_tle</span><span class="p">,</span><span class="n">tsinces</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#I now propagate until 1000 minutes after</span>
-<span class="n">found_tle</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">newton_method</span><span class="p">(</span><span class="n">tle_0</span><span class="o">=</span><span class="n">my_tle</span><span class="p">,</span>
-                                 <span class="n">time_mjd</span><span class="o">=</span><span class="n">my_tle</span><span class="o">.</span><span class="n">date_mjd</span><span class="o">+</span><span class="mf">800.</span><span class="p">,</span>
-                                 <span class="n">new_tol</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">,</span>
-                                 <span class="n">max_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-<span class="c1">#Newton still converges, and the TLE is of course now different:</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">my_tle</span><span class="p">,</span> <span class="n">found_tle</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dsgp4</span><span class="o">.</span><span class="n">plot_orbit</span><span class="p">(</span><span class="n">state_teme</span><span class="p">,</span>
+                 <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightcoral&#39;</span><span class="p">,</span>
+                 <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;SATCAT n°: </span><span class="si">{</span><span class="n">my_tle</span><span class="o">.</span><span class="n">satellite_catalog_number</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>F(y): 4.547518096460396e-13
-Solution found, at iter: 7
-TLE(
-0 COSMOS 2251 DEB
-1 34454U 93036SX  22068.91971155  .00000319  00000-0  11812-3 0  9996
-2 34454  74.0583 280.7094 0037596 327.9100  31.9764 14.35844873683320
-) TLE(
-1 34454U 93036SX  24138.91971967  .00000319  00000-0  11812-3 0  9997
-2 34454  74.0583 254.2494 0037442 103.1744  22.5962 14.36399602683320
-)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes3D: xlabel=&#39;X [km]&#39;, ylabel=&#39;Y [km]&#39;, zlabel=&#39;Z [km]&#39;&gt;
 </pre></div>
 </div>
+<img alt="../_images/0f55a4b15dbfd62957a8084aa0161da148a2e7f751e04e1713b82a540ba309af.png" src="../_images/0f55a4b15dbfd62957a8084aa0161da148a2e7f751e04e1713b82a540ba309af.png" />
+</div>
+</div>
+</section>
+<section id="batch-tle-propagation">
+<h2>Batch TLE propagation<a class="headerlink" href="#batch-tle-propagation" title="Permalink to this heading">#</a></h2>
+<p>Here, we show how to to propagate batches of TLEs in parallel</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#we first need to prepare the data, the API requires that there are as many TLEs as times. Let us assume we want to</span>
+<span class="c1">#propagate each of the </span>
+<span class="n">tsinces</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">24</span><span class="o">*</span><span class="mi">60</span><span class="p">,</span><span class="mi">10000</span><span class="p">)]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">tles</span><span class="p">))</span>
+<span class="c1">#first let&#39;s initialize them:</span>
+<span class="n">dsgp4</span><span class="o">.</span><span class="n">initialize_tle</span><span class="p">(</span><span class="n">tles</span><span class="p">)</span>
+<span class="c1">#then let&#39;s construct the TLEs batch by making sure there are as many TLEs as times:</span>
+<span class="n">tles_batch</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">tle</span> <span class="ow">in</span> <span class="n">tles</span><span class="p">:</span>
+    <span class="n">tles_batch</span><span class="o">+=</span><span class="p">[</span><span class="n">tle</span><span class="p">]</span><span class="o">*</span><span class="mi">10000</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#we propagate the batch of 3,000 TLEs for 1 day:</span>
+<span class="n">states_teme</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">propagate_batch</span><span class="p">(</span><span class="n">tles_batch</span><span class="p">,</span><span class="n">tsinces</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Let&#39;s plot the first orbit:</span>
+<span class="n">ax</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">plot_orbit</span><span class="p">(</span><span class="n">states_teme</span><span class="p">[:</span><span class="mi">10000</span><span class="p">],</span>
+                    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightcoral&#39;</span><span class="p">,</span>
+                    <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;SATCAT n°:</span><span class="si">{</span><span class="n">tles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">satellite_catalog_number</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">plot_orbit</span><span class="p">(</span><span class="n">states_teme</span><span class="p">[</span><span class="mi">10000</span><span class="p">:</span><span class="mi">20000</span><span class="p">],</span>
+                    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> 
+                    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkkhaki&#39;</span><span class="p">,</span> 
+                    <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;SATCAT n°:</span><span class="si">{</span><span class="n">tles</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">satellite_catalog_number</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">plot_orbit</span><span class="p">(</span><span class="n">states_teme</span><span class="p">[</span><span class="mi">20000</span><span class="p">:],</span>
+                    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> 
+                    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightseagreen&#39;</span><span class="p">,</span> 
+                    <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;SATCAT n°:</span><span class="si">{</span><span class="n">tles</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">satellite_catalog_number</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/45620a7097029601417a8bda23079d8a9871f55aac18c277783355e29c177b94.png" src="../_images/45620a7097029601417a8bda23079d8a9871f55aac18c277783355e29c177b94.png" />
 </div>
 </div>
 </section>
@@ -504,20 +521,20 @@ TLE(
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="covariance_propagation.html"
+       href="tle_object.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Covariance Propagation</p>
+        <p class="prev-next-title">TLE Object</p>
       </div>
     </a>
     <a class="right-next"
-       href="../api.html"
+       href="sgp4_partial_derivatives.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">API</p>
+        <p class="prev-next-title"><span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span> Autodiff Support</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -539,7 +556,8 @@ TLE(
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-description">Problem description:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#single-tle-propagation">Single TLE propagation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-tle-propagation">Batch TLE propagation</a></li>
 </ul>
   </nav></div>
 

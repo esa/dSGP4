@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>dSGP4 Documentation &#8212; dsgp4 0.0.3 documentation</title>
+    <title>\(\partial\textrm{SGP4}\) Documentation &#8212; dsgp4 0.1.0 documentation</title>
   
   
   
@@ -44,6 +44,8 @@
     <script src="_static/doctools.js"></script>
     <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -139,6 +141,11 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="tutorials.html">Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/tle_object.html">TLE Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/tle_propagation.html">Propagate TLEs with <span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/sgp4_partial_derivatives.html"><span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span> Autodiff Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/covariance_transformation.html">Similarity Transformation - from Cartesian to TLE Covariance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/covariance_propagation.html">Covariance Propagation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="notebooks/gradient_based_optimization.html">Gradient Based Optimization</a></li>
 </ul>
 </li>
@@ -326,7 +333,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>dSGP4 Documentation</h1>
+    <h1>\partial\textrm{SGP4} Documentation</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -340,8 +347,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="dsgp4-documentation">
-<h1>dSGP4 Documentation<a class="headerlink" href="#dsgp4-documentation" title="Permalink to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="partial-textrm-sgp4-documentation">
+<h1><span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span> Documentation<a class="headerlink" href="#partial-textrm-sgp4-documentation" title="Permalink to this heading">#</a></h1>
 <p><strong>dsgp4</strong> is a differentiable SGP4 program written leveraging the <a class="reference external" href="https://pytorch.org/">PyTorch</a> machine learning framework: this enables features like automatic differentiation and batch propagation (across different TLEs) that were not previously available in the original implementation.</p>
 <p>The authors are <a class="reference external" href="https://www.esa.int/gsp/ACT/team/giacomo_acciarini/">Giacomo Acciarini</a>, <a class="reference external" href="https://gbaydin.github.io/">Atılım Güneş Baydin</a>, <a class="reference external" href="https://www.esa.int/gsp/ACT/team/dario_izzo/">Dario Izzo</a>. The main developer is Giacomo Acciarini (giacomo.acciarini&#64;gmail.com).</p>
 <div class="toctree-wrapper compound">
@@ -410,7 +417,7 @@ By Giacomo Acciarini, Atılım Güneş Baydin, Dario Izzo
     
   <p class="copyright">
     
-      © Copyright 2022, 2023, Giacomo Acciarini and Atılım Güneş Baydin and Dario Izzo.
+      © Copyright 2022, 2023, 2024, Giacomo Acciarini and Atılım Güneş Baydin and Dario Izzo.
       <br/>
     
   </p>

@@ -1,0 +1,746 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Similarity Transformation - from Cartesian to TLE Covariance &#8212; dsgp4 0.1.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/covariance_transformation';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Covariance Propagation" href="covariance_propagation.html" />
+    <link rel="prev" title="\(\partial\textrm{SGP4}\) Autodiff Support" href="sgp4_partial_derivatives.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo_dsgp4.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/logo_dsgp4.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../capabilities.html">Capabilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../tutorials.html">Tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tle_object.html">TLE Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tle_propagation.html">Propagate TLEs with <span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgp4_partial_derivatives.html"><span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span> Autodiff Support</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Similarity Transformation - from Cartesian to TLE Covariance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="covariance_propagation.html">Covariance Propagation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gradient_based_optimization.html">Gradient Based Optimization</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="simple">
+</ul>
+</li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/esa/dSGP4/master?urlpath=lab/tree/doc/notebooks/covariance_transformation.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/esa/dSGP4" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/esa/dSGP4/issues/new?title=Issue%20on%20page%20%2Fnotebooks/covariance_transformation.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/covariance_transformation.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Similarity Transformation - from Cartesian to TLE Covariance</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#covariance-transformation">Covariance Transformation</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="similarity-transformation-from-cartesian-to-tle-covariance">
+<h1>Similarity Transformation - from Cartesian to TLE Covariance<a class="headerlink" href="#similarity-transformation-from-cartesian-to-tle-covariance" title="Permalink to this heading">#</a></h1>
+<p>One obvious application of <code class="docutils literal notranslate"><span class="pre">dsgp4</span></code>, where the use of its differentiability can be useful, is for covariance transformation and propagation (see tutorial <code class="docutils literal notranslate"><span class="pre">covariance_propagation.ipynb</span></code>).</p>
+<p>In this notebook, we will discuss how to use <code class="docutils literal notranslate"><span class="pre">dsgp4</span></code> for the first case.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">dsgp4</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="covariance-transformation">
+<h2>Covariance Transformation<a class="headerlink" href="#covariance-transformation" title="Permalink to this heading">#</a></h2>
+<p>We start with the state corresponding to a given TLE at a certain time: this is in Cartesian TEME reference frame.</p>
+<p>Then, we assume that we have the covariance matrix associated to this state in the RTN frame (see, for instance, “Fundamental of Astrodynamics and Applications” by Vallado, for a discussion and theoretical background on these frames). We want to:</p>
+<ul class="simple">
+<li><p>first convert the RTN covariance into TEME</p></li>
+<li><p>then leverage <code class="docutils literal notranslate"><span class="pre">dsgp4</span></code> to transform the covariance matrix from position and velocity coordinates to TLE elements, leveraging the similarity transformation:</p></li>
+</ul>
+<div class="amsmath math notranslate nohighlight" id="equation-48fb0183-76ff-4c17-bbb1-7226223dc16c">
+<span class="eqno">(1)<a class="headerlink" href="#equation-48fb0183-76ff-4c17-bbb1-7226223dc16c" title="Permalink to this equation">#</a></span>\[\begin{equation}
+P_{y} = m P_x m^T\text{,}
+\end{equation}\]</div>
+<p>where:</p>
+<div class="amsmath math notranslate nohighlight" id="equation-9f01ee46-49e9-4f15-9b45-bc54b433a640">
+<span class="eqno">(2)<a class="headerlink" href="#equation-9f01ee46-49e9-4f15-9b45-bc54b433a640" title="Permalink to this equation">#</a></span>\[\begin{equation}
+m_{ij}=\dfrac{\partial y_i}{\partial x_j}
+\end{equation}\]</div>
+<ul class="simple">
+<li><p>once the above is done, we are left with a covariance directly in TLE parameters, which can be used for several applications. An example, is to directly use the covariance to generate perturbed TLEs (from their mean) and feed them to <span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span> to propagate the noisy observations</p></li>
+</ul>
+<p>As always, let’s start by constructing the TLE:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lines</span><span class="o">=</span><span class="p">[]</span>
+<span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;0 COSMOS 2251 DEB&quot;</span><span class="p">)</span>
+<span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;1 34427U 93036RU  22068.94647328  .00008100  00000-0  11455-2 0  9999&quot;</span><span class="p">)</span>
+<span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;2 34427  74.0145 306.8269 0033346  13.0723 347.1308 14.76870515693886&quot;</span><span class="p">)</span>
+<span class="n">my_tle</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">tle</span><span class="o">.</span><span class="n">TLE</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+<span class="n">tle_elements</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">initialize_tle</span><span class="p">(</span><span class="n">my_tle</span><span class="p">,</span><span class="n">with_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s now construct the initial RTN covariance matrix, and the initial TEME state:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">matrix_rtn</span><span class="p">(</span><span class="n">cov</span><span class="p">):</span>
+    <span class="n">cov_matrix_rtn</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">cov</span><span class="p">[</span><span class="s1">&#39;sigma_rr&#39;</span><span class="p">],</span>
+                             <span class="n">cov</span><span class="p">[</span><span class="s1">&#39;sigma_rt&#39;</span><span class="p">],</span>
+                             <span class="n">cov</span><span class="p">[</span><span class="s1">&#39;sigma_rn&#39;</span><span class="p">],</span>
+                             <span class="n">cov</span><span class="p">[</span><span class="s1">&#39;sigma_vr&#39;</span><span class="p">],</span>
+                             <span class="n">cov</span><span class="p">[</span><span class="s1">&#39;sigma_vt&#39;</span><span class="p">],</span>
+                             <span class="n">cov</span><span class="p">[</span><span class="s1">&#39;sigma_vn&#39;</span><span class="p">]])</span>
+    <span class="n">cov_matrix_rtn</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">cov_matrix_rtn</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cov_matrix_rtn</span>
+
+<span class="n">covariance_diagonal</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;sigma_rr&quot;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> 
+                     <span class="s2">&quot;sigma_rt&quot;</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span> 
+                     <span class="s2">&quot;sigma_rn&quot;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> 
+                     <span class="s2">&quot;sigma_vr&quot;</span><span class="p">:</span><span class="mf">1e-3</span><span class="p">,</span> 
+                     <span class="s2">&quot;sigma_vt&quot;</span><span class="p">:</span><span class="mf">1e-1</span><span class="p">,</span> 
+                     <span class="s2">&quot;sigma_vn&quot;</span><span class="p">:</span><span class="mf">1e-3</span><span class="p">}</span>
+
+<span class="n">cov_matrix_rtn</span><span class="o">=</span><span class="n">matrix_rtn</span><span class="p">(</span><span class="n">covariance_diagonal</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RTN covariance matrix is: </span><span class="si">{</span><span class="n">cov_matrix_rtn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">state_teme</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="n">my_tle</span><span class="p">,</span><span class="mf">0.</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Initial state in Cartesian TEME is: </span><span class="si">{</span><span class="n">state_teme</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>RTN covariance matrix is: [[1.e+01 0.e+00 0.e+00 0.e+00 0.e+00 0.e+00]
+ [0.e+00 1.e+02 0.e+00 0.e+00 0.e+00 0.e+00]
+ [0.e+00 0.e+00 1.e+01 0.e+00 0.e+00 0.e+00]
+ [0.e+00 0.e+00 0.e+00 1.e-03 0.e+00 0.e+00]
+ [0.e+00 0.e+00 0.e+00 0.e+00 1.e-01 0.e+00]
+ [0.e+00 0.e+00 0.e+00 0.e+00 0.e+00 1.e-03]]
+Initial state in Cartesian TEME is: tensor([[ 4.1941e+03, -5.6009e+03,  4.2616e-02],
+        [ 1.6578e+00,  1.2582e+00,  7.2697e+00]], grad_fn=&lt;TransposeBackward0&gt;)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s now transform the covariance from RTN to Cartesian TEME:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">rotation_matrix</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the UVW rotation matrix.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        state (`numpy.array`): numpy array of 2 rows and 3 columns, where</span>
+<span class="sd">                                    the first row represents position, and the second velocity.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        `numpy.array`: numpy array of the rotation matrix from the cartesian state.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">r</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">w</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">from_cartesian_to_rtn</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">cartesian_to_rtn_rotation_matrix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a cartesian state to the RTN frame.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        state (`numpy.array`): numpy array of 2 rows and 3 columns, where</span>
+<span class="sd">                                    the first row represents position, and the second velocity.</span>
+<span class="sd">        cartesian_to_rtn_rotation_matrix (`numpy.array`): numpy array of the rotation matrix from the cartesian state. If None, it is computed.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        `numpy.array`: numpy array of the RTN state.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Use the supplied rotation matrix if available, otherwise compute it</span>
+    <span class="k">if</span> <span class="n">cartesian_to_rtn_rotation_matrix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cartesian_to_rtn_rotation_matrix</span> <span class="o">=</span> <span class="n">rotation_matrix</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">r_rtn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">cartesian_to_rtn_rotation_matrix</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+    <span class="n">v_rtn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">cartesian_to_rtn_rotation_matrix</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">r_rtn</span><span class="p">,</span> <span class="n">v_rtn</span><span class="p">]),</span> <span class="n">cartesian_to_rtn_rotation_matrix</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">###### RTN-&gt;Cartesian Rotation ######</span>
+<span class="n">state_rtn</span><span class="p">,</span> <span class="n">cartesian_to_rtn_rotation_matrix</span> <span class="o">=</span> <span class="n">from_cartesian_to_rtn</span><span class="p">(</span><span class="n">state_teme</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+<span class="n">transformation_matrix_cartesian_to_rtn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">transformation_matrix_cartesian_to_rtn</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">cartesian_to_rtn_rotation_matrix</span>
+<span class="n">transformation_matrix_cartesian_to_rtn</span><span class="p">[</span><span class="mi">3</span><span class="p">:,</span><span class="mi">3</span><span class="p">:]</span> <span class="o">=</span> <span class="n">cartesian_to_rtn_rotation_matrix</span>
+<span class="n">C_teme</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">transformation_matrix_cartesian_to_rtn</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">cov_matrix_rtn</span><span class="p">),</span><span class="n">transformation_matrix_cartesian_to_rtn</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cartesian TEME covariance matrix is: </span><span class="si">{</span><span class="n">C_teme</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Cartesian TEME covariance matrix is: [[1.43678346e+01 3.27091412e+00 1.90611714e+01 0.00000000e+00
+  0.00000000e+00 0.00000000e+00]
+ [3.27091412e+00 1.24494699e+01 1.42742252e+01 0.00000000e+00
+  0.00000000e+00 0.00000000e+00]
+ [1.90611714e+01 1.42742252e+01 9.31826956e+01 0.00000000e+00
+  0.00000000e+00 0.00000000e+00]
+ [0.00000000e+00 0.00000000e+00 0.00000000e+00 5.80461804e-03
+  3.59800553e-03 2.09672885e-02]
+ [0.00000000e+00 0.00000000e+00 0.00000000e+00 3.59800553e-03
+  3.69441685e-03 1.57016478e-02]
+ [0.00000000e+00 0.00000000e+00 0.00000000e+00 2.09672885e-02
+  1.57016478e-02 9.25009651e-02]]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#quick check to confirm the transformation was correct:</span>
+<span class="n">C_rtn2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">transformation_matrix_cartesian_to_rtn</span><span class="p">,</span> <span class="n">C_teme</span><span class="p">),</span><span class="n">transformation_matrix_cartesian_to_rtn</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Was the RTN-&gt;Cartesian transformation correct? </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">C_rtn2</span><span class="p">,</span><span class="n">cov_matrix_rtn</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Was the RTN-&gt;Cartesian transformation correct? True
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">C_teme</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[1.43678346e+01, 3.27091412e+00, 1.90611714e+01, 0.00000000e+00,
+        0.00000000e+00, 0.00000000e+00],
+       [3.27091412e+00, 1.24494699e+01, 1.42742252e+01, 0.00000000e+00,
+        0.00000000e+00, 0.00000000e+00],
+       [1.90611714e+01, 1.42742252e+01, 9.31826956e+01, 0.00000000e+00,
+        0.00000000e+00, 0.00000000e+00],
+       [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 5.80461804e-03,
+        3.59800553e-03, 2.09672885e-02],
+       [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 3.59800553e-03,
+        3.69441685e-03, 1.57016478e-02],
+       [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 2.09672885e-02,
+        1.57016478e-02, 9.25009651e-02]])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, we do the similarity transformation, leveraging the partials of the TLE parameters, w.r.t. the state in Cartesian TEME. For a detailed discussion (with examples) on how to compute partials with <code class="docutils literal notranslate"><span class="pre">dsgp4</span></code>, check out the tutorial <code class="docutils literal notranslate"><span class="pre">tle_propagation.ipynb</span></code></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#let&#39;s construct the 6x9 matrix of partials:</span>
+<span class="n">dx_dtle</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">6</span><span class="p">,</span><span class="mi">9</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">):</span>
+    <span class="n">tle_elements</span><span class="o">.</span><span class="n">grad</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">state_teme</span><span class="o">.</span><span class="n">flatten</span><span class="p">()[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">retain_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">dx_dtle</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">tle_elements</span><span class="o">.</span><span class="n">grad</span>
+<span class="c1">#let&#39;s print them to screen:</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dx_dtle</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor([[ 0.0000e+00,  0.0000e+00,  0.0000e+00, -4.7924e+03,  1.5394e+03,
+          1.0479e+00,  1.5463e+03, -4.3390e+04,  5.6009e+03],
+        [ 0.0000e+00,  0.0000e+00,  0.0000e+00,  4.9523e+03,  1.1618e+03,
+         -3.3683e+00,  1.1736e+03,  5.7875e+04,  4.1941e+03],
+        [ 0.0000e+00,  0.0000e+00,  0.0000e+00, -3.0267e+03,  6.7277e+03,
+         -3.9559e+00,  6.7716e+03, -1.4301e+02,  0.0000e+00],
+        [ 0.0000e+00,  0.0000e+00,  0.0000e+00,  2.6362e+00, -4.5385e+00,
+         -5.8152e+00, -4.5521e+00,  8.6044e+00, -1.2582e+00],
+        [ 0.0000e+00,  0.0000e+00,  0.0000e+00, -1.3649e-01,  6.0581e+00,
+         -4.3574e+00,  6.0789e+00,  6.4300e+00,  1.6578e+00],
+        [ 0.0000e+00,  0.0000e+00,  0.0000e+00,  7.0851e+00, -5.4891e-03,
+          2.0766e+00, -4.7732e-05,  3.7622e+01,  0.0000e+00]])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#now, we can apply the similarity transformation, and obtain the 9x9 covariance matrix in TLE elements:</span>
+<span class="n">Cov_tle</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">dx_dtle</span><span class="p">),</span><span class="n">C_teme</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">dx_dtle</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#quick check to confirm we are doing things correctly:</span>
+<span class="n">C_xyz_2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">dx_dtle</span><span class="p">,</span><span class="n">Cov_tle</span><span class="p">),</span><span class="n">dx_dtle</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Was the TLE-&gt;Cartesian transformation correct? </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">C_xyz_2</span><span class="p">,</span><span class="w"> </span><span class="n">C_teme</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Was the TLE-&gt;Cartesian transformation correct? True
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="sgp4_partial_derivatives.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span> Autodiff Support</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="covariance_propagation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Covariance Propagation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#covariance-transformation">Covariance Transformation</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Giacomo Acciarini, Atılım Güneş Baydin, Dario Izzo
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022, 2023, 2024, Giacomo Acciarini and Atılım Güneş Baydin and Dario Izzo.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
