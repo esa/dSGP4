@@ -29,7 +29,7 @@ This repository contains the code discussed in [this paper](https://arxiv.org/ab
 
 * Differentiable version of SGP4 (implemented in PyTorch)
 * Hybrid SGP4 and machine learning propagation: input/output/parameters corrections of SGP4 from accurate simulated or observed data are learned
-* Embarrassingly parallel TLE propagation
+* Parallel TLE propagation
 * Use of differentiable SGP4 on several spaceflight mechanics problems (state transition matrix computation, covariance transformation, and propagation, orbit determination, ML hybrid orbit propagation, etc.)
 
 ## Documentation and examples
