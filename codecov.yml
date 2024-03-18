@@ -1,5 +1,6 @@
 coverage:
   ignore:
   - "test/.*"
+  - "dsgp4/plot.py"
 
 comment: off
