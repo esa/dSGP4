@@ -21,12 +21,32 @@ Differentiable SGP4.
   </p>
 </p>
 
+This repository contains the code discussed in [this paper](https://arxiv.org/abs/2402.04830). $\partial \textrm{SGP4}$ is a differentiable version of SGP4 implemented using PyTorch. By making SGP4 differentiable, $\partial \textrm{SGP4}$ facilitates various space-related applications, including spacecraft orbit determination, state conversion, covariance transformation, state transition matrix computation, and covariance propagation. Additionally, $\partial \textrm{SGP4}$'s PyTorch implementation allows for embarrassingly parallel orbital propagation across batches of Two-Line Element Sets (TLEs), leveraging the computational power of CPUs, GPUs, and advanced hardware for distributed prediction of satellite positions at future times. Furthermore, dSGP4's differentiability enables integration with modern machine learning techniques. Thus, we propose a novel orbital propagation paradigm, ML-$\partial \textrm{SGP4}$, where neural networks are integrated into the orbital propagator. Through stochastic gradient descent, this combined model's inputs, outputs, and parameters can be iteratively refined, surpassing SGP4's precision. Neural networks act as identity operators by default, adhering to SGP4's behavior. However, $\partial \textrm{SGP4}$'s differentiability allows fine-tuning with ephemeris data, enhancing precision while maintaining computational speed. This empowers satellite operators and researchers to train the model using specific ephemeris or high-precision numerical propagation data, significantly advancing orbital prediction capabilities.
+
 ## Goals
 
-* Differentiable version of SGP4
+* Differentiable version of SGP4 (implemented in PyTorch)
+* Hybrid SGP4 and machine learning propagation: input/output/parameters corrections of SGP4 from accurate simulated or observed data are learned
+* Embarrassingly parallel TLE propagation
+* Use of differentiable SGP4 on several spaceflight mechanics problems (state transition matrix computation, covariance transformation, and propagation, orbit determination, ML hybrid orbit propagation, etc.)
 
-## Installation, documentation, and examples
+## Documentation and examples
 
+To get started, follow the examples in the [documentation](https://esa.github.io/dSGP4/). You will find tutorials with basic and more advanced functionalities and applications. 
+
+## More info and how to cite
+
+If you use `dsgp4` and/or find it useful, we would be grateful if you could star the repository and/or cite our work.
+$\partial \textrm{SGP4}$ and its applications for ML hybrid propagation and more, can be found in our [publication](https://arxiv.org/abs/2402.04830):
+
+```
+@article{acciarini2024closing,
+  title={Closing the Gap Between SGP4 and High-Precision Propagation via Differentiable Programming},
+  author={Acciarini, Giacomo and Baydin, At{\i}l{\i}m G{\"u}ne{\c{s}} and Izzo, Dario},
+  journal={arXiv preprint arXiv:2402.04830},
+  year={2024}
+}
+```
 
 ## Authors:
 * [Giacomo Acciarini](https://www.esa.int/gsp/ACT/team/giacomo_acciarini/)
@@ -37,6 +57,11 @@ The project originated after the work of the authors at the [University of Oxfor
 
 ## Acknowledgements:
 
+We would like to thank Dr. T.S. Kelso for his support and useful pointers on how to correctly validate the code with respect to the [official release](https://www.space-track.org/documentation#/sgp4) by Space-Track.
+
+## License:
+
+$\partial\textrm{SGP4}$ is distributed under the GNU General Public License version 3. Get in touch with the authors for other licensing options.
 
 ## Contact:
 * `giacomo.acciarini@gmail.com`
