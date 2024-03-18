@@ -1,6 +1,8 @@
 # $\partial\textrm{SGP4}$
 [![build](https://github.com/esa/dSGP4/actions/workflows/build.yml/badge.svg)](https://github.com/esa/dSGP4/actions/workflows/build.yml)
 [![codecov](https://codecov.io/gh/esa/dSGP4/graph/badge.svg?token=K3py7YT8UR)](https://codecov.io/gh/esa/dSGP4)
+[![Anaconda-Server Badge](https://anaconda.org/conda-forge/dsgp4/badges/latest_release_relative_date.svg)](https://anaconda.org/conda-forge/dsgp4)
+[![Anaconda-Server Badge](https://anaconda.org/conda-forge/dsgp4/badges/downloads.svg)](https://anaconda.org/conda-forge/dsgp4)
 
 Differentiable SGP4.
 <!-- PROJECT LOGO -->
@@ -34,9 +36,24 @@ This repository contains the code discussed in [this paper](https://arxiv.org/ab
 * Parallel TLE propagation
 * Use of differentiable SGP4 on several spaceflight mechanics problems (state transition matrix computation, covariance transformation, and propagation, orbit determination, ML hybrid orbit propagation, etc.)
 
-## Documentation and examples
+## Installation
 
-To get started, follow the examples in the [documentation](https://esa.github.io/dSGP4/). You will find tutorials with basic and more advanced functionalities and applications. 
+Via [pip](https://pypi.org/project/dsgp4/):
+```
+pip install dsgp4
+```
+
+Via [conda](https://anaconda.org/conda-forge/dsgp4):
+```
+conda install conda-forge::dsgp4
+```
+
+Local installation:
+```
+git clone https://github.com/esa/dSGP4.git
+cd dSGP4
+pip install -e .
+```
 
 ## How to cite
 
@@ -51,6 +68,10 @@ $\partial \textrm{SGP4}$ and its applications for ML hybrid propagation and more
   year={2024}
 }
 ```
+
+## Documentation and examples
+
+To get started, follow the examples in the [documentation](https://esa.github.io/dSGP4/). You will find tutorials with basic and more advanced functionalities and applications. 
 
 ## Authors:
 * [Giacomo Acciarini](https://www.esa.int/gsp/ACT/team/giacomo_acciarini/)
