@@ -30,11 +30,13 @@ class UtilTestCase(unittest.TestCase):
             try:
                 dsgp4.initialize_tle(tle,gravity_constant_name="wgs-72");
                 #we only check those that have not failed to initialize:
-                if tle._error==0:   
-                    tsinces=torch.rand(100)*10
-                    tles_batch+=[tle]*len(tsinces)
-                    tsinces_batch+=[tsinces]
-                    out_non_batched+=[dsgp4.propagate(tle,tsinces)]
+                if tle._error==0:
+                    #batch mode only supports isimp==0
+                    if tle._isimp==0:       
+                        tsinces=torch.rand(100)*10
+                        tles_batch+=[tle]*len(tsinces)
+                        tsinces_batch+=[tsinces]
+                        out_non_batched+=[dsgp4.propagate(tle,tsinces)]
             except Exception as e:
                     self.assertTrue((str(e).split()==error_string.split()) or ((str(e).split()==error_string_isimp.split())))
         tsinces_batch=torch.cat(tsinces_batch)
