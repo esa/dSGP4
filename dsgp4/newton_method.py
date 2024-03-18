@@ -1,10 +1,30 @@
 import numpy as np
 import torch
-import datetime
 from .sgp4 import sgp4
 from .sgp4init import sgp4init
 from . import util
 from .tle import TLE
+
+def _propagate(x, tle_sat, tsince, gravity_constant_name="wgs-84"):
+    from .sgp4init import sgp4init
+    from .sgp4 import sgp4
+    whichconst=util.get_gravity_constants(gravity_constant_name)
+    sgp4init(whichconst=whichconst,
+                        opsmode='i',
+                        satn=tle_sat.satellite_catalog_number,
+                        epoch=(tle_sat._jdsatepoch+tle_sat._jdsatepochF)-2433281.5,
+                        xbstar=x[0],
+                        xndot=x[1],
+                        xnddot=x[2],
+                        xecco=x[3],
+                        xargpo=x[4],
+                        xinclo=x[5],
+                        xmo=x[6],
+                        xno_kozai=x[7],
+                        xnodeo=x[8],
+                        satellite=tle_sat)
+    state=sgp4(tle_sat, tsince*torch.ones(1,1))
+    return state
 
 def initial_guess(tle_0, time_mjd, target_state=None):
     """
@@ -155,7 +175,7 @@ def newton_method(tle_0, time_mjd, target_state=None, new_tol=1e-12,max_iter=50)
     #newton iterations:
     while i<max_iter and tol>new_tol:
         #print(f"y0: {y0}")
-        propagate=lambda x: util.propagate(x,next_tle,(time_mjd-util.from_datetime_to_mjd(next_tle._epoch))*1440.)
+        propagate=lambda x: _propagate(x,next_tle,(time_mjd-util.from_datetime_to_mjd(next_tle._epoch))*1440.)
         y1=util.clone_w_grad(y0)
         y2=util.clone_w_grad(y0)
         y3=util.clone_w_grad(y0)

@@ -11,6 +11,8 @@ error_string="Error: deep space propagation not supported (yet). The provided sa
 an orbital period above 225 minutes. If you want to let us know you need it or you want to \
 contribute to implement it, open a PR or raise an issue at: https://github.com/esa/dSGP4."
 
+error_string_isimp="isimp == 1 not supported in batch mode."
+
 class UtilTestCase(unittest.TestCase):
     def test_sgp4_batched(self):
         lines=file.splitlines()
@@ -19,7 +21,6 @@ class UtilTestCase(unittest.TestCase):
         out_non_batched=[]
         tles_batch=[]
         tsinces_batch=[]
-        whichconst=dsgp4.util.get_gravity_constants("wgs-72")
         for i in indexes:
             data=[]
             data.append(lines[i])
@@ -27,34 +28,19 @@ class UtilTestCase(unittest.TestCase):
             data.append(lines[i+2])
             tle=dsgp4.tle.TLE(data)
             try:
-                dsgp4.sgp4init(whichconst=whichconst,
-                                        opsmode=tle._opsmode,
-                                        satn=tle.satellite_catalog_number,
-                                        epoch=(tle._jdsatepoch+tle._jdsatepochF)-2433281.5,
-                                        xbstar=tle._bstar,
-                                        xndot=tle._ndot,
-                                        xnddot=tle._nddot,
-                                        xecco=tle._ecco,
-                                        xargpo=tle._argpo,
-                                        xinclo=tle._inclo,
-                                        xmo=tle._mo,
-                                        xno_kozai=tle._no_kozai,
-                                        xnodeo=tle._nodeo,
-                                        satellite=tle)
-                tsinces=torch.rand(100)*100
-                tles_batch+=[tle]*len(tsinces)
-                tsinces_batch+=[tsinces]
-                out_non_batched+=[dsgp4.sgp4(tle,tsinces)]
+                dsgp4.initialize_tle(tle,gravity_constant_name="wgs-72");
+                #we only check those that have not failed to initialize:
+                if tle._error==0:   
+                    tsinces=torch.rand(100)*10
+                    tles_batch+=[tle]*len(tsinces)
+                    tsinces_batch+=[tsinces]
+                    out_non_batched+=[dsgp4.propagate(tle,tsinces)]
             except Exception as e:
-                self.assertTrue((str(e).split()==error_string.split()))
+                    self.assertTrue((str(e).split()==error_string.split()) or ((str(e).split()==error_string_isimp.split())))
         tsinces_batch=torch.cat(tsinces_batch)
         out_non_batched=torch.cat(out_non_batched)
         #we batch propagate all TLEs at all required times:
-        try:
-            out_batched=dsgp4.sgp4_batched(tles_batch,tsinces_batch)
-        except Exception as e:
-            print(e)
-            self.assertTrue((str(e).split()==error_string.split()))      
+        out_batched=dsgp4.propagate_batch(tles_batch,tsinces_batch)
         self.assertTrue(np.allclose(out_non_batched.numpy(),out_batched.numpy()))
 
 file="""

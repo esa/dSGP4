@@ -1,5 +1,6 @@
 import torch
 import numpy 
+from .tle import TLE
 
 def sgp4_batched(satellite, tsince):
     """
@@ -18,15 +19,18 @@ def sgp4_batched(satellite, tsince):
         - batch_state (``torch.tensor``): a batch of 2x3 tensors, where the first row represents the spacecraft
                                     position (in km) and the second the spacecraft velocity (in km/s)
     """
-
     if not isinstance(satellite, list):
+        raise ValueError("satellite should be a list of TLE objects.")
+    if not isinstance(satellite[0],TLE):
         raise ValueError("satellite should be a list of TLE objects.")
     if not torch.is_tensor(tsince):
         raise ValueError("tsince must be a tensor.")
     if tsince.ndim!=1:
         raise ValueError("tsince should be a one dimensional tensor.")
     if len(tsince)!=len(satellite):
-        raise ValueError("tsince and satellite shall be of same length.")
+        raise ValueError("in batch mode, tsince and satellite shall be of same length.")
+    if not hasattr(satellite[0], '_radiusearthkm'):
+        raise AttributeError('It looks like the satellite has not been initialized. Please use the `initialize_tle` method or directly `sgp4init` to initialize the satellite. Otherwise, if you are propagating, another option is to use `dsgp4.propagate` and pass `initialized=True` in the arguments.')
     
     batch_size = len(satellite)
         
@@ -121,7 +125,7 @@ def sgp4_batched(satellite, tsince):
     # START: ASSUME satellite._isimp IS ALWAYS 0
     for sat in satellite:
         if sat._isimp == 1:
-            raise ValueError("isimp == 1 not supported.")
+            raise ValueError("isimp == 1 not supported in batch mode.")
 
     delomg = satellite_batch._omgcof * satellite_batch._t
 

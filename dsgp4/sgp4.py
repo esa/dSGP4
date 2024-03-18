@@ -1,6 +1,6 @@
 import numpy
 import torch
-torch.set_default_dtype(torch.float64)
+from .tle import TLE
 
 #@torch.jit.script
 def sgp4(satellite, tsince):
@@ -12,12 +12,20 @@ def sgp4(satellite, tsince):
 
     Args:
         - satellite (``dsgp4.tle.TLE``): TLE object
-        - tsince (``torch.tensor``): time to propagate, since the TLE epoch, in minutes
+        - tsince (``int`` or ``float`` or ``list`` or ``torch.tensor``): time to propagate, since the TLE epoch, in minutes (can be a vector or a single element)
 
     Returns:
-        - state (``torch.tensor``): a 2x3 tensor, where the first row represents the spacecraft
-                                    position (in km) and the second the spacecraft velocity (in km/s)
+        - state (``torch.tensor``): a set of len(tsince)x2x3 tensor of states,  where the first row represents the spacecraft
+                                    position (in km) and the second the spacecraft velocity (in km/s). Reference frame is TEME.
     """
+    #quick check to see if the satellite has been initialized
+    if not isinstance(satellite, TLE):
+        raise TypeError('The satellite object should be a dsgp4.tle.TLE object.')
+    if not hasattr(satellite, '_radiusearthkm'):
+        raise AttributeError('It looks like the satellite has not been initialized. Please use the `initialize_tle` method or directly `sgp4init` to initialize the satellite. Otherwise, if you are propagating, another option is to use `dsgp4.propagate` and pass `initialized=True` in the arguments.')
+    #in case an int, float or list are passed, convert them to torch.tensor
+    if isinstance(tsince, (int, float, list)):
+        tsince = torch.tensor(tsince)
     mrt = torch.zeros(tsince.size())
     temp4 = torch.ones(tsince.size())*1.5e-12
     x2o3  = torch.tensor(2.0 / 3.0)

@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = "dsgp4"
-copyright = "2022, 2023, Giacomo Acciarini and Atılım Güneş Baydin and Dario Izzo"
+copyright = "2022, 2023, 2024, Giacomo Acciarini and Atılım Güneş Baydin and Dario Izzo"
 author = "Giacomo Acciarini, Atılım Güneş Baydin, Dario Izzo"
 
 # The full version, including alpha/beta/rc tags
@@ -32,18 +32,18 @@ release = dsgp4.__version__
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["myst_nb","sphinx.ext.autodoc", "sphinx.ext.doctest"]#, "sphinx.ext.intersphinx"]
+extensions = ["myst_nb", "sphinx.ext.autodoc", "sphinx.ext.doctest", "sphinx.ext.intersphinx", "sphinx.ext.autosummary"]
 
-#intersphinx_mapping = {
-#    "numpy": ("https://numpy.org/doc/stable/", None),
-#    "python": ("https://docs.python.org/3", None),
-#    "matplotlib": ("https://matplotlib.org/stable/", None),
-#    }
+intersphinx_mapping = {
+    "numpy": ("https://numpy.org/doc/stable/", None),
+    "python": ("https://docs.python.org/3", None),
+    "matplotlib": ("https://matplotlib.org/stable/", None),
+}
 
 autoclass_content = 'both'
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ["_templates"]
+templates_path = ["_templates",".DS_Store"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -73,15 +73,15 @@ html_theme_options = {
     "use_issues_button": True,
     "launch_buttons": {
         "binderhub_url": "https://mybinder.org",
-        "notebook_interface": "jupyterlab",
-        "home_page_in_toc":True,
-    }
+        "notebook_interface": "jupyterlab"
+    },
+    "navigation_with_keys": False,
 }
 
 nb_execution_mode = "force"
 
 nb_execution_excludepatterns = [
-    "gradient_based_optimization.ipynb",
+    "tle_propagation.ipynb"
 ]
 
 latex_engine = "xelatex"
