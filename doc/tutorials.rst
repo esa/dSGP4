@@ -23,4 +23,6 @@ for more complex tasks.
 .. toctree::
   :maxdepth: 1
 
+  notebooks/covariance_transformation.ipynb
+  notebooks/covariance_propagation.ipynb
   notebooks/gradient_based_optimization.ipynb
