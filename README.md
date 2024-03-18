@@ -21,6 +21,8 @@ Differentiable SGP4.
   </p>
 </p>
 
+## Info
+
 This repository contains the code discussed in [this paper](https://arxiv.org/abs/2402.04830). $\partial \textrm{SGP4}$ is a differentiable version of SGP4 implemented using PyTorch. By making SGP4 differentiable, $\partial \textrm{SGP4}$ facilitates various space-related applications, including spacecraft orbit determination, state conversion, covariance transformation, state transition matrix computation, and covariance propagation. Additionally, $\partial \textrm{SGP4}$'s PyTorch implementation allows for embarrassingly parallel orbital propagation across batches of Two-Line Element Sets (TLEs), leveraging the computational power of CPUs, GPUs, and advanced hardware for distributed prediction of satellite positions at future times. Furthermore, dSGP4's differentiability enables integration with modern machine learning techniques. Thus, we propose a novel orbital propagation paradigm, ML-$\partial \textrm{SGP4}$, where neural networks are integrated into the orbital propagator. Through stochastic gradient descent, this combined model's inputs, outputs, and parameters can be iteratively refined, surpassing SGP4's precision. Neural networks act as identity operators by default, adhering to SGP4's behavior. However, $\partial \textrm{SGP4}$'s differentiability allows fine-tuning with ephemeris data, enhancing precision while maintaining computational speed. This empowers satellite operators and researchers to train the model using specific ephemeris or high-precision numerical propagation data, significantly advancing orbital prediction capabilities.
 
 ## Goals
@@ -34,7 +36,7 @@ This repository contains the code discussed in [this paper](https://arxiv.org/ab
 
 To get started, follow the examples in the [documentation](https://esa.github.io/dSGP4/). You will find tutorials with basic and more advanced functionalities and applications. 
 
-## More info and how to cite
+## How to cite
 
 If you use `dsgp4` and/or find it useful, we would be grateful if you could star the repository and/or cite our work.
 $\partial \textrm{SGP4}$ and its applications for ML hybrid propagation and more, can be found in our [publication](https://arxiv.org/abs/2402.04830):
