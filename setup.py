@@ -4,6 +4,8 @@ from setuptools import setup, find_packages
 PACKAGE_NAME = 'dsgp4'
 MINIMUM_PYTHON_VERSION = 3, 5
 
+with open('README.md', 'r') as f:
+    long_description = f.read()
 
 def check_python_version():
     """Exit when the Python version is too low."""
@@ -27,9 +29,12 @@ setup(
     name='dsgp4',
     version=read_package_variable('__version__'),
     description='Differentiable SGP4 prototype',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author='Acciarini & Baydin',
     author_email='giacomo.acciarini@gmail.com',
     packages=find_packages(),
+    url='https://github.com/esa/dSGP4',
     install_requires=['numpy', 'torch', 'matplotlib'],
     extras_require={'dev': ['pytest', 'coverage', 'pytest-xdist', 'sgp4>=2.21']},
     classifiers=['License :: OSI Approved :: GNU General Public License v3 (GPLv3)', 'Programming Language :: Python :: 3']
