@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Propagate TLEs with \(\partial\textrm{SGP4}\) &#8212; dsgp4 0.1.0 documentation</title>
+    <title>Propagate TLEs &#8212; dsgp4 0.1.0 documentation</title>
   
   
   
@@ -49,7 +49,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/tle_propagation';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="\(\partial\textrm{SGP4}\) Autodiff Support" href="sgp4_partial_derivatives.html" />
+    <link rel="next" title="Partial Derivatives Computation via Autodiff" href="sgp4_partial_derivatives.html" />
     <link rel="prev" title="TLE Object" href="tle_object.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -143,8 +143,8 @@
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../tutorials.html">Tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="tle_object.html">TLE Object</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Propagate TLEs with <span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="sgp4_partial_derivatives.html"><span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span> Autodiff Support</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Propagate TLEs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgp4_partial_derivatives.html">Partial Derivatives Computation via Autodiff</a></li>
 <li class="toctree-l2"><a class="reference internal" href="covariance_transformation.html">Similarity Transformation - from Cartesian to TLE Covariance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="covariance_propagation.html">Covariance Propagation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gradient_based_optimization.html">Gradient Based Optimization</a></li>
@@ -367,7 +367,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Propagate TLEs with \partial\textrm{SGP4}</h1>
+    <h1>Propagate TLEs</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -390,8 +390,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="propagate-tles-with-partial-textrm-sgp4">
-<h1>Propagate TLEs with <span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span><a class="headerlink" href="#propagate-tles-with-partial-textrm-sgp4" title="Permalink to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="propagate-tles">
+<h1>Propagate TLEs<a class="headerlink" href="#propagate-tles" title="Permalink to this heading">#</a></h1>
 <p>In this notebook, we show how to use <span class="math notranslate nohighlight">\(\partial \textrm{SGP4}\)</span> for the propagation of two-line elements (TLE) data</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -534,7 +534,7 @@ document.write(`
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span> Autodiff Support</p>
+        <p class="prev-next-title">Partial Derivatives Computation via Autodiff</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

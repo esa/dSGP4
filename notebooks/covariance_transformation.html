@@ -50,7 +50,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Covariance Propagation" href="covariance_propagation.html" />
-    <link rel="prev" title="\(\partial\textrm{SGP4}\) Autodiff Support" href="sgp4_partial_derivatives.html" />
+    <link rel="prev" title="Partial Derivatives Computation via Autodiff" href="sgp4_partial_derivatives.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -143,8 +143,8 @@
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../tutorials.html">Tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="tle_object.html">TLE Object</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tle_propagation.html">Propagate TLEs with <span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="sgp4_partial_derivatives.html"><span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span> Autodiff Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tle_propagation.html">Propagate TLEs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgp4_partial_derivatives.html">Partial Derivatives Computation via Autodiff</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Similarity Transformation - from Cartesian to TLE Covariance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="covariance_propagation.html">Covariance Propagation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gradient_based_optimization.html">Gradient Based Optimization</a></li>
@@ -410,13 +410,13 @@ document.write(`
 <li><p>first convert the RTN covariance into TEME</p></li>
 <li><p>then leverage <code class="docutils literal notranslate"><span class="pre">dsgp4</span></code> to transform the covariance matrix from position and velocity coordinates to TLE elements, leveraging the similarity transformation:</p></li>
 </ul>
-<div class="amsmath math notranslate nohighlight" id="equation-be0b8dec-1a47-4d1b-98a2-ba613b185caa">
-<span class="eqno">(1)<a class="headerlink" href="#equation-be0b8dec-1a47-4d1b-98a2-ba613b185caa" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-7c69f975-67c1-41b6-adef-28b88b9374ca">
+<span class="eqno">(1)<a class="headerlink" href="#equation-7c69f975-67c1-41b6-adef-28b88b9374ca" title="Permalink to this equation">#</a></span>\[\begin{equation}
 P_{y} = m P_x m^T\text{,}
 \end{equation}\]</div>
 <p>where:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-2573a81a-3778-4093-9e82-f26479935094">
-<span class="eqno">(2)<a class="headerlink" href="#equation-2573a81a-3778-4093-9e82-f26479935094" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-b620a897-9c71-48ce-b40c-336e02bc4faf">
+<span class="eqno">(2)<a class="headerlink" href="#equation-b620a897-9c71-48ce-b40c-336e02bc4faf" title="Permalink to this equation">#</a></span>\[\begin{equation}
 m_{ij}=\dfrac{\partial y_i}{\partial x_j}
 \end{equation}\]</div>
 <ul class="simple">
@@ -659,7 +659,7 @@ Initial state in Cartesian TEME is: tensor([[ 4.1941e+03, -5.6009e+03,  4.2616e-
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span> Autodiff Support</p>
+        <p class="prev-next-title">Partial Derivatives Computation via Autodiff</p>
       </div>
     </a>
     <a class="right-next"

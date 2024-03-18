@@ -143,8 +143,8 @@
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../tutorials.html">Tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="tle_object.html">TLE Object</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tle_propagation.html">Propagate TLEs with <span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="sgp4_partial_derivatives.html"><span class="math notranslate nohighlight">\(\partial\textrm{SGP4}\)</span> Autodiff Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tle_propagation.html">Propagate TLEs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgp4_partial_derivatives.html">Partial Derivatives Computation via Autodiff</a></li>
 <li class="toctree-l2"><a class="reference internal" href="covariance_transformation.html">Similarity Transformation - from Cartesian to TLE Covariance</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Covariance Propagation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gradient_based_optimization.html">Gradient Based Optimization</a></li>
@@ -382,8 +382,8 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="covariance-propagation">
 <h1>Covariance Propagation<a class="headerlink" href="#covariance-propagation" title="Permalink to this heading">#</a></h1>
 <p>In this notebook, we discuss how to use <code class="docutils literal notranslate"><span class="pre">dsgp4</span></code> to apply the first order approximation for propagating a covariance matrix:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-309a0099-ae59-42bb-9ea0-dcc326c55e8e">
-<span class="eqno">(1)<a class="headerlink" href="#equation-309a0099-ae59-42bb-9ea0-dcc326c55e8e" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-f746851b-bf22-4494-9ab5-5e5063e0a36c">
+<span class="eqno">(1)<a class="headerlink" href="#equation-f746851b-bf22-4494-9ab5-5e5063e0a36c" title="Permalink to this equation">#</a></span>\[\begin{equation}
 P_{\pmb{x}_f}=\dfrac{\partial \pmb{x}}{\partial \textrm{TLE}_0}  P_{\textrm{TLE}_{0}}\dfrac{\partial \pmb{x}}{\partial \textrm{TLE}_0}^T\text{,}
 \end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\textrm{TLE}_0\)</span> is the initial TLE, at time <span class="math notranslate nohighlight">\(t_0\)</span>, and <span class="math notranslate nohighlight">\(\pmb{x}\)</span> is the state vector in Cartesian TEME, at a certain propagation time <span class="math notranslate nohighlight">\(t_f\)</span>.</p>
