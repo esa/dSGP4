@@ -36,6 +36,20 @@ This repository contains the code discussed in [this paper](https://arxiv.org/ab
 * Parallel TLE propagation
 * Use of differentiable SGP4 on several spaceflight mechanics problems (state transition matrix computation, covariance transformation, and propagation, orbit determination, ML hybrid orbit propagation, etc.)
 
+## How to cite
+
+If you use `dsgp4` and/or find it useful, we would be grateful if you could star the repository and/or cite our work.
+$\partial \textrm{SGP4}$ and its applications for ML hybrid propagation and more, can be found in our [publication](https://arxiv.org/abs/2402.04830):
+
+```
+@article{acciarini2024closing,
+  title={Closing the Gap Between SGP4 and High-Precision Propagation via Differentiable Programming},
+  author={Acciarini, Giacomo and Baydin, At{\i}l{\i}m G{\"u}ne{\c{s}} and Izzo, Dario},
+  journal={arXiv preprint arXiv:2402.04830},
+  year={2024}
+}
+```
+
 ## Installation
 
 Via [pip](https://pypi.org/project/dsgp4/):
@@ -53,20 +67,6 @@ Local installation:
 git clone https://github.com/esa/dSGP4.git
 cd dSGP4
 pip install -e .
-```
-
-## How to cite
-
-If you use `dsgp4` and/or find it useful, we would be grateful if you could star the repository and/or cite our work.
-$\partial \textrm{SGP4}$ and its applications for ML hybrid propagation and more, can be found in our [publication](https://arxiv.org/abs/2402.04830):
-
-```
-@article{acciarini2024closing,
-  title={Closing the Gap Between SGP4 and High-Precision Propagation via Differentiable Programming},
-  author={Acciarini, Giacomo and Baydin, At{\i}l{\i}m G{\"u}ne{\c{s}} and Izzo, Dario},
-  journal={arXiv preprint arXiv:2402.04830},
-  year={2024}
-}
 ```
 
 ## Documentation and examples
