@@ -96,11 +96,14 @@ def sgp4_batched(satellite, tsince):
     satellite_batch._Om=torch.stack([s._Om for s in satellite])
     satellite_batch._mm=torch.stack([s._mm for s in satellite])
     satellite_batch._nm=torch.stack([s._nm for s in satellite])
-    satellite_batch._init=[s._init for s in satellite]
+    satellite_batch._init=([s._init for s in satellite])
             
     satellite_batch._no_unkozai=torch.stack([s._no_unkozai for s in satellite])
     satellite_batch._a=torch.stack([s._a for s in satellite])
     satellite_batch._alta=torch.stack([s._altp for s in satellite])
+
+ 
+   
 
     mrt = torch.zeros(batch_size)
     x2o3  = torch.tensor(2.0 / 3.0)
@@ -118,14 +121,11 @@ def sgp4_batched(satellite, tsince):
     mm     = xmdf
     t2     = satellite_batch._t * satellite_batch._t
     nodem   = nodedf + satellite_batch._nodecf * t2
-    tempa   = 1.0 - satellite_batch._cc1 * satellite_batch._t
-    tempe   = satellite_batch._bstar * satellite_batch._cc4 * satellite_batch._t
-    templ   = satellite_batch._t2cof * t2
+    tempa1   = 1.0 - satellite_batch._cc1 * satellite_batch._t
+    tempe1   = satellite_batch._bstar * satellite_batch._cc4 * satellite_batch._t
+    templ1   = satellite_batch._t2cof * t2
 
-    # START: ASSUME satellite._isimp IS ALWAYS 0
-    for sat in satellite:
-        if sat._isimp == 1:
-            raise ValueError("isimp == 1 not supported in batch mode.")
+           
 
     delomg = satellite_batch._omgcof * satellite_batch._t
 
@@ -138,13 +138,17 @@ def sgp4_batched(satellite, tsince):
     argpm  = argpdf - temp
     t3     = t2 * satellite_batch._t
     t4     = t3 * satellite_batch._t
-    tempa  = tempa - satellite_batch._d2 * t2 - satellite_batch._d3 * t3 - \
+    tempa0  = tempa1 - satellite_batch._d2 * t2 - satellite_batch._d3 * t3 - \
                         satellite_batch._d4 * t4
-    tempe  = tempe + satellite_batch._bstar * satellite_batch._cc5 * (mm.sin() -
+    tempe0  = tempe1 + satellite_batch._bstar * satellite_batch._cc5 * (mm.sin() -
                         satellite_batch._sinmao)
-    templ  = templ + satellite_batch._t3cof * t3 + t4 * (satellite_batch._t4cof +
+    templ0  = templ1 + satellite_batch._t3cof * t3 + t4 * (satellite_batch._t4cof +
                         satellite_batch._t * satellite_batch._t5cof)
-    # END: ASSUME satellite._isimp IS ALWAYS 0
+    
+
+    tempa = torch.where(satellite_batch._isimp==0,tempa0,tempa1)
+    tempe = torch.where(satellite_batch._isimp==0,tempe0,tempe1)
+    templ = torch.where(satellite_batch._isimp==0,templ0,templ1)
 
     nm    = satellite_batch._no_unkozai.clone()
     em    = satellite_batch._ecco.clone()
