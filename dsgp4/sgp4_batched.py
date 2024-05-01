@@ -96,7 +96,7 @@ def sgp4_batched(satellite, tsince):
     satellite_batch._Om=torch.stack([s._Om for s in satellite])
     satellite_batch._mm=torch.stack([s._mm for s in satellite])
     satellite_batch._nm=torch.stack([s._nm for s in satellite])
-    satellite_batch._init=([s._init for s in satellite])
+    satellite_batch._init=[s._init for s in satellite]
             
     satellite_batch._no_unkozai=torch.stack([s._no_unkozai for s in satellite])
     satellite_batch._a=torch.stack([s._a for s in satellite])
