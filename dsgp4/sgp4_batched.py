@@ -117,8 +117,8 @@ def sgp4_batched(satellite, tsince):
     xmdf    = satellite_batch._mo + satellite_batch._mdot * satellite_batch._t
     argpdf  = satellite_batch._argpo + satellite_batch._argpdot * satellite_batch._t
     nodedf  = satellite_batch._nodeo + satellite_batch._nodedot * satellite_batch._t
-    argpm   = argpdf
-    mm     = xmdf
+    argpm1   = argpdf
+    mm1     = xmdf
     t2     = satellite_batch._t * satellite_batch._t
     nodem   = nodedf + satellite_batch._nodecf * t2
     tempa1   = 1.0 - satellite_batch._cc1 * satellite_batch._t
@@ -134,18 +134,19 @@ def sgp4_batched(satellite, tsince):
                 (delmtemp * delmtemp * delmtemp -
                 satellite_batch._delmo)
     temp   = delomg + delm
-    mm     = xmdf + temp
-    argpm  = argpdf - temp
+    mm0     = xmdf + temp
+    argpm0  = argpdf - temp
     t3     = t2 * satellite_batch._t
     t4     = t3 * satellite_batch._t
     tempa0  = tempa1 - satellite_batch._d2 * t2 - satellite_batch._d3 * t3 - \
                         satellite_batch._d4 * t4
-    tempe0  = tempe1 + satellite_batch._bstar * satellite_batch._cc5 * (mm.sin() -
+    tempe0  = tempe1 + satellite_batch._bstar * satellite_batch._cc5 * (mm0.sin() -
                         satellite_batch._sinmao)
     templ0  = templ1 + satellite_batch._t3cof * t3 + t4 * (satellite_batch._t4cof +
                         satellite_batch._t * satellite_batch._t5cof)
     
-
+    mm    = torch.where(satellite_batch._isimp==0,mm0,mm1)
+    argpm = torch.where(satellite_batch._isimp==0,argpm0,argpm1)
     tempa = torch.where(satellite_batch._isimp==0,tempa0,tempa1)
     tempe = torch.where(satellite_batch._isimp==0,tempe0,tempe1)
     templ = torch.where(satellite_batch._isimp==0,templ0,templ1)
@@ -269,4 +270,6 @@ def sgp4_batched(satellite, tsince):
           (mvt * uz + rvdot * vz) * vkmpersec))
 
     satellite_batch._error=torch.where(satellite_batch._error==0.,torch.any(mrt<1.0)*6,satellite_batch._error)
+    return torch.transpose(torch.stack((r.squeeze(),v.squeeze()),1),0,-1)#torch.cat((r.swapaxes(0,2),v.swapaxes(0,2)),1)#torch.stack(list(r)+list(v)).reshape(2,3)
+
     return torch.transpose(torch.stack((r.squeeze(),v.squeeze()),1),0,-1)#torch.cat((r.swapaxes(0,2),v.swapaxes(0,2)),1)#torch.stack(list(r)+list(v)).reshape(2,3)
