@@ -44,6 +44,48 @@ class UtilTestCase(unittest.TestCase):
         #we batch propagate all TLEs at all required times:
         out_batched=dsgp4.propagate_batch(tles_batch,tsinces_batch)
         self.assertTrue(np.allclose(out_non_batched.numpy(),out_batched.numpy()))
+        
+    def test_isimp_batched(self):
+        lines = file1.splitlines()
+        index = list(range(1,4,3))
+        tles_batch      = []
+        tsinces_batch    = []
+        out_non_batched = []
+        for i in index:
+            data = []
+            data.append(lines[i])
+            data.append(lines[i+1])
+            data.append(lines[i+2])
+            tle = dsgp4.tle.TLE(data)
+            try: 
+                dsgp4.initialize_tle(tle)
+                if tle._error==0:
+                    tsince = torch.rand(100)*10
+                    tles_batch += [tle]*len(tsince)
+                    tsinces_batch+=[tsince]
+                    out_non_batched+=[dsgp4.propagate(tle,tsince)]
+            except Exception as e:
+                self.assertTrue(str(e).split()==error_string.split())
+        tsinces_batch = torch.cat(tsinces_batch)
+        out_non_batched = torch.cat(out_non_batched)
+        out_batched = dsgp4.propagate_batch(tles_batch,tsinces_batch)
+        self.assertTrue(np.allclose(out_non_batched.numpy(),out_batched.numpy()))
+
+
+file1 = """
+0 STARLINK-1110
+1 44946U 20001AJ  24101.30511192  .09874184  11821-4  44382-2 0  9991
+2 44946  52.9924  47.4575 0002378 194.8867 193.8851 16.21437839237242
+0 XJS E
+1 45251U 20014C   24100.53376843  .08568485  13520-5  71805-3 0  9994
+2 45251  35.0216  36.8737 0007634 230.7084 292.0228 16.38395432233146
+0 COSMOS 2251 DEB
+1 34427U 93036RU  22068.94647328  .00008100  00000-0  11455-2 0  9999
+2 34427  74.0145 306.8269 0033346  13.0723 347.1308 14.76870515693886
+0 COSMOS 2251 DEB
+1 34428U 93036RV  22068.90158861  .00002627  00000-0  63561-3 0  9999
+2 34428  74.0386 139.1157 0038434 196.7068 279.9147 14.53118052686950
+"""
 
 file="""
 0 COSMOS 2251 DEB
