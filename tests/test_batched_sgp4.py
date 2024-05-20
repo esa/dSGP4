@@ -69,6 +69,7 @@ class UtilTestCase(unittest.TestCase):
         tsinces_batch = torch.cat(tsinces_batch)
         out_non_batched = torch.cat(out_non_batched)
         out_batched = dsgp4.propagate_batch(tles_batch,tsinces_batch)
+        self.assertTrue(torch.any(torch.tensor([tle._isimp==1 for tle in tles_batch])))
         self.assertTrue(np.allclose(out_non_batched.numpy(),out_batched.numpy()))
 
 
