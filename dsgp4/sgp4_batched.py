@@ -271,5 +271,3 @@ def sgp4_batched(satellite, tsince):
 
     satellite_batch._error=torch.where(satellite_batch._error==0.,torch.any(mrt<1.0)*6,satellite_batch._error)
     return torch.transpose(torch.stack((r.squeeze(),v.squeeze()),1),0,-1)#torch.cat((r.swapaxes(0,2),v.swapaxes(0,2)),1)#torch.stack(list(r)+list(v)).reshape(2,3)
-
-    return torch.transpose(torch.stack((r.squeeze(),v.squeeze()),1),0,-1)#torch.cat((r.swapaxes(0,2),v.swapaxes(0,2)),1)#torch.stack(list(r)+list(v)).reshape(2,3)
