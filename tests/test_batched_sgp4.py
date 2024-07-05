@@ -41,8 +41,9 @@ class UtilTestCase(unittest.TestCase):
                     self.assertTrue((str(e).split()==error_string.split()) or ((str(e).split()==error_string_isimp.split())))
         tsinces_batch=torch.cat(tsinces_batch)
         out_non_batched=torch.cat(out_non_batched)
-        #we batch propagate all TLEs at all required times:
-        out_batched=dsgp4.propagate_batch(tles_batch,tsinces_batch)
+        #we initialize and then batch propagate all TLEs at all required times:
+        _,tle_batch=dsgp4.initialize_tle(tles_batch,gravity_constant_name="wgs-72")
+        out_batched=dsgp4.propagate_batch(tle_batch,tsinces_batch)
         self.assertTrue(np.allclose(out_non_batched.numpy(),out_batched.numpy()))
         
     def test_isimp_batched(self):
@@ -68,7 +69,8 @@ class UtilTestCase(unittest.TestCase):
                 self.assertTrue(str(e).split()==error_string.split())
         tsinces_batch = torch.cat(tsinces_batch)
         out_non_batched = torch.cat(out_non_batched)
-        out_batched = dsgp4.propagate_batch(tles_batch,tsinces_batch)
+        _,tle_batch=dsgp4.initialize_tle(tles_batch)
+        out_batched = dsgp4.propagate_batch(tle_batch,tsinces_batch)
         self.assertTrue(torch.any(torch.tensor([tle._isimp==1 for tle in tles_batch])))
         self.assertTrue(np.allclose(out_non_batched.numpy(),out_batched.numpy()))
 

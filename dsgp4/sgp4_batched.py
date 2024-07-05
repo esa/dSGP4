@@ -2,7 +2,7 @@ import torch
 import numpy 
 from .tle import TLE
 
-def sgp4_batched(satellite, tsince):
+def sgp4_batched(satellite_batch, tsince):
     """
     This function represents the batch SGP4 propagator. 
     It resembles `sgp4`, but accepts batches of TLEs.
@@ -12,99 +12,25 @@ def sgp4_batched(satellite, tsince):
     in km and km/s, respectively, after `tsince` minutes.
 
     Args:
-        - satellite (``dsgp4.tle.TLE``): TLE object
-        - tsince (``torch.tensor``): time to propagate, since the TLE epoch, in minutes
+        - satellite (``dsgp4.tle.TLE``): TLE batch object (with attributes that are N-dimensional tensors) 
+        - tsince (``torch.tensor``): time to propagate, since the TLE epoch, in minutes (also an N-dimensional tensor)
 
     Returns:
         - batch_state (``torch.tensor``): a batch of 2x3 tensors, where the first row represents the spacecraft
                                     position (in km) and the second the spacecraft velocity (in km/s)
     """
-    if not isinstance(satellite, list):
-        raise ValueError("satellite should be a list of TLE objects.")
-    if not isinstance(satellite[0],TLE):
-        raise ValueError("satellite should be a list of TLE objects.")
+    if not isinstance(satellite_batch, TLE):
+        raise ValueError("satellite_batch should be a TLE object.")
     if not torch.is_tensor(tsince):
         raise ValueError("tsince must be a tensor.")
     if tsince.ndim!=1:
         raise ValueError("tsince should be a one dimensional tensor.")
-    if len(tsince)!=len(satellite):
-        raise ValueError("in batch mode, tsince and satellite shall be of same length.")
-    if not hasattr(satellite[0], '_radiusearthkm'):
-        raise AttributeError('It looks like the satellite has not been initialized. Please use the `initialize_tle` method or directly `sgp4init` to initialize the satellite. Otherwise, if you are propagating, another option is to use `dsgp4.propagate` and pass `initialized=True` in the arguments.')
+    if len(tsince)!=len(satellite_batch._argpo):
+        raise ValueError(f"in batch mode, tsince and satellite_batch shall have attributes of same length. Instead {len(tsince)} for time, and {len(satellite_batch._argpo)} for satellites' attributes found")
+    if not hasattr(satellite_batch, '_radiusearthkm'):
+        raise AttributeError('It looks like the satellite_batch has not been initialized. Please use the `initialize_tle` method or directly `sgp4init` to initialize the satellite_batch. Otherwise, if you are propagating, another option is to use `dsgp4.propagate` and pass `initialized=True` in the arguments.')
     
-    batch_size = len(satellite)
-        
-    satellite_batch=satellite[0].copy()    
-    satellite_batch._bstar=torch.stack([s._bstar for s in satellite])
-    satellite_batch._ndot=torch.stack([s._ndot for s in satellite])
-    satellite_batch._nddot=torch.stack([s._nddot for s in satellite])
-    satellite_batch._ecco=torch.stack([s._ecco for s in satellite])
-    satellite_batch._argpo=torch.stack([s._argpo for s in satellite])
-    satellite_batch._inclo=torch.stack([s._inclo for s in satellite])
-    satellite_batch._mo=torch.stack([s._mo for s in satellite])
-
-    satellite_batch._no_kozai=torch.stack([s._no_kozai for s in satellite])
-    satellite_batch._nodeo=torch.stack([s._nodeo for s in satellite])
-    satellite_batch.satellite_catalog_number=torch.tensor([s.satellite_catalog_number for s in satellite])
-    satellite_batch._jdsatepoch=torch.stack([s._jdsatepoch for s in satellite])
-    satellite_batch._jdsatepochF=torch.stack([s._jdsatepochF for s in satellite])
-    satellite_batch._isimp=torch.tensor([s._isimp for s in satellite])
-    satellite_batch._method=[s._method for s in satellite]
-
-    satellite_batch._mdot=torch.stack([s._mdot for s in satellite])
-    satellite_batch._argpdot=torch.stack([s._argpdot for s in satellite])
-    satellite_batch._nodedot=torch.stack([s._nodedot for s in satellite])
-    satellite_batch._nodecf=torch.stack([s._nodecf for s in satellite])
-    satellite_batch._cc1=torch.stack([s._cc1 for s in satellite])
-    satellite_batch._cc4=torch.stack([s._cc4 for s in satellite])
-    satellite_batch._cc5=torch.stack([s._cc5 for s in satellite])
-    satellite_batch._t2cof=torch.stack([s._t2cof for s in satellite])
-
-    satellite_batch._omgcof=torch.stack([s._omgcof for s in satellite])
-    satellite_batch._eta=torch.stack([s._eta for s in satellite])
-    satellite_batch._xmcof=torch.stack([s._xmcof for s in satellite])
-    satellite_batch._delmo=torch.stack([s._delmo for s in satellite])
-    satellite_batch._d2=torch.stack([s._d2 for s in satellite])
-    satellite_batch._d3=torch.stack([s._d3 for s in satellite])
-    satellite_batch._d4=torch.stack([s._d4 for s in satellite])
-    satellite_batch._cc5=torch.stack([s._cc5 for s in satellite])
-    satellite_batch._sinmao=torch.stack([s._sinmao for s in satellite])
-    satellite_batch._t3cof=torch.stack([s._t3cof for s in satellite])
-    satellite_batch._t4cof=torch.stack([s._t4cof for s in satellite])
-    satellite_batch._t5cof=torch.stack([s._t5cof for s in satellite])
-    
-    satellite_batch._xke=torch.stack([s._xke for s in satellite])
-    satellite_batch._radiusearthkm=torch.stack([s._radiusearthkm for s in satellite])
-    satellite_batch._t=torch.stack([s._t for s in satellite])
-    satellite_batch._aycof=torch.stack([s._aycof for s in satellite])
-    satellite_batch._x1mth2=torch.stack([s._x1mth2 for s in satellite])
-    satellite_batch._con41=torch.stack([s._con41 for s in satellite])
-    satellite_batch._x7thm1=torch.stack([s._x7thm1 for s in satellite])
-    satellite_batch._xlcof=torch.stack([s._xlcof for s in satellite])
-    satellite_batch._tumin=torch.stack([s._tumin for s in satellite])
-    satellite_batch._mu=torch.stack([s._mu for s in satellite])
-    satellite_batch._j2=torch.stack([s._j2 for s in satellite])
-    satellite_batch._j3=torch.stack([s._j3 for s in satellite])
-    satellite_batch._j4=torch.stack([s._j4 for s in satellite])
-    satellite_batch._j3oj2=torch.stack([s._j3oj2 for s in satellite])
-    satellite_batch._error=torch.stack([s._error for s in satellite])
-    satellite_batch._operationmode=[s._operationmode for s in satellite]
-    satellite_batch._satnum=torch.tensor([s._satnum for s in satellite])
-    satellite_batch._am=torch.stack([s._am for s in satellite])
-    satellite_batch._em=torch.stack([s._em for s in satellite])
-    satellite_batch._im=torch.stack([s._im for s in satellite])
-    satellite_batch._Om=torch.stack([s._Om for s in satellite])
-    satellite_batch._mm=torch.stack([s._mm for s in satellite])
-    satellite_batch._nm=torch.stack([s._nm for s in satellite])
-    satellite_batch._init=[s._init for s in satellite]
-            
-    satellite_batch._no_unkozai=torch.stack([s._no_unkozai for s in satellite])
-    satellite_batch._a=torch.stack([s._a for s in satellite])
-    satellite_batch._alta=torch.stack([s._altp for s in satellite])
-
- 
-   
-
+    batch_size = len(tsince)
     mrt = torch.zeros(batch_size)
     x2o3  = torch.tensor(2.0 / 3.0)
 
@@ -125,7 +51,6 @@ def sgp4_batched(satellite, tsince):
     tempe1   = satellite_batch._bstar * satellite_batch._cc4 * satellite_batch._t
     templ1   = satellite_batch._t2cof * t2
 
-           
 
     delomg = satellite_batch._omgcof * satellite_batch._t
 
