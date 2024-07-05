@@ -76,7 +76,9 @@ def propagate(tle, tsinces, initialized=True):
     state=sgp4(tle, tsinces)
     return state
 
-def initialize_tle(tles,gravity_constant_name="wgs-84",with_grad=False):
+def initialize_tle(tles,
+                   gravity_constant_name="wgs-84",
+                   with_grad=False):
     """
     This function takes a single `dsgp4.tle.TLE` object or a list of `dsgp4.tle.TLE` objects and initializes the SGP4 propagator.
     This is a necessary step to be ran before propagating TLEs (e.g. before calling `propagate` function).
@@ -90,12 +92,12 @@ def initialize_tle(tles,gravity_constant_name="wgs-84",with_grad=False):
         - tle_elements (``torch.tensor``): tensor of TLE parameters (especially useful to retrieve gradients, when `with_grad` is `True`)
     """
     from .sgp4init import sgp4init
+    from .sgp4init_batch import sgp4init_batch
     whichconst=get_gravity_constants(gravity_constant_name)
     deep_space_counter=0
     if isinstance(tles,list):
         tle_elements=[]#torch.zeros((len(tles),9),requires_grad=with_grad)
-        for i, tle in enumerate(tles): 
-            try:
+        for tle in tles:
                 x=torch.tensor([tle._bstar,
                             tle._ndot,
                             tle._nddot,
@@ -106,23 +108,31 @@ def initialize_tle(tles,gravity_constant_name="wgs-84",with_grad=False):
                             tle._no_kozai,
                             tle._nodeo
                             ],requires_grad=with_grad)
-                sgp4init(whichconst=whichconst,
-                                    opsmode='i',
-                                    satn=tle.satellite_catalog_number,
-                                    epoch=(tle._jdsatepoch+tle._jdsatepochF)-2433281.5,
-                                    xbstar=x[0],
-                                    xndot=x[1],
-                                    xnddot=x[2],
-                                    xecco=x[3],
-                                    xargpo=x[4],
-                                    xinclo=x[5],
-                                    xmo=x[6],
-                                    xno_kozai=x[7],
-                                    xnodeo=x[8],
-                                    satellite=tle)
                 tle_elements.append(x)
-            except:
-                deep_space_counter+=1
+        xx=torch.stack(tle_elements)
+        try:
+            tles_batch=tles[0].copy()
+            sgp4init_batch(whichconst=whichconst,
+                            opsmode='i',
+                            satn=tle.satellite_catalog_number,
+                            epoch=(tle._jdsatepoch+tle._jdsatepochF)-2433281.5,
+                            xbstar=xx[:,0],
+                            xndot=xx[:,1],
+                            xnddot=xx[:,2],
+                            xecco=xx[:,3],
+                            xargpo=xx[:,4],
+                            xinclo=xx[:,5],
+                            xmo=xx[:,6],
+                            xno_kozai=xx[:,7],
+                            xnodeo=xx[:,8],
+                            satellite_batch=tles_batch,
+                            )
+        except:
+            deep_space_counter+=1
+        if deep_space_counter>0:
+            print("Warning: "+str(deep_space_counter)+" TLEs were not initialized because they are in deep space. Deep space propagation is currently not supported.")
+        return tle_elements, tles_batch
+
     else:
         tle_elements=torch.tensor([tles._bstar,
                                     tles._ndot,
@@ -148,10 +158,7 @@ def initialize_tle(tles,gravity_constant_name="wgs-84",with_grad=False):
                             xno_kozai=tle_elements[7],
                             xnodeo=tle_elements[8],
                             satellite=tles)
-        
-    if deep_space_counter>0:
-        print("Warning: "+str(deep_space_counter)+" TLEs were not initialized because they are in deep space. Deep space propagation is currently not supported.")
-    return tle_elements
+        return tle_elements
 
 def from_year_day_to_date(y,d):
     return (datetime.datetime(y, 1, 1) + datetime.timedelta(d - 1))

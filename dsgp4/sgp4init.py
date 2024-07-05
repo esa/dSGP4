@@ -42,7 +42,7 @@ def sgp4init(
      temp4    =   torch.tensor(1.5e-12)
 
     #  ----------- set all near earth variables to zero ------------
-     satellite._isimp   = torch.tensor(0);   satellite._method = 'n';                 satellite._aycof    = torch.tensor(0.0);
+     satellite._isimp   = torch.tensor(0);   satellite._method = 'n';               satellite._aycof    = torch.tensor(0.0);
      satellite._con41   = torch.tensor(0.0); satellite._cc1    = torch.tensor(0.0); satellite._cc4      = torch.tensor(0.0);
      satellite._cc5     = torch.tensor(0.0); satellite._d2     = torch.tensor(0.0); satellite._d3       = torch.tensor(0.0);
      satellite._d4      = torch.tensor(0.0); satellite._delmo  = torch.tensor(0.0); satellite._eta      = torch.tensor(0.0);
@@ -198,6 +198,6 @@ def sgp4init(
                             12.0 * satellite._cc1 * satellite._d3 +
                             6.0 * satellite._d2 * satellite._d2 +
                             15.0 * cc1sq * (2.0 * satellite._d2 + cc1sq))
-     sgp4(satellite, torch.zeros(1,1))
+     sgp4(satellite, torch.zeros(1,1));
 
      satellite._init = 'n'
