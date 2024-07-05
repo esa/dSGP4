@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Propagate TLEs &#8212; dsgp4 0.1.2 documentation</title>
+    <title>Propagate TLEs &#8212; dsgp4 1.0.0 documentation</title>
   
   
   
@@ -465,13 +465,12 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#we first need to prepare the data, the API requires that there are as many TLEs as times. Let us assume we want to</span>
 <span class="c1">#propagate each of the </span>
+<span class="n">tles_</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">tle</span> <span class="ow">in</span> <span class="n">tles</span><span class="p">:</span>
+    <span class="n">tles_</span><span class="o">+=</span><span class="p">[</span><span class="n">tle</span><span class="p">]</span><span class="o">*</span><span class="mi">10000</span>
 <span class="n">tsinces</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">24</span><span class="o">*</span><span class="mi">60</span><span class="p">,</span><span class="mi">10000</span><span class="p">)]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">tles</span><span class="p">))</span>
 <span class="c1">#first let&#39;s initialize them:</span>
-<span class="n">dsgp4</span><span class="o">.</span><span class="n">initialize_tle</span><span class="p">(</span><span class="n">tles</span><span class="p">)</span>
-<span class="c1">#then let&#39;s construct the TLEs batch by making sure there are as many TLEs as times:</span>
-<span class="n">tles_batch</span><span class="o">=</span><span class="p">[]</span>
-<span class="k">for</span> <span class="n">tle</span> <span class="ow">in</span> <span class="n">tles</span><span class="p">:</span>
-    <span class="n">tles_batch</span><span class="o">+=</span><span class="p">[</span><span class="n">tle</span><span class="p">]</span><span class="o">*</span><span class="mi">10000</span>
+<span class="n">_</span><span class="p">,</span><span class="n">tle_batch</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">initialize_tle</span><span class="p">(</span><span class="n">tles_</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -479,7 +478,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#we propagate the batch of 3,000 TLEs for 1 day:</span>
-<span class="n">states_teme</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">propagate_batch</span><span class="p">(</span><span class="n">tles_batch</span><span class="p">,</span><span class="n">tsinces</span><span class="p">)</span>
+<span class="n">states_teme</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">propagate_batch</span><span class="p">(</span><span class="n">tle_batch</span><span class="p">,</span><span class="n">tsinces</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

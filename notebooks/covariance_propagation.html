@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Covariance Propagation &#8212; dsgp4 0.1.2 documentation</title>
+    <title>Covariance Propagation &#8212; dsgp4 1.0.0 documentation</title>
   
   
   
@@ -382,8 +382,8 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="covariance-propagation">
 <h1>Covariance Propagation<a class="headerlink" href="#covariance-propagation" title="Permalink to this heading">#</a></h1>
 <p>In this notebook, we discuss how to use <code class="docutils literal notranslate"><span class="pre">dsgp4</span></code> to apply the first order approximation for propagating a covariance matrix:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-654b8df3-cdae-43e9-846b-024535100037">
-<span class="eqno">(1)<a class="headerlink" href="#equation-654b8df3-cdae-43e9-846b-024535100037" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-67a6a5be-a933-445f-a0e6-f59d7bbefff6">
+<span class="eqno">(1)<a class="headerlink" href="#equation-67a6a5be-a933-445f-a0e6-f59d7bbefff6" title="Permalink to this equation">#</a></span>\[\begin{equation}
 P_{\pmb{x}_f}=\dfrac{\partial \pmb{x}}{\partial \textrm{TLE}_0}  P_{\textrm{TLE}_{0}}\dfrac{\partial \pmb{x}}{\partial \textrm{TLE}_0}^T\text{,}
 \end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\textrm{TLE}_0\)</span> is the initial TLE, at time <span class="math notranslate nohighlight">\(t_0\)</span>, and <span class="math notranslate nohighlight">\(\pmb{x}\)</span> is the state vector in Cartesian TEME, at a certain propagation time <span class="math notranslate nohighlight">\(t_f\)</span>.</p>
@@ -397,6 +397,7 @@ P_{\pmb{x}_f}=\dfrac{\partial \pmb{x}}{\partial \textrm{TLE}_0}  P_{\textrm{TLE}
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dsgp4</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">set_default_dtype</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -439,9 +440,14 @@ P_{\pmb{x}_f}=\dfrac{\partial \pmb{x}}{\partial \textrm{TLE}_0}  P_{\textrm{TLE}
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#we initialize the TLEs w gradients:</span>
-<span class="n">tle_elements</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">initialize_tle</span><span class="p">(</span><span class="n">tles</span><span class="p">,</span><span class="n">with_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">tle_elements</span><span class="p">,</span><span class="n">tle_batch</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">initialize_tle</span><span class="p">(</span><span class="n">tles</span><span class="p">,</span><span class="n">with_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="c1">#propagate the orbits:</span>
-<span class="n">state_teme</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">propagate_batch</span><span class="p">(</span><span class="n">tles</span><span class="p">,</span><span class="n">tsinces</span><span class="p">)</span>
+<span class="n">state_teme</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">propagate_batch</span><span class="p">(</span><span class="n">tle_batch</span><span class="p">,</span><span class="n">tsinces</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Warning: 1 TLEs were not initialized because they are in deep space. Deep space propagation is currently not supported.
 </pre></div>
 </div>
 </div>
@@ -571,7 +577,7 @@ P_{\pmb{x}_f}=\dfrac{\partial \pmb{x}}{\partial \textrm{TLE}_0}  P_{\textrm{TLE}
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;Frobenius norm of the covariance matrix&#39;)
 </pre></div>
 </div>
-<img alt="../_images/1ea2ca597358b9d46fe90a763ff91a87bdcd90a8902cd4dce26b634214940e84.png" src="../_images/1ea2ca597358b9d46fe90a763ff91a87bdcd90a8902cd4dce26b634214940e84.png" />
+<img alt="../_images/b3f01727b00f3d869f795e5ea069d32949a0a3cef8f12e84a1f1213cbea681f9.png" src="../_images/b3f01727b00f3d869f795e5ea069d32949a0a3cef8f12e84a1f1213cbea681f9.png" />
 </div>
 </div>
 </section>
