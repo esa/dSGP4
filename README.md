@@ -62,6 +62,11 @@ Via [conda](https://anaconda.org/conda-forge/dsgp4):
 conda install conda-forge::dsgp4
 ```
 
+or mamba:
+```
+mamba install dsgp4
+```
+
 Local installation:
 ```
 git clone https://github.com/esa/dSGP4.git
