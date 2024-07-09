@@ -139,6 +139,8 @@ def sgp4_batched(satellite_batch, tsince):
         tem5=torch.where(tem5>=0.95, 0.95, tem5)
         tem5=torch.where(tem5<=-0.95, -0.95, tem5)
         eo1    = eo1 + tem5
+        if torch.all(torch.abs(tem5) < 1e-12):
+            break
 
     # short period preliminary quantities
     ecose = axnl*coseo1 + aynl*sineo1

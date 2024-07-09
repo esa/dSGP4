@@ -130,7 +130,10 @@ def sgp4(satellite, tsince):
         tem5   = (u - aynl * coseo1 + axnl * sineo1 - eo1) / tem5
         tem5=torch.where(tem5>=0.95, 0.95, tem5)
         tem5=torch.where(tem5<=-0.95, -0.95, tem5)
+        #we need to break if abs value of tem5 is less than 1e-12:
         eo1    = eo1 + tem5
+        if torch.all(torch.abs(tem5) < 1e-12):
+            break
 
     #  short period preliminary quantities
     ecose = axnl*coseo1 + aynl*sineo1
