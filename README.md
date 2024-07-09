@@ -41,7 +41,7 @@ This repository contains the code discussed in [this paper](https://arxiv.org/ab
 If you use `dsgp4`, we would be grateful if you could star the repository and/or cite our work.
 $\partial \textrm{SGP4}$ and its applications for ML hybrid propagation and more, can be found in our [publication](https://arxiv.org/abs/2402.04830):
 
-```
+```bibtex
 @article{acciarini2024closing,
   title={Closing the Gap Between SGP4 and High-Precision Propagation via Differentiable Programming},
   author={Acciarini, Giacomo and Baydin, At{\i}l{\i}m G{\"u}ne{\c{s}} and Izzo, Dario},
