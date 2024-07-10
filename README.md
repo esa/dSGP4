@@ -83,7 +83,7 @@ To get started, follow the examples in the [documentation](https://esa.github.io
 * [Atılım Güneş Baydin](http://gbaydin.github.io/)
 * [Dario Izzo](https://www.esa.int/gsp/ACT/team/dario_izzo/)
 
-The project originated after the work of the authors at the [University of Oxford OX4AI Lab](https://oxai4science.github.io/).
+The project originated after the work of the authors at the [University of Oxford AI4Science Lab](https://oxai4science.github.io/).
 
 ## Acknowledgements:
 
