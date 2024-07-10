@@ -31,7 +31,7 @@ setup(
     description='Differentiable SGP4 prototype',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    author='Acciarini & Baydin',
+    author='Acciarini, Baydin, Izzo',
     author_email='giacomo.acciarini@gmail.com',
     packages=find_packages(),
     url='https://github.com/esa/dSGP4',
