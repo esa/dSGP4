@@ -395,26 +395,26 @@ document.write(`
 <h2>Problem description:<a class="headerlink" href="#problem-description" title="Permalink to this heading">#</a></h2>
 <p>We have a TLE at a given time, which we call TLE<span class="math notranslate nohighlight">\(_{0}\)</span>, and we look for a TLE at a future observation time (<span class="math notranslate nohighlight">\(t_{obs}\)</span>): TLE<span class="math notranslate nohighlight">\(_{t}\)</span>.</p>
 <p>We can propagate the state from <span class="math notranslate nohighlight">\(t_0 \rightarrow t_{obs}\)</span>, and obtain the state at <span class="math notranslate nohighlight">\(t_{obs}\)</span>. In general, we define the state (i.e., position and velocity), as:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-41047326-b64a-4c22-bad8-f6b99d974e40">
-<span class="eqno">(1)<a class="headerlink" href="#equation-41047326-b64a-4c22-bad8-f6b99d974e40" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-47440fce-ca19-4572-8953-6f562bf7ef1b">
+<span class="eqno">(1)<a class="headerlink" href="#equation-47440fce-ca19-4572-8953-6f562bf7ef1b" title="Permalink to this equation">#</a></span>\[\begin{equation}
 \vec{x}(t)=[x(t), y(t), z(t), \dot{x}(t), \dot{y}(t), \dot{z}(t)]^T
 \end{equation}\]</div>
 <p>We then have: TLE<span class="math notranslate nohighlight">\(_0\)</span>, <span class="math notranslate nohighlight">\(\vec{x}(t_0)\)</span>, and <span class="math notranslate nohighlight">\(\vec{x}(t_{obs})\)</span>, but we want to find TLE<span class="math notranslate nohighlight">\(_{obs}\)</span>. That is, the TLE at the observation time, that when propagated with SGP4 at its time, it corresponds to that <span class="math notranslate nohighlight">\(\vec{x}(t_{obs})\)</span>. In general, this means that we are able to invert from the state to the TLE, at any given time.</p>
 <p>In order to do this, we formulate the problem as looking for the minimum of a function of a free variables vector (i.e., <span class="math notranslate nohighlight">\(\vec{y}\)</span>) <span class="math notranslate nohighlight">\(F(\vec{y})\)</span>, where this function defines the difference between the given state propagated from TLE<span class="math notranslate nohighlight">\(_0\)</span> at <span class="math notranslate nohighlight">\(t_{obs}\)</span>, and the state generated from the free variables that make a TLE which is then propagated at its current time: TLE<span class="math notranslate nohighlight">\((\vec{y})(t_{0}\rightarrow t_{obs})\)</span>. So we can reformulate the problem as:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-fd910cfb-d31e-4085-bc18-8f207bc9ac50">
-<span class="eqno">(2)<a class="headerlink" href="#equation-fd910cfb-d31e-4085-bc18-8f207bc9ac50" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-0b5d4716-4527-473a-9c47-522bc89fdd89">
+<span class="eqno">(2)<a class="headerlink" href="#equation-0b5d4716-4527-473a-9c47-522bc89fdd89" title="Permalink to this equation">#</a></span>\[\begin{align}
 \textrm{given}: &amp; \ \textrm{TLE}_0, \vec{x}_0\\
 \textrm{find}: &amp; \ \vec{y}\\
 \textrm{that minimize}: &amp; F(\vec{y})=|SGP4(\textrm{TLE}(\vec{y}),t_{obs})-\vec{x}(t_{obs})| =|\vec{\tilde{x}}(t_{obs})-\vec{x}(t_{obs})|
 \end{align}\]</div>
 <p>We can do this via Newton method, by updating an initial guess <span class="math notranslate nohighlight">\(y_{0}\)</span> until convergence. Where the update is done as follows:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-88b83961-d192-40a5-9ae6-ab393f373dd9">
-<span class="eqno">(3)<a class="headerlink" href="#equation-88b83961-d192-40a5-9ae6-ab393f373dd9" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-f6440563-558c-4933-baaa-8368af25e510">
+<span class="eqno">(3)<a class="headerlink" href="#equation-f6440563-558c-4933-baaa-8368af25e510" title="Permalink to this equation">#</a></span>\[\begin{equation}
 y_{k+1}=y_{k}-DF^{-1}(y_k)F(y_k)
 \end{equation}\]</div>
 <p>with <span class="math notranslate nohighlight">\(DF\)</span> the Jacobian of <span class="math notranslate nohighlight">\(F\)</span> with respect to <span class="math notranslate nohighlight">\(y_k\)</span>. We can easily see that this Jacobian is made of the following elements:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-6fa4d498-c0dc-4178-8a14-07251f297bba">
-<span class="eqno">(4)<a class="headerlink" href="#equation-6fa4d498-c0dc-4178-8a14-07251f297bba" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-8240e5ff-7439-4bbb-9058-2f07dffb00cb">
+<span class="eqno">(4)<a class="headerlink" href="#equation-8240e5ff-7439-4bbb-9058-2f07dffb00cb" title="Permalink to this equation">#</a></span>\[\begin{equation}
 DF_{ij}=\dfrac{\partial \tilde{x}_{i}}{\partial y_{j}}|_{y_k}
 \end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\tilde{x}_{i} \in [\tilde{x}_1,\tilde{x}_2,\tilde{x}_3,\tilde{x}_4,\tilde{x}_5,\tilde{x}_6]=[\tilde{x},\tilde{y},\tilde{z},\tilde{\dot{x}},\tilde{\dot{y}},\tilde{\dot{z}}]\)</span>; and <span class="math notranslate nohighlight">\(y_i \in [no_{kozai}, ecco, inclo, mo, argpo, nodeo, n_{dot},n_{ddot},B^*]\)</span>.</p>
