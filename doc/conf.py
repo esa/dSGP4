@@ -81,7 +81,8 @@ html_theme_options = {
 nb_execution_mode = "force"
 
 nb_execution_excludepatterns = [
-    "tle_propagation.ipynb"
+    "tle_propagation.ipynb",
+    "covariance_propagation.ipynb"
 ]
 
 latex_engine = "xelatex"
