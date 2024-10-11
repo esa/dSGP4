@@ -101,8 +101,8 @@ def sgp4init(
        cosio2,eccsq, omeosq, posq,
        rp,    rteosq,sinio , satellite._gsto,
        ) = initl(
-           satellite._xke, satellite._j2, satellite._ecco, epoch, satellite._inclo, satellite._no_kozai, satellite._method,
-           satellite._operationmode
+           satellite._xke, satellite._j2, satellite._ecco, epoch, satellite._inclo, satellite._no_kozai,
+           satellite._operationmode, satellite._method
          )
      satellite._a    = torch.pow( satellite._no_unkozai*satellite._tumin , (-2.0/3.0) )
      satellite._alta = satellite._a*(1.0 + satellite._ecco) - 1.0

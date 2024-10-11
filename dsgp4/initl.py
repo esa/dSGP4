@@ -6,8 +6,8 @@ from . import util
 def initl(
        xke, j2,
        ecco,   epoch,  inclo,   no,
-       method,
        opsmode,
+       method='n',
        ):
 
      x2o3   = torch.tensor(2.0 / 3.0);
@@ -34,7 +34,6 @@ def initl(
      ainv  = 1.0 / ao;
      posq  = po * po;
      rp    = ao * (1.0 - ecco);
-     method = 'n';
 
      if opsmode == 'a':
          #  gst time
