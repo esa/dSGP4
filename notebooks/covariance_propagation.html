@@ -382,8 +382,8 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="covariance-propagation">
 <h1>Covariance Propagation<a class="headerlink" href="#covariance-propagation" title="Permalink to this heading">#</a></h1>
 <p>In this notebook, we discuss how to use <code class="docutils literal notranslate"><span class="pre">dsgp4</span></code> to apply the first order approximation for propagating a covariance matrix:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-5ac466a7-3f2b-4d18-a22f-f75ecbe2767d">
-<span class="eqno">(1)<a class="headerlink" href="#equation-5ac466a7-3f2b-4d18-a22f-f75ecbe2767d" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-e641c8f5-55bc-4420-b331-e685e987569f">
+<span class="eqno">(1)<a class="headerlink" href="#equation-e641c8f5-55bc-4420-b331-e685e987569f" title="Permalink to this equation">#</a></span>\[\begin{equation}
 P_{\pmb{x}_f}=\dfrac{\partial \pmb{x}}{\partial \textrm{TLE}_0}  P_{\textrm{TLE}_{0}}\dfrac{\partial \pmb{x}}{\partial \textrm{TLE}_0}^T\text{,}
 \end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\textrm{TLE}_0\)</span> is the initial TLE, at time <span class="math notranslate nohighlight">\(t_0\)</span>, and <span class="math notranslate nohighlight">\(\pmb{x}\)</span> is the state vector in Cartesian TEME, at a certain propagation time <span class="math notranslate nohighlight">\(t_f\)</span>.</p>
@@ -443,11 +443,6 @@ P_{\pmb{x}_f}=\dfrac{\partial \pmb{x}}{\partial \textrm{TLE}_0}  P_{\textrm{TLE}
 <span class="n">tle_elements</span><span class="p">,</span><span class="n">tle_batch</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">initialize_tle</span><span class="p">(</span><span class="n">tles</span><span class="p">,</span><span class="n">with_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="c1">#propagate the orbits:</span>
 <span class="n">state_teme</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">propagate_batch</span><span class="p">(</span><span class="n">tle_batch</span><span class="p">,</span><span class="n">tsinces</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Warning: 1 TLEs were not initialized because they are in deep space. Deep space propagation is currently not supported.
 </pre></div>
 </div>
 </div>
@@ -558,6 +553,14 @@ P_{\pmb{x}_f}=\dfrac{\partial \pmb{x}}{\partial \textrm{TLE}_0}  P_{\textrm{TLE}
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/vf/cj60m8k162316snsvmjw65280000gp/T/ipykernel_16046/2216534334.py:8: DeprecationWarning: __array_wrap__ must accept context and return_scalar arguments (positionally) in the future. (Deprecated NumPy 2.0)
+  Cov_xyz[idx,:,:]=np.matmul(np.matmul(dx_dtle[idx,:],Cov_tle),dx_dtle[idx,:].T)
+/var/folders/vf/cj60m8k162316snsvmjw65280000gp/T/ipykernel_16046/2216534334.py:8: DeprecationWarning: __array__ implementation doesn&#39;t accept a copy keyword, so passing copy=False failed. __array__ must implement &#39;dtype&#39; and &#39;copy&#39; keyword arguments.
+  Cov_xyz[idx,:,:]=np.matmul(np.matmul(dx_dtle[idx,:],Cov_tle),dx_dtle[idx,:].T)
+</pre></div>
+</div>
+</div>
 </div>
 <p>Let’s plot the Frobenius norm of each covariance for each TLE, as a function of time from TLE:</p>
 <div class="cell docutils container">
@@ -577,7 +580,7 @@ P_{\pmb{x}_f}=\dfrac{\partial \pmb{x}}{\partial \textrm{TLE}_0}  P_{\textrm{TLE}
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;Frobenius norm of the covariance matrix&#39;)
 </pre></div>
 </div>
-<img alt="../_images/b3f01727b00f3d869f795e5ea069d32949a0a3cef8f12e84a1f1213cbea681f9.png" src="../_images/b3f01727b00f3d869f795e5ea069d32949a0a3cef8f12e84a1f1213cbea681f9.png" />
+<img alt="../_images/a0b84cc09b062f64a4996f09c5f2aad3367032484b97aea0b1b9780b0d6a299d.png" src="../_images/a0b84cc09b062f64a4996f09c5f2aad3367032484b97aea0b1b9780b0d6a299d.png" />
 </div>
 </div>
 </section>
