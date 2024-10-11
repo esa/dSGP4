@@ -1,4 +1,4 @@
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 
 import torch
 torch.set_default_dtype(torch.float64)
