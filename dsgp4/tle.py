@@ -342,7 +342,7 @@ class TLE():
         Returns:
             `dsgp4.tle.TLE` object
         """
-        d = copy.deepcopy(self._data)
+        d = {k: (v.clone() if isinstance(v, torch.Tensor) else copy.deepcopy(v)) for k, v in self._data.items()}
         return TLE(d)
 
     def set_time(self, date_mjd):
