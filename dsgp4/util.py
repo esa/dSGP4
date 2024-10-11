@@ -127,8 +127,14 @@ def initialize_tle(tles,
                             xnodeo=xx[:,8],
                             satellite_batch=tles_batch,
                             )
-        except:
-            deep_space_counter+=1
+        except Exception as e:
+            _error_string="Error: deep space propagation not supported (yet). The provided satellite has \
+an orbital period above 225 minutes. If you want to let us know you need it or you want to \
+contribute to implement it, open a PR or raise an issue at: https://github.com/esa/dSGP4."
+            if str(e)==_error_string:
+                deep_space_counter+=1
+            else:
+                raise e
         if deep_space_counter>0:
             print("Warning: "+str(deep_space_counter)+" TLEs were not initialized because they are in deep space. Deep space propagation is currently not supported.")
         return tle_elements, tles_batch
