@@ -53,8 +53,8 @@ class UtilTestCase(unittest.TestCase):
                 tle_sat_cosio2, tle_sat_eccsq, tle_sat_omeosq, tle_sat_posq,
                 tle_sat_rp,    tle_sat_rteosq, tle_sat_sinio , tle_sat_gsto,
                 ) = dsgp4.initl(
-                   xke, j2, tle_sat._ecco, (tle_sat._jdsatepoch+tle_sat._jdsatepochF)-2433281.5, tle_sat._inclo, tle_sat._no_kozai, 'n',
-                   'i'
+                   xke, j2, tle_sat._ecco, (tle_sat._jdsatepoch+tle_sat._jdsatepochF)-2433281.5, tle_sat._inclo, tle_sat._no_kozai,
+                   'i', 'n'
                  );
                 self.assertAlmostEqual(satrec_no_unkozai, float(tle_sat_no_unkozai))
                 self.assertTrue(satrec_method==tle_sat_method)
@@ -80,7 +80,7 @@ class UtilTestCase(unittest.TestCase):
         tumin, mu, radiusearthkm, xke, j2, j3, j4, j3oj2=whichconst
         satrec_tumin, satrec_mu, satrec_radiusearthkm, satrec_xke, satrec_j2, satrec_j3, satrec_j4, satrec_j3oj2=sgp4.earth_gravity.wgs84
         #I run the opsmode=='a'
-        dsgp4.initl(xke, j2, tle._ecco, (tle._jdsatepoch+tle._jdsatepochF)-2433281.5, tle._inclo, tle._no_kozai, 'n', 'a')
+        dsgp4.initl(xke, j2, tle._ecco, (tle._jdsatepoch+tle._jdsatepochF)-2433281.5, tle._inclo, tle._no_kozai, 'a', 'n')
 
 file="""
 0 COSMOS 2251 DEB

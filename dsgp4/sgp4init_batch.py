@@ -6,8 +6,7 @@ from .util import gstime
 def initl_batch(
        xke, j2,
        ecco,   epoch,  inclo,   no,
-       method,
-       opsmode, batch_size
+       opsmode, batch_size, method='n',
        ):
 
      x2o3   = torch.full((batch_size,),2.0 / 3.0);
@@ -34,7 +33,7 @@ def initl_batch(
      ainv  = 1.0 / ao;
      posq  = po * po;
      rp    = ao * (1.0 - ecco);
-     method = ['n']*batch_size;
+     method = [method]*batch_size;
 
      if opsmode == 'a':
          #  gst time
@@ -161,8 +160,8 @@ def sgp4init_batch(
        cosio2,eccsq, omeosq, posq,
        rp,    rteosq,sinio , satellite_batch._gsto,
        ) = initl_batch(
-           satellite_batch._xke, satellite_batch._j2, satellite_batch._ecco, epoch, satellite_batch._inclo, satellite_batch._no_kozai, satellite_batch._method,
-           satellite_batch._operationmode,batch_size
+           satellite_batch._xke, satellite_batch._j2, satellite_batch._ecco, epoch, satellite_batch._inclo, satellite_batch._no_kozai,
+           satellite_batch._operationmode, batch_size, satellite_batch._method
          )
      satellite_batch._a    = torch.pow( satellite_batch._no_unkozai*satellite_batch._tumin , (-2.0/3.0) )
      satellite_batch._alta = satellite_batch._a*(1.0 + satellite_batch._ecco) - 1.0
