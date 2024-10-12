@@ -28,10 +28,10 @@ def read_satellite_catalog_number(string):
     the corresponding satellite catalog number.
 
     Args:
-        string (`str`): string line
+        string (``str``): string line
     
     Returns:
-        `int`: satellite catalog number
+        ``int``: satellite catalog number
     """
     if not string[0].isalpha():
         return int(string)
@@ -47,11 +47,11 @@ def load_from_lines(lines, opsmode='i'):
     """
     This function takes a TLE as a list of strings and returns both itself and its dictionary representation.
     Args:
-        lines (`list`): TLE data in the form of a list
-        opsmode (`str`): operation mode, either 'i' or 'a'
+        lines (``list``): TLE data in the form of a list
+        opsmode (``str``): operation mode, either 'i' or 'a'
     Returns:
-        `list`: TLE data in the form of a list
-        `dict`: TLE data in the form of a dictionary
+        ``list``: TLE data in the form of a list
+        ``dict``: TLE data in the form of a dictionary
     """
     if isinstance(lines, str):
         lines = util.get_non_empty_lines(lines)

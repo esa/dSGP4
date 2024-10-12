@@ -11,7 +11,7 @@ def plot_orbit(states, r_earth=6378.137, elevation_azimuth=None, ax=None, *args,
                                      position (in km) and the second the spacecraft velocity (in km/s). Reference frame is TEME.
         - r_earth (``float``): Earth radius in km (used for the plot). Default value is 6378.137 km.
         - elevation_azimuth (``tuple``): tuple of two floats, representing the elevation and azimuth angles of the plot. If None, the default values are used.
-        - ax (``matplotlib.axes._subplots.Axes3DSubplot``): 3D axis object
+        - ax (``matplotlib.axes._subplots.Axes3DSubplot``): 3D axis object. If None, a new figure is created.
         - *args, **kwargs: additional arguments to be passed to the plot function
     
     Returns:
@@ -53,20 +53,30 @@ def plot_orbit(states, r_earth=6378.137, elevation_azimuth=None, ax=None, *args,
     plt.tight_layout()
     return ax
 
-def plot_tles(tles, file_name=None, figsize = (36,18), show=True, axs=None, return_axs=False, log_yscale=False, *args, **kwargs):
+def plot_tles(tles, 
+              file_name=None, 
+              figsize = (36,18), 
+              show=True, 
+              axs=None, 
+              return_axs=False, 
+              log_yscale=False, 
+              *args, 
+              **kwargs):
     """
     This function takes a list of tles as input and plots the histograms of some of their elements.
-
-    Inputs
-    ----------
-    - tles (`list`): list of tles, where each element is a `dsgp4.tle.TLE` object.
-    - save_fig (`bool`): boolean variable, if True, figure is saved to a file.
-    - file_name (`str`): name of the file (including path) where the plot is to be saved.
-    - figsize (`tuple`): figure size.
-
-    Outputs
-    ----------
-    - ax (`numpy.ndarray`): array of AxesSubplot objects
+    
+    Args:    
+        - tles (``list``): list of tles, where each element is a ``dsgp4.tle.TLE`` object.
+        - file_name (``str``): name of the file (including path) where the plot is to be saved.
+        - figsize (``tuple``): figure size.
+        - show (``bool``): if True, the plot is shown.
+        - axs (``numpy.ndarray``): array of AxesSubplot objects.
+        - return_axs (``bool``): if True, the function returns the array of AxesSubplot objects.
+        - log_yscale (``bool``): if True, the y-scale is logarithmic.
+        - *args, **kwargs: additional arguments to be passed to the hist function.
+    
+    Returns:    
+        - ax (``numpy.ndarray``): array of AxesSubplot objects
     """
     #I collect all the six variables from the TLEs:
     mean_motion, eccentricity, inclination, argument_of_perigee, raan, b_star, mean_anomaly, mean_motion_first_derivative, mean_motion_second_derivative = [], [], [], [], [], [], [], [], []

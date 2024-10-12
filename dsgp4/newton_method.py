@@ -34,8 +34,8 @@ def initial_guess(tle_0, time_mjd, target_state=None):
     Args:
         - tle_0 (``dsgp4.tle.TLE``): starting TLE at time0
         - new_date (``datetime.datetime``): new date of the TLE, as a datetime object
-        - target_state (``torch.tensor``): a 2x3 tensor for the position and velocity of the state. If None, then this is computed
-                                           by propagating `tle_0` at the `new_date`.
+        - target_state (``torch.tensor``): a 2x3 tensor for the position and velocity of the state. If None, then this is computed 
+                                            by propagating `tle_0` at the `new_date`.
 
     Returns:
         - y0 (``torch.tensor``): initial guess for the TLE elements. In particular, y0 contains
@@ -152,21 +152,20 @@ def update_TLE(old_tle,y0):
 
 def newton_method(tle_0, time_mjd, target_state=None, new_tol=1e-12,max_iter=50):
     """
-    This method performs Newton method starting from an initial TLE and a given propagation time. The objective
+    This method performs Newton method starting from an initial TLE and a given propagation time. The objective 
     is to find a TLE that accurately reconstructs the propagated state, at observation time.
 
     Args:
         - tle_0 (``dsgp4.tle.TLE``): starting TLE (i.e., TLE at a given initial time)
-        - new_date (``datetime.datetime``): time (as a datetime object) at which we want the state to be propagated, and we want the TLE at that time
-        - target_state (``torch.tensor``): 2x3 tensor representing target state. If None, then this is directly computed by propagating the TLE at `new_date`
-        - new_tol (``float``): newton tolerance
-        - max_iter (``int``): maximum iterations for Newton's method
+        - time_mjd (``float``): time at which we want to propagate the TLE (in Modified Julian Date)
+        - target_state (``torch.tensor``): a 2x3 tensor for the position and velocity of the state. If None, then this is computed by propagating `tle_0` at the `new_date`.
+        - new_tol (``float``): tolerance for the Newton method
+        - max_iter (``int``): maximum number of iterations for the Newton method
 
     Returns:
-        - tle (``dsgp4.tle.TLE``): found TLE
-        - y (``torch.tensor``): returns the solution that satisfied F(y)=0 (with a given tolerance)
-                                or (in case no convergence is reached within the tolerance) the best
-                                guess found in `max_iter` iterations
+        - next_tle (``dsgp4.tle.TLE``): TLE corresponding to the propagated state
+        - y0 (``torch.tensor``): initial guess for the TLE elements. In particular, y0 contains the following elements (see SGP4 for a thorough description of these parameters):
+
     """
     i=0
     tol=1e9

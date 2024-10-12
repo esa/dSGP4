@@ -23,6 +23,9 @@ author = "Giacomo Acciarini, Atılım Güneş Baydin, Dario Izzo"
 
 # The full version, including alpha/beta/rc tags
 import dsgp4
+import sys
+import os
+sys.path.insert(0, os.path.abspath('../dsgp4'))
 
 release = dsgp4.__version__
 
@@ -32,7 +35,11 @@ release = dsgp4.__version__
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["myst_nb", "sphinx.ext.autodoc", "sphinx.ext.doctest", "sphinx.ext.intersphinx", "sphinx.ext.autosummary"]
+extensions = ["myst_nb", "sphinx.ext.autodoc", "sphinx.ext.doctest", "sphinx.ext.intersphinx", "sphinx.ext.autosummary","sphinx.ext.napoleon"]
+
+autosummary_generate = True
+napoleon_google_docstring = True
+napoleon_numpy_docstring = False
 
 intersphinx_mapping = {
     "numpy": ("https://numpy.org/doc/stable/", None),
