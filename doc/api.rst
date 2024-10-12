@@ -3,8 +3,10 @@
 API
 ====
 
-$\partial\textrm{SGP4}$ API
+$\partial$SGP4 API
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents
+.. autosummary::
+   :toctree: _autosummary
+   :recursive:
+
+   dsgp4
