@@ -38,14 +38,16 @@ def get_gravity_constants(gravity_constant_name):
 def propagate_batch(tles, tsinces, initialized=True):
     """
     This function takes a list of TLEs and a tensor of times (which must be of same length), and returns the corresponding states.
-
-    Args:
-        - tles (``list`` of ``dsgp4.tle.TLE``): list of TLE objects to be propagated
-        - tsinces (``torch.tensor``): propagation times in minutes (it has to be a tensor of the same size of the list of TLEs)
-        - initialized (``bool``): whether the TLEs have been initialized or not (default: True
+    
+    Parameters:
+    ----------------
+    tles (``list`` of ``dsgp4.tle.TLE``): list of TLE objects to be propagated
+    tsinces (``torch.tensor``): propagation times in minutes (it has to be a tensor of the same size of the list of TLEs)
+    initialized (``bool``): whether the TLEs have been initialized or not (default: True
 
     Returns:
-        - state (``torch.tensor``): (Nx2x3) tensor representing position and velocity in km and km/s, where the first dimension is the batch size.
+    ----------------
+    state (``torch.tensor``): (Nx2x3) tensor representing position and velocity in km and km/s, where the first dimension is the batch size.
     """
     from .sgp4_batched import sgp4_batched
     if not initialized:
@@ -61,14 +63,16 @@ def propagate(tle, tsinces, initialized=True):
     - if a list of TLEs is provided, then the function returns the state of each satellite at the requested times
 
     In the second case, the length of the list of TLEs must be equal to the length of the tensor of times.
-
-    Args:
-        - tle (``dsgp4.tle.TLE`` or ``list`` of ``dsgp4.tle.TLE``): TLE object or list of TLE objects to be propagated
-        - tsinces (``torch.tensor``): propagation times in minutes
-        - initialized (``bool``): whether the TLEs have been initialized or not (default: True)
+    
+    Parameters:
+    ----------------
+    tle (``dsgp4.tle.TLE`` or ``list`` of ``dsgp4.tle.TLE``): TLE object or list of TLE objects to be propagated
+    tsinces (``torch.tensor``): propagation times in minutes
+    initialized (``bool``): whether the TLEs have been initialized or not (default: True)
 
     Returns:
-        - state (``torch.tensor``): (2x3) tensor representing position and velocity in km and km/s.
+    ----------------
+    state (``torch.tensor``): (2x3) tensor representing position and velocity in km and km/s.
     """
     from .sgp4 import sgp4
     if not initialized:
@@ -82,14 +86,16 @@ def initialize_tle(tles,
     """
     This function takes a single `dsgp4.tle.TLE` object or a list of `dsgp4.tle.TLE` objects and initializes the SGP4 propagator.
     This is a necessary step to be ran before propagating TLEs (e.g. before calling `propagate` function).
-
-    Args:
-        - tles (``dsgp4.tle.TLE`` or ``list`` of ``dsgp4.tle.TLE``): TLE object or list of TLE objects to be initialized
-        - gravity_constant_name (``str``): name of the gravity constant to be used (default: "wgs-84")    
-        - with_grad (``bool``): whether to use gradients or not (default: False)
+    
+    Parameters:
+    ----------------
+    tles (``dsgp4.tle.TLE`` or ``list`` of ``dsgp4.tle.TLE``): TLE object or list of TLE objects to be initialized
+    gravity_constant_name (``str``): name of the gravity constant to be used (default: "wgs-84")    
+    with_grad (``bool``): whether to use gradients or not (default: False)
     
     Returns:
-        - tle_elements (``torch.tensor``): tensor of TLE parameters (especially useful to retrieve gradients, when `with_grad` is `True`)
+    ----------------
+    tle_elements (``torch.tensor``): tensor of TLE parameters (especially useful to retrieve gradients, when `with_grad` is `True`)
     """
     from .sgp4init import sgp4init
     from .sgp4init_batch import sgp4init_batch
@@ -169,25 +175,29 @@ contribute to implement it, open a PR or raise an issue at: https://github.com/e
 def from_year_day_to_date(y,d):
     """
     Converts a year and day of the year to a date.
-
-    Args:
-        - y (``int``): year
-        - d (``int``): day of the year
+    
+    Parameters:
+    ----------------
+    y (``int``): year
+    d (``int``): day of the year
 
     Returns:
-        - ``datetime.datetime``: date
+    ----------------
+    ``datetime.datetime``: date
     """
     return (datetime.datetime(y, 1, 1) + datetime.timedelta(d - 1))
 
 def gstime(jdut1):
     """
     This function computes the Greenwich Sidereal Time (GST) at the given Julian Date (UT1).
-
-    Args:
-        - jdut1 (``float``): Julian Date (UT1)
+    
+    Parameters:
+    ----------------
+    jdut1 (``float``): Julian Date (UT1)
 
     Returns:
-        - ``float``: Greenwich Sidereal Time (GST)
+    ----------------
+    ``float``: Greenwich Sidereal Time (GST)
     """
     tut1 = (jdut1 - 2451545.0) / 36525.0
     temp = -6.2e-6* tut1 * tut1 * tut1 + 0.093104 * tut1 * tut1 + \
@@ -201,29 +211,33 @@ def gstime(jdut1):
 def clone_w_grad(y):
     """
     This function takes a tensor and returns a copy of it with gradients.
-
-    Args:
-        - y (``torch.tensor``): tensor to clone
+    
+    Parameters:
+    ----------------
+    y (``torch.tensor``): tensor to clone
 
     Returns:
-        - ``torch.tensor``: tensor with gradients
+    ----------------
+    ``torch.tensor``: tensor with gradients
     """
     return y.clone().detach().requires_grad_(True)
 
 def jday(year, mon, day, hr, minute, sec):
     """
     Converts a date and time to a Julian Date. The Julian Date is the number of days since noon on January 1st, 4713 BC.
-
-    Args:
-        - year (``int``): year
-        - mon (``int``): month
-        - day (``int``): day
-        - hr (``int``): hour
-        - minute (``int``): minute
-        - sec (``float``): second
+    
+    Parameters:
+    ----------------
+    year (``int``): year
+    mon (``int``): month
+    day (``int``): day
+    hr (``int``): hour
+    minute (``int``): minute
+    sec (``float``): second
 
     Returns:
-        - ``tuple``: Julian Date as integer and fractional part of the day
+    ----------------
+    ``tuple``: Julian Date as integer and fractional part of the day
     """
     jd=(367.0 * year -
             7.0 * (year + ((mon + 9.0) // 12.0)) * 0.25 // 1.0 +
@@ -235,12 +249,14 @@ def jday(year, mon, day, hr, minute, sec):
 def invjday(jd):
     """
     Converts a Julian Date to a date and time. The Julian Date is the number of days since noon on January 1st, 4713 BC.
-
-    Args:
-        - jd (``float``): Julian Date
+    
+    Parameters:
+    ----------------
+    jd (``float``): Julian Date
 
     Returns:
-        - ``tuple``: year, month, day, hour, minute, second
+    ----------------
+    ``tuple``: year, month, day, hour, minute, second
     """
     temp    = jd - 2415019.5
     tu      = temp / 365.25
@@ -258,13 +274,15 @@ def invjday(jd):
 def days2mdhms(year, fractional_day):
     """
     Converts a number of days to months, days, hours, minutes, and seconds.
-
-    Args:
-        - year (``int``): year
-        - fractional_day (``float``): number of days
+    
+    Parameters:
+    ----------------
+    year (``int``): year
+    fractional_day (``float``): number of days
 
     Returns:
-        - ``tuple``: month, day, hour, minute, second
+    ----------------
+    ``tuple``: month, day, hour, minute, second
     """
     d=datetime.timedelta(days=fractional_day)
     datetime_obj=datetime.datetime(year-1,12,31)+d
@@ -273,12 +291,14 @@ def days2mdhms(year, fractional_day):
 def from_string_to_datetime(string):
     """
     Converts a string to a datetime object.
-
-    Args:
-        - string (``str``): string to convert
+    
+    Parameters:
+    ----------------
+    string (``str``): string to convert
 
     Returns:
-        - ``datetime.datetime``: datetime object
+    ----------------
+    ``datetime.datetime``: datetime object
     """
     if string.find('.')!=-1:
         return datetime.datetime.strptime(string, '%Y-%m-%d %H:%M:%S.%f')
@@ -288,12 +308,14 @@ def from_string_to_datetime(string):
 def from_mjd_to_epoch_days_after_1_jan(mjd_date):
     """
     Converts a Modified Julian Date to the number of days after 1 Jan 2000.
-
-    Args:
-        - mjd_date (``float``): Modified Julian Date
+    
+    Parameters:
+    ----------------
+    mjd_date (``float``): Modified Julian Date
 
     Returns:
-        - ``float``: number of days after 1 Jan 2000
+    ----------------
+    ``float``: number of days after 1 Jan 2000
     """
     d = from_mjd_to_datetime(mjd_date)
     dd = d - datetime.datetime(d.year-1, 12, 31)
@@ -304,12 +326,14 @@ def from_mjd_to_epoch_days_after_1_jan(mjd_date):
 def from_mjd_to_datetime(mjd_date):
     """
     Converts a Modified Julian Date to a datetime object. The Modified Julian Date is the number of days since midnight on November 17, 1858.
-
-    Args:
-        - mjd_date (``float``): Modified Julian Date
+    
+    Parameters:
+    ----------------
+    mjd_date (``float``): Modified Julian Date
 
     Returns:
-        - ``datetime.datetime``: datetime
+    ----------------
+    ``datetime.datetime``: datetime
     """
     jd_date=mjd_date+2400000.5
     return from_jd_to_datetime(jd_date)
@@ -317,12 +341,14 @@ def from_mjd_to_datetime(mjd_date):
 def from_jd_to_datetime(jd_date):
     """
     Converts a Julian Date to a datetime object. The Julian Date is the number of days since noon on January 1st, 4713 BC.
-
-    Args:
-        - jd_date (``float``): Julian Date
+    
+    Parameters:
+    ----------------
+    jd_date (``float``): Julian Date
 
     Returns:
-        - ``datetime.datetime``: datetime
+    ----------------
+    ``datetime.datetime``: datetime
     """
     year, month, day, hour, minute, seconds=invjday(jd_date)
     e_1=datetime.datetime(year=int(year), month=int(month), day=int(day), hour=int(hour), minute=int(minute), second=0)
@@ -331,12 +357,14 @@ def from_jd_to_datetime(jd_date):
 def get_non_empty_lines(lines):
     """
     This function returns the non-empty lines of a list of lines.
-
-    Args:
-        - lines (``list``): list of lines
+    
+    Parameters:
+    ----------------
+    lines (``list``): list of lines
 
     Returns:
-        - ``list``: list of non-empty lines
+    ----------------
+    ``list``: list of non-empty lines
     """
     if not isinstance(lines, str):
         raise ValueError('Expecting a string')
@@ -347,12 +375,14 @@ def get_non_empty_lines(lines):
 def from_datetime_to_fractional_day(datetime_object):
     """
     Converts a datetime object to a fractional day. The fractional day is the number of days since the beginning of the year. For example, January 1st is 0.0, January 2nd is 1.0, etc.
-
-    Args:
-        - datetime_object (``datetime.datetime``): datetime object to convert
+    
+    Parameters:
+    ----------------
+    datetime_object (``datetime.datetime``): datetime object to convert
 
     Returns:
-        - ``float``: fractional day
+    ----------------
+    ``float``: fractional day
     """
     d = datetime_object-datetime.datetime(datetime_object.year-1, 12, 31)
     fractional_day = d.days + d.seconds/60./60./24 + d.microseconds/60./60./24./1e6
@@ -361,37 +391,43 @@ def from_datetime_to_fractional_day(datetime_object):
 def from_datetime_to_mjd(datetime_obj):
     """
     Converts a datetime object to a Modified Julian Date. The Modified Julian Date is the number of days since midnight on November 17, 1858.
-
-    Args:
-        - datetime_obj (``datetime.datetime``): datetime object to convert
+    
+    Parameters:
+    ----------------
+    datetime_obj (``datetime.datetime``): datetime object to convert
 
     Returns:
-        - ``float``: Modified Julian Date
+    ----------------
+    ``float``: Modified Julian Date
     """
     return from_datetime_to_jd(datetime_obj)-2400000.5
 
 def from_datetime_to_jd(datetime_obj):
     """
     Converts a datetime object to a Julian Date. The Julian Date is the number of days since noon on January 1, 4713 BC.
-
-    Args:
-        - datetime_obj (``datetime.datetime``): datetime object to convert
+    
+    Parameters:
+    ----------------
+    datetime_obj (``datetime.datetime``): datetime object to convert
 
     Returns:
-        - ``float``: Julian Date
+    ----------------
+    ``float``: Julian Date
     """
     return sum(jday(year=datetime_obj.year, mon=datetime_obj.month, day=datetime_obj.day, hr=datetime_obj.hour, minute=datetime_obj.minute, sec=datetime_obj.second+float('0.'+str(datetime_obj.microsecond))))
 
 def from_cartesian_to_tle_elements(state, gravity_constant_name='wgs-72'):
     """
     This function converts the provided state from Cartesian to TLE elements.
-
-    Args:
-        - state (``np.array``): state in Cartesian coordinates
-        - gravity_constant_name (``str``): name of the gravity constant to be used (default: 'wgs-72')
+    
+    Parameters:
+    ----------------
+    state (``np.array``): state in Cartesian coordinates
+    gravity_constant_name (``str``): name of the gravity constant to be used (default: 'wgs-72')
     
     Returns:
-        - ``dict``: dictionary of TLE elements
+    ----------------
+    ``dict``: dictionary of TLE elements
     """
     _,mu_earth,_,_,_,_,_,_=get_gravity_constants(gravity_constant_name)
     mu_earth=float(mu_earth)*1e9
@@ -410,14 +446,16 @@ def from_cartesian_to_keplerian(state, mu):
     """
     This function takes the state in cartesian coordinates and the gravitational
     parameter of the central body, and returns the state in Keplerian elements.
-
-    Args:
-        - state (``np.array``): numpy array of 2 rows and 3 columns, where
+    
+    Parameters:
+    ----------------
+    state (``np.array``): numpy array of 2 rows and 3 columns, where
                                     the first row represents position, and the second velocity.
-        - mu (``float``): gravitational parameter of the central body
+                                    mu (``float``): gravitational parameter of the central body
 
     Returns:
-        - ``np.array``: numpy array of the six keplerian elements: (a,e,i,omega,Omega,mean_anomaly)
+    ----------------
+    ``np.array``: numpy array of the six keplerian elements: (a,e,i,omega,Omega,mean_anomaly)
                                              (i.e., semi major axis, eccentricity, inclination,
                                              right ascension of ascending node, argument of perigee,
                                              mean anomaly). All the angles are in radiants, eccentricity is unitless
@@ -458,14 +496,16 @@ def from_cartesian_to_keplerian(state, mu):
 def from_cartesian_to_keplerian_torch(state, mu):
     """
     Same as from_cartesian_to_keplerian, but for torch tensors.
-
-    Args:
-        - state (``torch.tensor``): torch tensor of 2 rows and 3 columns, where
+    
+    Parameters:
+    ----------------
+    state (``torch.tensor``): torch tensor of 2 rows and 3 columns, where
                                     the first row represents position, and the second velocity.
-        - mu (``float``): gravitational parameter of the central body
+                                    mu (``float``): gravitational parameter of the central body
 
     Returns:
-        - ``torch.tensor``: torch tensor of the six keplerian elements: (a,e,i,omega,Omega,mean_anomaly)
+    ----------------
+    ``torch.tensor``: torch tensor of the six keplerian elements: (a,e,i,omega,Omega,mean_anomaly)
                                              (i.e., semi major axis, eccentricity, inclination,
                                              right ascension of ascending node, argument of perigee,
                                              mean anomaly). All the angles are in radiants, eccentricity is unitless

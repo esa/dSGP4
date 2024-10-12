@@ -31,14 +31,16 @@ def initial_guess(tle_0, time_mjd, target_state=None):
     This method takes an initial TLE and the time at which we want to propagate it, and returns
     a set of parameter related to an initial guess useful to find the TLE observation that corresponds to the propagated state
 
-    Args:
-        - tle_0 (``dsgp4.tle.TLE``): starting TLE at time0
-        - new_date (``datetime.datetime``): new date of the TLE, as a datetime object
-        - target_state (``torch.tensor``): a 2x3 tensor for the position and velocity of the state. If None, then this is computed 
+    Parameters:
+    ----------------
+    tle_0 (``dsgp4.tle.TLE``): starting TLE at time
+    new_date (``datetime.datetime``): new date of the TLE, as a datetime objec
+    target_state (``torch.tensor``): a 2x3 tensor for the position and velocity of the state. If None, then this is computed 
                                             by propagating `tle_0` at the `new_date`.
 
     Returns:
-        - y0 (``torch.tensor``): initial guess for the TLE elements. In particular, y0 contains
+    ----------------
+    y0 (``torch.tensor``): initial guess for the TLE elements. In particular, y0 contains
                                  the following elements (see SGP4 for a thorough description of these parameters):
                                 * y0[0]: bstar (B* parameter)
                                 * y0[1]: ndot (mean motion first derivative)
@@ -49,11 +51,14 @@ def initial_guess(tle_0, time_mjd, target_state=None):
                                 * y0[6]: mo (mean anomaly)
                                 * y0[7]: no_kozai (mean anomaly in certain units)
                                 * y0[8]: nodeo (right ascension of the ascending node)
-        - target_state (``torch.tensor``): this expresses the cartesian state as position & velocity in km & km/s, at the propagated time.
+                        
+                        target_state (``torch.tensor``): this expresses the cartesian state as position & velocity in km & km/s, at the propagated time.
                                             The objective of the Newton method is to find the TLE observation that corresponds to that, at the propagated
                                             time.
-        - new_tle (``dsgp4.tle.TLE``): TLE constructed with `y0`, in order to find the TLE that corresponds to `target_state`
-        - tle_elements_0 (``dict``): dictionary used to construct `new_tle`
+                                    
+                                    new_tle (``dsgp4.tle.TLE``): TLE constructed with `y0`, in order to find the TLE that corresponds to `target_state`
+                                    
+                                    tle_elements_0 (``dict``): dictionary used to construct `new_tle`
 
     """
     new_date=util.from_mjd_to_datetime(time_mjd)
@@ -115,12 +120,14 @@ def update_TLE(old_tle,y0):
     This method takes a TLE and an initial guess, and returns a TLE updated accordingly. It
     is useful while doing Newton iterations.
 
-    Args:
-        - old_tle (``dsgp4.tle.TLE``): TLE corresponding to previous guess
-        - y0 (``torch.tensor``): initial guess (see the docstrings for `initial_guess` to know the content of `y0`)
+    Parameters:
+    ----------------
+    old_tle (``dsgp4.tle.TLE``): TLE corresponding to previous guess
+    y0 (``torch.tensor``): initial guess (see the docstrings for `initial_guess` to know the content of `y0`)
 
     Returns:
-        - new_tle (``dsgp4.tle.TLE``): updated TLE
+    ----------------
+    new_tle (``dsgp4.tle.TLE``): updated TLE
 
     """
     tle_elements={}
@@ -155,16 +162,18 @@ def newton_method(tle_0, time_mjd, target_state=None, new_tol=1e-12,max_iter=50)
     This method performs Newton method starting from an initial TLE and a given propagation time. The objective 
     is to find a TLE that accurately reconstructs the propagated state, at observation time.
 
-    Args:
-        - tle_0 (``dsgp4.tle.TLE``): starting TLE (i.e., TLE at a given initial time)
-        - time_mjd (``float``): time at which we want to propagate the TLE (in Modified Julian Date)
-        - target_state (``torch.tensor``): a 2x3 tensor for the position and velocity of the state. If None, then this is computed by propagating `tle_0` at the `new_date`.
-        - new_tol (``float``): tolerance for the Newton method
-        - max_iter (``int``): maximum number of iterations for the Newton method
+    Parameters:
+    ----------------
+    tle_0 (``dsgp4.tle.TLE``): starting TLE (i.e., TLE at a given initial time)
+    time_mjd (``float``): time at which we want to propagate the TLE (in Modified Julian Date)
+    target_state (``torch.tensor``): a 2x3 tensor for the position and velocity of the state. If None, then this is computed by propagating `tle_0` at the `new_date`.
+    new_tol (``float``): tolerance for the Newton method
+    max_iter (``int``): maximum number of iterations for the Newton method
 
     Returns:
-        - next_tle (``dsgp4.tle.TLE``): TLE corresponding to the propagated state
-        - y0 (``torch.tensor``): initial guess for the TLE elements. In particular, y0 contains the following elements (see SGP4 for a thorough description of these parameters):
+    ----------------
+    next_tle (``dsgp4.tle.TLE``): TLE corresponding to the propagated state
+    y0 (``torch.tensor``): initial guess for the TLE elements. In particular, y0 contains the following elements (see SGP4 for a thorough description of these parameters):
 
     """
     i=0

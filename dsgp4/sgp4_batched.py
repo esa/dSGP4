@@ -11,12 +11,14 @@ def sgp4_batched(satellite_batch, tsince):
     The method returns the satellite position and velocity
     in km and km/s, respectively, after `tsince` minutes.
 
-    Args:
-        - satellite (``dsgp4.tle.TLE``): TLE batch object (with attributes that are N-dimensional tensors) 
-        - tsince (``torch.tensor``): time to propagate, since the TLE epoch, in minutes (also an N-dimensional tensor)
+    Parameters:
+    ----------------
+    satellite_batch (``dsgp4.tle.TLE``): a TLE object.
+    tsince (``torch.tensor``): a torch.tensor of times since the TLE epoch in minutes.
 
     Returns:
-        - batch_state (``torch.tensor``): a batch of 2x3 tensors, where the first row represents the spacecraft
+    ----------------
+    batch_state (``torch.tensor``): a batch of 2x3 tensors, where the first row represents the spacecraft
                                     position (in km) and the second the spacecraft velocity (in km/s)
     """
     if not isinstance(satellite_batch, TLE):

@@ -10,13 +10,14 @@ def sgp4(satellite, tsince):
     to propagate the TLE at future times. The method returns the satellite position and velocity
     in km and km/s, respectively, after `tsince` minutes.
 
-    Args:
-        - satellite (``dsgp4.tle.TLE``): TLE object
-        - tsince (``int`` or ``float`` or ``list`` or ``torch.tensor``): time to propagate, since the TLE epoch, in minutes (can be a vector or a single element)
+    Parameters:
+    ----------------
+    satellite (``dsgp4.tle.TLE``): a TLE object.
+    tsince (``torch.tensor``): a torch.tensor of times since the TLE epoch in minutes.
 
     Returns:
-        - state (``torch.tensor``): a set of len(tsince)x2x3 tensor of states,  where the first row represents the spacecraft
-                                    position (in km) and the second the spacecraft velocity (in km/s). Reference frame is TEME.
+    ----------------
+    (``torch.tensor``): a tensor of len(tsince)x2x3 representing the satellite position and velocity in km and km/s, respectively.
     """
     #quick check to see if the satellite has been initialized
     if not isinstance(satellite, TLE):

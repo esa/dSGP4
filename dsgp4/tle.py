@@ -12,11 +12,13 @@ def compute_checksum(line):
     """
     This function takes a TLE line in the form of a string and computes the checksum.
 
-    Args:
-        line (`str`): TLE line
+    Parameters:
+    ----------------
+    line (``str``): TLE line
 
     Returns:
-        `int`: checksum
+    ----------------
+    ``int``: checksum
     """
     return sum((int(c) if c.isdigit() else c == '-') for c in line[0:68]) % 10
 
@@ -26,12 +28,14 @@ def read_satellite_catalog_number(string):
     """
     This function takes a string corresponding to part of a TLE line, and returns
     the corresponding satellite catalog number.
-
-    Args:
-        string (``str``): string line
+    
+    Parameters:
+    ----------------
+    string (``str``): string line
     
     Returns:
-        ``int``: satellite catalog number
+    ----------------
+    ``int``: satellite catalog number
     """
     if not string[0].isalpha():
         return int(string)
@@ -46,12 +50,16 @@ def read_satellite_catalog_number(string):
 def load_from_lines(lines, opsmode='i'):
     """
     This function takes a TLE as a list of strings and returns both itself and its dictionary representation.
-    Args:
-        lines (``list``): TLE data in the form of a list
-        opsmode (``str``): operation mode, either 'i' or 'a'
+    
+    Parameters:
+    ----------------
+    lines (``list``): TLE data in the form of a list
+    opsmode (``str``): operation mode, either 'i' or 'a'
+
     Returns:
-        ``list``: TLE data in the form of a list
-        ``dict``: TLE data in the form of a dictionary
+    ----------------
+    ``list``: TLE data in the form of a list
+    ``dict``: TLE data in the form of a dictionary
     """
     if isinstance(lines, str):
         lines = util.get_non_empty_lines(lines)
@@ -186,13 +194,15 @@ def load_from_data(data, opsmode='i'):
     """
     This function takes a TLE as a dictionary and returns both itself and its representation as a list of strings.
 
-    Args:
-        data (`dict`): TLE data in the form of a dictionary
-        opsmode (`str`): 'i' for improved, 's' for simplified
+    Parameters:
+    ----------------
+    data (`dict`): TLE data in the form of a dictionary
+    opsmode (`str`): 'i' for improved, 's' for simplified
 
     Returns:
-        `list`: TLE data in the form of a list
-        `dict`: TLE data in the form of a dictionary
+    ----------------
+    `list`: TLE data in the form of a list
+    `dict`: TLE data in the form of a dictionary
     """
     #for SGP4:
     xpdotp   =  1440.0 / (2.0 *np.pi);
@@ -289,11 +299,13 @@ def load(file_name):
     This function takes a file name that contains TLE (either with names or without),
     and returns a list of TLE objects.
 
-    Args:
-        file_name (`str`): TLEs file name
+    Parameters:
+    ----------------
+    file_name (`str`): TLEs file name
 
     Returns:
-        `list`: list of `dsgp4.tle.TLE` objects
+    ----------------
+    `list`: list of `dsgp4.tle.TLE` objects
     """
     with open(file_name) as f:
         lines = util.get_non_empty_lines(f.read())
@@ -321,11 +333,13 @@ class TLE():
     This class constructs a TLE object from either a list of strings (that make up the TLE)
     or from a dictionary.
 
-    Args:
-        tle (`list` or `dict`): list of strings (that make up the TLE) or dictionary
+    Parameters:
+    ----------------
+    data (`str`, `list`, `dict`): TLE data
 
     Returns:
-        `dsgp4.tle.TLE` object
+    ----------------
+    `dsgp4.tle.TLE` object
     """
     def __init__(self, data):
         if isinstance(data, list) or isinstance(data, str):
@@ -349,8 +363,10 @@ class TLE():
         """
         This function sets the epoch of the TLE to the given date.
 
-        Args:
-            date_mjd (`float`): date in MJD
+
+        Parameters:
+        ----------------
+        date_mjd (`float`): date in MJD
         """
         d = copy.deepcopy(self._data)
         d['epoch_year'] = util.from_mjd_to_datetime(date_mjd).year
@@ -368,8 +384,10 @@ class TLE():
         """
         This function updates the TLE object with the given data.
 
-        Args:
-            tle_data (`dict`): dictionary of TLE data
+
+        Parameters:
+        ----------------
+        tle_data (`dict`): dictionary of TLE data
         """
         d = copy.deepcopy(self._data)
         for k, v in tle_data.items():
@@ -391,11 +409,14 @@ class TLE():
         """
         This function returns the perigee altitude of a given TLE.
 
-        Args:
-            R_eq (`float`): equatorial radius of the Earth [m]
+
+        Parameters:
+        ----------------
+        R_eq (``float``): equatorial radius of the Earth [m]
 
         Returns:
-            `float`: perigee altitude
+        ----------------
+        ``float``: perigee altitude
         """
         return self.semi_major_axis*(1-self.eccentricity)-R_eq
 
@@ -403,11 +424,14 @@ class TLE():
         """
         This function returns the apogee altitude of a given TLE.
 
-        Args:
-            R_eq (`float`): equatorial radius of the Earth [m]
+
+        Parameters:
+        ----------------
+        R_eq (``float``): equatorial radius of the Earth [m]
 
         Returns:
-            `float`: apogee altitude
+        ----------------
+        ``float``: apogee altitude
         """
         return self.semi_major_axis*(1+self.eccentricity)-R_eq
 
