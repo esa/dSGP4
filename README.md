@@ -48,10 +48,16 @@ $\partial \textrm{SGP4}$ and its applications for ML hybrid propagation and more
 
 ```bibtex
 @article{acciarini2024closing,
-  title={Closing the Gap Between SGP4 and High-Precision Propagation via Differentiable Programming},
-  author={Acciarini, Giacomo and Baydin, At{\i}l{\i}m G{\"u}ne{\c{s}} and Izzo, Dario},
-  journal={arXiv preprint arXiv:2402.04830},
-  year={2024}
+title = {Closing the gap between SGP4 and high-precision propagation via differentiable programming},
+journal = {Acta Astronautica},
+volume = {226},
+pages = {694-701},
+year = {2025},
+issn = {0094-5765},
+doi = {https://doi.org/10.1016/j.actaastro.2024.10.063},
+url = {https://www.sciencedirect.com/science/article/pii/S0094576524006374},
+author = {Giacomo Acciarini and Atılım Güneş Baydin and Dario Izzo},
+keywords = {SGP4, Orbital propagation, Differentiable programming, Machine learning, Spacecraft collision avoidance, Kessler, Kessler syndrome, AI for space, Applied machine learning for space},
 }
 ```
 
