@@ -44,7 +44,7 @@ Through stochastic gradient descent, this combined model's inputs, outputs, and 
 ## How to cite
 
 If you use `dsgp4`, we would be grateful if you could star the repository and/or cite our work.
-$\partial \textrm{SGP4}$ and its applications for ML hybrid propagation and more, can be found in our [publication](https://arxiv.org/abs/2402.04830):
+$\partial \textrm{SGP4}$ and its applications for ML hybrid propagation and more, can be found in our [publication](https://doi.org/10.1016/j.actaastro.2024.10.063):
 
 ```bibtex
 @article{acciarini2024closing,
