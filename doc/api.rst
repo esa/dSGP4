@@ -10,6 +10,7 @@ $\partial$SGP4 API
    :recursive:
 
    dsgp4
+   dsgp4.mldsgp4.mldsgp4
    dsgp4.plot.plot_orbit
    dsgp4.plot.plot_tles
    dsgp4.tle.compute_checksum
