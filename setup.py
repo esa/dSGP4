@@ -2,7 +2,7 @@ import os
 import sys
 from setuptools import setup, find_packages
 PACKAGE_NAME = 'dsgp4'
-MINIMUM_PYTHON_VERSION = 3, 10
+MINIMUM_PYTHON_VERSION = 3, 8
 
 with open('README.md', 'r') as f:
     long_description = f.read()
