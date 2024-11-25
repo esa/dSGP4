@@ -7,12 +7,6 @@ $\partial$SGP4 API
 
 .. currentmodule:: dsgp4
 
-.. toctree::
-   :maxdepth: 2
-
-   _autosummary/dsgp4
-   _autosummary/dsgp4.mldsgp4
-
 .. autosummary::
    :toctree: _autosummary/
    :recursive:
