@@ -38,6 +38,7 @@ release = dsgp4.__version__
 extensions = ["myst_nb", "sphinx.ext.autodoc", "sphinx.ext.doctest", "sphinx.ext.intersphinx", "sphinx.ext.autosummary","sphinx.ext.napoleon"]
 
 autosummary_generate = True
+autosummary_imported_members = True
 napoleon_google_docstring = True
 napoleon_numpy_docstring = False
 

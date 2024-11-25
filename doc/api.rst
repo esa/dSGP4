@@ -6,8 +6,8 @@ API
 $\partial$SGP4 API
 
 .. autosummary::
-   :toctree: _autosummary
-   :maxdepth: 3
+   :toctree: _autosummary/
+   :recursive:
 
    dsgp4
    dsgp4.plot.plot_orbit
@@ -49,4 +49,14 @@ $\partial$SGP4 API
    dsgp4.sgp4init.sgp4init
    dsgp4.sgp4init_batch.sgp4init_batch
    dsgp4.sgp4init_batch.initl_batch
+   dsgp4.mldsgp4
+   dsgp4.initl
+   dsgp4.newton_method
+   dsgp4.sgp4init
+   dsgp4.sgp4init_batch
+
+.. autosummary::
+   :toctree: _autosummary
+   :template: custom-class-template.rst
+ 
    dsgp4.mldsgp4.mldsgp4
