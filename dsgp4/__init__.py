@@ -1,8 +1,9 @@
-__version__ = '1.0.2'
+__version__ = '1.1.2'
 
 import torch
 torch.set_default_dtype(torch.float64)
 from .sgp4 import sgp4
+from .mldsgp4 import mldsgp4
 from .initl import initl
 from .sgp4init import sgp4init
 from .sgp4init_batch import sgp4init_batch

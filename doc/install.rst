@@ -3,12 +3,6 @@ Installation
 
 .. _installation_deps:
 
-Dependencies
-------------
-
-dSGP4 has the following Python dependencies:
-
-
 
 Packages
 --------
