@@ -37,10 +37,24 @@ release = dsgp4.__version__
 # ones.
 extensions = ["myst_nb", "sphinx.ext.autodoc", "sphinx.ext.doctest", "sphinx.ext.intersphinx", "sphinx.ext.autosummary","sphinx.ext.napoleon"]
 
+
+# build the templated autosummary files
 autosummary_generate = True
-autosummary_imported_members = True
-napoleon_google_docstring = True
-napoleon_numpy_docstring = False
+numpydoc_show_class_members = False
+
+panels_add_bootstrap_css = False
+
+autosectionlabel_prefix_document = True
+
+# katex options
+#
+#
+katex_prerender = True
+
+napoleon_use_ivar = True
+
+# Add any paths that contain templates here, relative to this directory.
+templates_path = ["_templates"]
 
 intersphinx_mapping = {
     "numpy": ("https://numpy.org/doc/stable/", None),
@@ -50,13 +64,10 @@ intersphinx_mapping = {
 
 autoclass_content = 'both'
 
-# Add any paths that contain templates here, relative to this directory.
-templates_path = ["_templates",".DS_Store"]
-
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["_build", ".DS_Store"]
+exclude_patterns = ["_build", ".DS_Store",'jupyter_execute/**/*.ipynb','jupyter_execute/*.ipynb']
 
 
 # -- Options for HTML output -------------------------------------------------

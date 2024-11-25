@@ -9,7 +9,6 @@ $\partial$SGP4 API
    :toctree: _autosummary/
    :recursive:
 
-   dsgp4
    dsgp4.plot.plot_orbit
    dsgp4.plot.plot_tles
    dsgp4.tle.compute_checksum
@@ -49,11 +48,12 @@ $\partial$SGP4 API
    dsgp4.sgp4init.sgp4init
    dsgp4.sgp4init_batch.sgp4init_batch
    dsgp4.sgp4init_batch.initl_batch
-   dsgp4.mldsgp4
    dsgp4.initl
    dsgp4.newton_method
    dsgp4.sgp4init
    dsgp4.sgp4init_batch
+   dsgp4.mldsgp4
+   dsgp4
 
 .. autosummary::
    :toctree: _autosummary
