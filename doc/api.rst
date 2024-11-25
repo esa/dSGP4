@@ -54,9 +54,10 @@ $\partial$SGP4 API
    newton_method
    sgp4init
    sgp4init_batch
+   mldsgp4
 
 .. autosummary::
-   :toctree: _autosummary
+   :toctree: _autosummary/
    :template: custom-class-template.rst
  
    mldsgp4.mldsgp4
