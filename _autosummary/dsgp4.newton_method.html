@@ -3,13 +3,13 @@
 <!DOCTYPE html>
 
 
-<html lang="en" >
+<html lang="en" data-content_root="" >
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>dsgp4.newton_method &#8212; dsgp4 1.0.2 documentation</title>
+    <title>dsgp4.newton_method &#8212; dsgp4 1.1.2 documentation</title>
   
   
   
@@ -19,12 +19,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
 
   
-  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
@@ -34,8 +34,9 @@
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
@@ -47,7 +48,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '_autosummary/dsgp4.newton_method';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="dsgp4.plot" href="dsgp4.plot.html" />
+    <link rel="next" title="dsgp4.sgp4init" href="dsgp4.sgp4init.html" />
     <link rel="prev" title="dsgp4.initl" href="dsgp4.initl.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -59,6 +60,15 @@
   
   
   <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
   
   <input type="checkbox"
           class="sidebar-toggle"
@@ -112,9 +122,11 @@
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
+
   
 
 <a class="navbar-brand logo" href="../index.html">
+  
   
   
   
@@ -124,8 +136,8 @@
       
     
     
-    <img src="../_static/logo_dsgp4.png" class="logo__image only-light" alt="Logo image"/>
-    <script>document.write(`<img src="../_static/logo_dsgp4.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+    <img src="../_static/logo_dsgp4.png" class="logo__image only-light" alt="dsgp4 1.1.2 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo_dsgp4.png" class="logo__image only-dark" alt="dsgp4 1.1.2 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -143,24 +155,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/tle_object.html">TLE Object</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/tle_propagation.html">Propagate TLEs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/sgp4_partial_derivatives.html">Partial Derivatives Computation via Autodiff</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/mldsgp4.html">ML-dSGP4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/covariance_transformation.html">Similarity Transformation - from Cartesian to TLE Covariance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/covariance_propagation.html">Covariance Propagation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/gradient_based_optimization.html">Gradient Based Optimization</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../api.html">API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l2 current active has-children"><a class="reference internal" href="dsgp4.html">dsgp4</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="dsgp4.initl.html">dsgp4.initl</a></li>
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">dsgp4.newton_method</a></li>
-<li class="toctree-l3"><a class="reference internal" href="dsgp4.plot.html">dsgp4.plot</a></li>
-<li class="toctree-l3"><a class="reference internal" href="dsgp4.sgp4.html">dsgp4.sgp4</a></li>
-<li class="toctree-l3"><a class="reference internal" href="dsgp4.sgp4_batched.html">dsgp4.sgp4_batched</a></li>
-<li class="toctree-l3"><a class="reference internal" href="dsgp4.sgp4init.html">dsgp4.sgp4init</a></li>
-<li class="toctree-l3"><a class="reference internal" href="dsgp4.sgp4init_batch.html">dsgp4.sgp4init_batch</a></li>
-<li class="toctree-l3"><a class="reference internal" href="dsgp4.tle.html">dsgp4.tle</a></li>
-<li class="toctree-l3"><a class="reference internal" href="dsgp4.util.html">dsgp4.util</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="dsgp4.plot.plot_orbit.html">dsgp4.plot.plot_orbit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dsgp4.plot.plot_tles.html">dsgp4.plot.plot_tles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dsgp4.tle.compute_checksum.html">dsgp4.tle.compute_checksum</a></li>
@@ -200,6 +201,11 @@
 <li class="toctree-l2"><a class="reference internal" href="dsgp4.sgp4init.sgp4init.html">dsgp4.sgp4init.sgp4init</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dsgp4.sgp4init_batch.sgp4init_batch.html">dsgp4.sgp4init_batch.sgp4init_batch</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dsgp4.sgp4init_batch.initl_batch.html">dsgp4.sgp4init_batch.initl_batch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dsgp4.initl.html">dsgp4.initl</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">dsgp4.newton_method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dsgp4.sgp4init.html">dsgp4.sgp4init</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dsgp4.sgp4init_batch.html">dsgp4.sgp4init_batch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dsgp4.mldsgp4.html">mldsgp4 model</a></li>
 </ul>
 </li>
 </ul>
@@ -355,20 +361,22 @@
 </button>
 
 
+
 <script>
 document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
 </script>
 
+
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
@@ -437,11 +445,10 @@ y0 (<code class="docutils literal notranslate"><span class="pre">torch.tensor</s
 
               
               
-                <footer class="bd-footer-article">
+              
+              
+                <footer class="prev-next-footer">
                   
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
        href="dsgp4.initl.html"
@@ -453,18 +460,15 @@ y0 (<code class="docutils literal notranslate"><span class="pre">torch.tensor</s
       </div>
     </a>
     <a class="right-next"
-       href="dsgp4.plot.html"
+       href="dsgp4.sgp4init.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">dsgp4.plot</p>
+        <p class="prev-next-title">dsgp4.sgp4init</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
-</div></div>
-  
 </div>
-
                 </footer>
               
             </div>
@@ -501,9 +505,10 @@ By Giacomo Acciarini, Atılım Güneş Baydin, Dario Izzo
   
   <div class="footer-item">
     
+
   <p class="copyright">
     
-      © Copyright 2022, 2023, 2024, Giacomo Acciarini and Atılım Güneş Baydin and Dario Izzo.
+      © Copyright 2022, 2023, 2024, 2025, Giacomo Acciarini and Atılım Güneş Baydin and Dario Izzo.
       <br/>
     
   </p>
@@ -527,8 +532,8 @@ By Giacomo Acciarini, Atılım Güneş Baydin, Dario Izzo
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
 
   <footer class="bd-footer">
   </footer>

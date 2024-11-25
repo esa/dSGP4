@@ -3,13 +3,13 @@
 <!DOCTYPE html>
 
 
-<html lang="en" >
+<html lang="en" data-content_root="" >
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Partial Derivatives Computation via Autodiff &#8212; dsgp4 1.0.2 documentation</title>
+    <title>Partial Derivatives Computation via Autodiff &#8212; dsgp4 1.1.2 documentation</title>
   
   
   
@@ -19,12 +19,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
 
   
-  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
@@ -34,8 +34,9 @@
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
@@ -49,7 +50,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/sgp4_partial_derivatives';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Similarity Transformation - from Cartesian to TLE Covariance" href="covariance_transformation.html" />
+    <link rel="next" title="ML-dSGP4" href="mldsgp4.html" />
     <link rel="prev" title="Propagate TLEs" href="tle_propagation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -61,6 +62,15 @@
   
   
   <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
   
   <input type="checkbox"
           class="sidebar-toggle"
@@ -114,9 +124,11 @@
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
+
   
 
 <a class="navbar-brand logo" href="../index.html">
+  
   
   
   
@@ -126,8 +138,8 @@
       
     
     
-    <img src="../_static/logo_dsgp4.png" class="logo__image only-light" alt="Logo image"/>
-    <script>document.write(`<img src="../_static/logo_dsgp4.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+    <img src="../_static/logo_dsgp4.png" class="logo__image only-light" alt="dsgp4 1.1.2 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo_dsgp4.png" class="logo__image only-dark" alt="dsgp4 1.1.2 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -145,24 +157,13 @@
 <li class="toctree-l2"><a class="reference internal" href="tle_object.html">TLE Object</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tle_propagation.html">Propagate TLEs</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Partial Derivatives Computation via Autodiff</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldsgp4.html">ML-dSGP4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="covariance_transformation.html">Similarity Transformation - from Cartesian to TLE Covariance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="covariance_propagation.html">Covariance Propagation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gradient_based_optimization.html">Gradient Based Optimization</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../_autosummary/dsgp4.html">dsgp4</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../_autosummary/dsgp4.initl.html">dsgp4.initl</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../_autosummary/dsgp4.newton_method.html">dsgp4.newton_method</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../_autosummary/dsgp4.plot.html">dsgp4.plot</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../_autosummary/dsgp4.sgp4.html">dsgp4.sgp4</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../_autosummary/dsgp4.sgp4_batched.html">dsgp4.sgp4_batched</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../_autosummary/dsgp4.sgp4init.html">dsgp4.sgp4init</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../_autosummary/dsgp4.sgp4init_batch.html">dsgp4.sgp4init_batch</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../_autosummary/dsgp4.tle.html">dsgp4.tle</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../_autosummary/dsgp4.util.html">dsgp4.util</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.plot.plot_orbit.html">dsgp4.plot.plot_orbit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.plot.plot_tles.html">dsgp4.plot.plot_tles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.tle.compute_checksum.html">dsgp4.tle.compute_checksum</a></li>
@@ -202,6 +203,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.sgp4init.sgp4init.html">dsgp4.sgp4init.sgp4init</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.sgp4init_batch.sgp4init_batch.html">dsgp4.sgp4init_batch.sgp4init_batch</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.sgp4init_batch.initl_batch.html">dsgp4.sgp4init_batch.initl_batch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.initl.html">dsgp4.initl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.newton_method.html">dsgp4.newton_method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.sgp4init.html">dsgp4.sgp4init</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.sgp4init_batch.html">dsgp4.sgp4init_batch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dsgp4.mldsgp4.html">mldsgp4 model</a></li>
 </ul>
 </li>
 </ul>
@@ -388,20 +394,22 @@
 </button>
 
 
+
 <script>
 document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
 </script>
 
+
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
@@ -505,35 +513,35 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor([[[ 1.4226e+03, -6.9783e+03,  3.5388e+02],
-         [ 1.9473e+00,  7.5324e-01,  7.1933e+00]],
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor([[[ 1.4409e+03, -6.9708e+03,  4.2184e+02],
+         [ 1.9324e+00,  8.2579e-01,  7.1892e+00]],
 
-        [[ 1.3810e+03, -6.9925e+03,  2.0156e+02],
-         [ 1.9800e+00,  5.9047e-01,  7.1997e+00]],
+        [[ 1.3291e+03, -7.0053e+03,  1.4628e+01],
+         [ 2.0187e+00,  3.9046e-01,  7.2028e+00]],
 
-        [[ 1.4210e+03, -6.9789e+03,  3.4806e+02],
-         [ 1.9486e+00,  7.4703e-01,  7.1936e+00]],
+        [[ 1.4359e+03, -6.9730e+03,  4.0311e+02],
+         [ 1.9366e+00,  8.0580e-01,  7.1904e+00]],
 
-        [[ 1.3903e+03, -6.9897e+03,  2.3531e+02],
-         [ 1.9728e+00,  6.2656e-01,  7.1986e+00]],
+        [[ 1.3976e+03, -6.9873e+03,  2.6221e+02],
+         [ 1.9671e+00,  6.5531e-01,  7.1976e+00]],
 
-        [[ 1.3356e+03, -7.0040e+03,  3.7782e+01],
-         [ 2.0140e+00,  4.1525e-01,  7.2028e+00]],
+        [[ 1.3397e+03, -7.0031e+03,  5.2561e+01],
+         [ 2.0110e+00,  4.3107e-01,  7.2026e+00]],
 
-        [[ 1.3582e+03, -6.9988e+03,  1.1900e+02],
-         [ 1.9973e+00,  5.0217e-01,  7.2018e+00]],
+        [[ 1.3824e+03, -6.9921e+03,  2.0678e+02],
+         [ 1.9789e+00,  5.9606e-01,  7.1996e+00]],
 
-        [[ 1.3350e+03, -7.0041e+03,  3.5772e+01],
-         [ 2.0144e+00,  4.1310e-01,  7.2028e+00]],
+        [[ 1.3596e+03, -6.9984e+03,  1.2415e+02],
+         [ 1.9962e+00,  5.0769e-01,  7.2017e+00]],
 
-        [[ 1.3446e+03, -7.0020e+03,  7.0016e+01],
-         [ 2.0074e+00,  4.4975e-01,  7.2025e+00]],
+        [[ 1.3309e+03, -7.0049e+03,  2.1085e+01],
+         [ 2.0174e+00,  3.9737e-01,  7.2028e+00]],
 
-        [[ 1.3489e+03, -7.0010e+03,  8.5468e+01],
-         [ 2.0042e+00,  4.6629e-01,  7.2023e+00]],
+        [[ 1.4255e+03, -6.9772e+03,  3.6480e+02],
+         [ 1.9450e+00,  7.6490e-01,  7.1927e+00]],
 
-        [[ 1.3981e+03, -6.9871e+03,  2.6397e+02],
-         [ 1.9667e+00,  6.5719e-01,  7.1975e+00]]],
+        [[ 1.3321e+03, -7.0047e+03,  2.5390e+01],
+         [ 2.0165e+00,  4.0198e-01,  7.2028e+00]]],
        grad_fn=&lt;TransposeBackward0&gt;)
 </pre></div>
 </div>
@@ -541,8 +549,8 @@ document.write(`
 </div>
 <p>Let’s now retrieve the partial derivatives of the SGP4 output w.r.t. time.</p>
 <p>Since the state is position and velocity (i.e., <span class="math notranslate nohighlight">\([x,y,z,v_x,v_y,v_z]\)</span>), these partials will be all the elements of type:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-49ed4331-2fb8-465b-bc83-fcf98c1eb918">
-<span class="eqno">(1)<a class="headerlink" href="#equation-49ed4331-2fb8-465b-bc83-fcf98c1eb918" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-f6f6f273-99d4-471d-98ef-1d00b705c095">
+<span class="eqno">(1)<a class="headerlink" href="#equation-f6f6f273-99d4-471d-98ef-1d00b705c095" title="Permalink to this equation">#</a></span>\[\begin{equation}
 \dfrac{d \pmb{x}}{d t}=[\dfrac{dx}{dt}, \dfrac{dy}{dt}, \dfrac{dz}{dt}, \dfrac{d^2x}{dt^2}, \dfrac{d^2y}{dt^2}, \dfrac{d^2z}{dt^2}]^T=[v_x, v_y, v_z, \dfrac{dv_x}{dt}, \dfrac{dv_y}{dt}, \dfrac{dv_z}{dt}]^T
 \end{equation}\]</div>
 <div class="admonition note">
@@ -564,35 +572,35 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor([[[ 1.1684e+02,  4.5195e+01,  4.3160e+02],
-         [-9.3958e-02,  4.6091e-01, -2.3434e-02]],
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor([[[ 1.1595e+02,  4.9548e+01,  4.3135e+02],
+         [-9.5165e-02,  4.6040e-01, -2.7933e-02]],
 
-        [[ 1.1880e+02,  3.5429e+01,  4.3199e+02],
-         [-9.1221e-02,  4.6189e-01, -1.3348e-02]],
+        [[ 1.2113e+02,  2.3428e+01,  4.3217e+02],
+         [-8.7800e-02,  4.6277e-01, -9.6916e-04]],
 
-        [[ 1.1692e+02,  4.4822e+01,  4.3162e+02],
-         [-9.3855e-02,  4.6095e-01, -2.3049e-02]],
+        [[ 1.1620e+02,  4.8349e+01,  4.3143e+02],
+         [-9.4834e-02,  4.6054e-01, -2.6693e-02]],
 
-        [[ 1.1837e+02,  3.7594e+01,  4.3192e+02],
-         [-9.1831e-02,  4.6169e-01, -1.5584e-02]],
+        [[ 1.1803e+02,  3.9319e+01,  4.3186e+02],
+         [-9.2316e-02,  4.6152e-01, -1.7365e-02]],
 
-        [[ 1.2084e+02,  2.4915e+01,  4.3217e+02],
-         [-8.8228e-02,  4.6268e-01, -2.5026e-03]],
+        [[ 1.2066e+02,  2.5864e+01,  4.3216e+02],
+         [-8.8500e-02,  4.6262e-01, -3.4814e-03]],
 
-        [[ 1.1984e+02,  3.0131e+01,  4.3211e+02],
-         [-8.9718e-02,  4.6232e-01, -7.8815e-03]],
+        [[ 1.1874e+02,  3.5764e+01,  4.3198e+02],
+         [-9.1315e-02,  4.6186e-01, -1.3694e-02]],
 
-        [[ 1.2087e+02,  2.4786e+01,  4.3217e+02],
-         [-8.8191e-02,  4.6269e-01, -2.3695e-03]],
+        [[ 1.1977e+02,  3.0461e+01,  4.3210e+02],
+         [-8.9812e-02,  4.6229e-01, -8.2227e-03]],
 
-        [[ 1.2045e+02,  2.6985e+01,  4.3215e+02],
-         [-8.8821e-02,  4.6254e-01, -4.6374e-03]],
+        [[ 1.2105e+02,  2.3842e+01,  4.3217e+02],
+         [-8.7920e-02,  4.6274e-01, -1.3968e-03]],
 
-        [[ 1.2026e+02,  2.7978e+01,  4.3214e+02],
-         [-8.9104e-02,  4.6247e-01, -5.6608e-03]],
+        [[ 1.1670e+02,  4.5894e+01,  4.3156e+02],
+         [-9.4153e-02,  4.6083e-01, -2.4157e-02]],
 
-        [[ 1.1801e+02,  3.9432e+01,  4.3185e+02],
-         [-9.2348e-02,  4.6151e-01, -1.7481e-02]]])
+        [[ 1.2099e+02,  2.4119e+01,  4.3217e+02],
+         [-8.7999e-02,  4.6273e-01, -1.6819e-03]]])
 </pre></div>
 </div>
 </div>
@@ -665,23 +673,23 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor([[[ 5.6582e+01, -3.7267e+01,  4.4361e+02],
-         [-2.0225e-01, -4.2672e-01, -6.0440e-03]],
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor([[[ 4.9298e+01, -5.2525e+01,  4.4308e+02],
+         [-2.0453e-01, -4.2534e-01, -2.3663e-02]],
 
-        [[ 1.8748e+01, -6.8405e+01,  4.4346e+02],
-         [-4.1181e-01, -2.3049e-01, -1.7509e-02]],
+        [[ 2.9558e+01, -6.2324e+01,  4.4375e+02],
+         [-4.1106e-01, -2.3237e-01, -4.5928e-03]],
 
-        [[-1.0938e+02, -2.6644e+01,  4.4237e+02],
-         [ 9.4761e-02, -4.8941e-01, -6.0518e-03]],
+        [[-1.0754e+02, -3.6031e+01,  4.4215e+02],
+         [ 9.7256e-02, -4.8868e-01, -1.6256e-02]],
 
-        [[-3.6444e+01, -1.0644e+02,  4.4120e+02],
-         [ 4.5421e-01, -1.9858e-01, -7.7427e-03]],
+        [[-3.4401e+01, -1.0733e+02,  4.4116e+02],
+         [ 4.5444e-01, -1.9803e-01, -1.0108e-02]],
 
-        [[-7.4821e+01, -8.6918e+01,  4.4144e+02],
-         [ 3.0487e-01, -3.9128e-01, -2.3078e-02]],
+        [[-8.6287e+01, -7.2046e+01,  4.4194e+02],
+         [ 3.0106e-01, -3.9464e-01, -3.1013e-03]],
 
-        [[ 4.5900e+01, -3.7586e+02, -2.2986e+02],
-         [ 3.9538e-02,  2.3648e-01, -3.7892e-01]]])
+        [[ 4.6435e+01, -3.7261e+02, -2.3500e+02],
+         [ 3.8896e-02,  2.4170e-01, -3.7568e-01]]])
 </pre></div>
 </div>
 </div>
@@ -706,8 +714,8 @@ document.write(`
 <li><p><span class="math notranslate nohighlight">\(\dot{n}\)</span> mean motion first derivative [radians/<span class="math notranslate nohighlight">\(\textrm{minute}^2\)</span>]</p></li>
 <li><p><span class="math notranslate nohighlight">\(\ddot{n}\)</span> mean motion second derivative [radians/<span class="math notranslate nohighlight">\(\textrm{minute}^2\)</span>]</p></li>
 </ul>
-<div class="amsmath math notranslate nohighlight" id="equation-b83d3c30-1355-41f4-a676-e80f3d742f40">
-<span class="eqno">(2)<a class="headerlink" href="#equation-b83d3c30-1355-41f4-a676-e80f3d742f40" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-9e3d07a8-b92c-402f-873a-cfacb74048af">
+<span class="eqno">(2)<a class="headerlink" href="#equation-9e3d07a8-b92c-402f-873a-cfacb74048af" title="Permalink to this equation">#</a></span>\[\begin{equation}
 \dfrac{\partial \pmb{x}}{\partial \textrm{TLE}}=
 \begin{bmatrix}
 \frac{\partial x}{\partial B^*} &amp; \frac{\partial x}{\partial \dot{n}} &amp; \frac{\partial x}{\partial \ddot{n}} &amp; \frac{\partial x}{\partial e} &amp; \frac{\partial x}{\partial \omega} &amp; \frac{\partial x}{\partial i} &amp; \frac{\partial x}{\partial M} &amp; \frac{\partial x}{\partial n} &amp; \frac{\partial x}{\partial \Omega} \\
@@ -775,135 +783,135 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor([[[-6.2227e-05,  0.0000e+00,  0.0000e+00,  9.4634e+02,  1.8979e+03,
-          -1.3404e+02,  1.9127e+03, -1.3933e+04,  6.9976e+03],
-         [-3.1431e-04,  0.0000e+00,  0.0000e+00,  6.4247e+03,  5.1028e+02,
-          -2.8705e+01,  4.9900e+02,  7.4554e+04,  1.3629e+03],
-         [-4.1818e-04,  0.0000e+00,  0.0000e+00,  7.4299e+03,  6.8560e+03,
-           3.4774e+01,  6.8996e+03,  5.7612e+02,  0.0000e+00],
-         [-6.2868e-07,  0.0000e+00,  0.0000e+00,  8.7792e-01, -1.4291e+00,
-          -7.0726e+00, -1.4377e+00,  1.0148e+01, -5.2032e-01],
-         [-3.7470e-07,  0.0000e+00,  0.0000e+00,  4.4977e+00,  7.3595e+00,
-          -1.3399e+00,  7.3817e+00,  5.0078e+00,  1.9938e+00],
-         [-2.4024e-06,  0.0000e+00,  0.0000e+00,  5.9496e+00, -1.2851e-01,
-           2.0514e+00, -1.4378e-01,  3.8291e+01,  0.0000e+00]],
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor([[[-1.4439e-05,  0.0000e+00,  0.0000e+00,  9.3343e+02,  1.9178e+03,
+          -3.4553e+01,  1.9327e+03, -1.4079e+04,  7.0041e+03],
+         [-7.9240e-05,  0.0000e+00,  0.0000e+00,  6.3626e+03,  4.0672e+02,
+          -9.8573e+00,  3.9512e+02,  7.4500e+04,  1.3347e+03],
+         [-1.0115e-04,  0.0000e+00,  0.0000e+00,  7.3453e+03,  6.8570e+03,
+           5.9172e+00,  6.9008e+03,  3.7170e+01,  0.0000e+00],
+         [-1.6193e-07,  0.0000e+00,  0.0000e+00,  9.4532e-01, -1.3995e+00,
+          -7.0739e+00, -1.4080e+00,  1.0598e+01, -4.1191e-01],
+         [-8.9016e-08,  0.0000e+00,  0.0000e+00,  4.3224e+00,  7.3663e+00,
+          -1.3401e+00,  7.3889e+00,  2.7007e+00,  2.0146e+00],
+         [-6.1393e-07,  0.0000e+00,  0.0000e+00,  6.0677e+00, -2.2063e-02,
+           2.0517e+00, -3.6660e-02,  3.8338e+01,  0.0000e+00]],
 
-        [[-2.4895e-05,  0.0000e+00,  0.0000e+00,  9.3654e+02,  1.9131e+03,
-          -5.7857e+01,  1.9280e+03, -1.4044e+04,  7.0027e+03],
-         [-1.3386e-04,  0.0000e+00,  0.0000e+00,  6.3769e+03,  4.3099e+02,
-          -1.4272e+01,  4.1946e+02,  7.4510e+04,  1.3413e+03],
-         [-1.7259e-04,  0.0000e+00,  0.0000e+00,  7.3653e+03,  6.8569e+03,
-           1.2677e+01,  6.9007e+03,  1.6346e+02,  0.0000e+00],
-         [-2.7220e-07,  0.0000e+00,  0.0000e+00,  9.2960e-01, -1.4065e+00,
-          -7.0738e+00, -1.4150e+00,  1.0494e+01, -4.3731e-01],
-         [-1.5257e-07,  0.0000e+00,  0.0000e+00,  4.3638e+00,  7.3648e+00,
-          -1.3401e+00,  7.3874e+00,  3.2415e+00,  2.0098e+00],
-         [-1.0339e-06,  0.0000e+00,  0.0000e+00,  6.0405e+00, -4.6998e-02,
-           2.0517e+00, -6.1754e-02,  3.8332e+01,  0.0000e+00]],
+        [[-4.6574e-05,  0.0000e+00,  0.0000e+00,  9.4245e+02,  1.9041e+03,
+          -1.0328e+02,  1.9189e+03, -1.3978e+04,  6.9998e+03],
+         [-2.4108e-04,  0.0000e+00,  0.0000e+00,  6.4052e+03,  4.7827e+02,
+          -2.2877e+01,  4.6689e+02,  7.4534e+04,  1.3542e+03],
+         [-3.1679e-04,  0.0000e+00,  0.0000e+00,  7.4040e+03,  6.8565e+03,
+           2.5851e+01,  6.9001e+03,  4.0953e+02,  0.0000e+00],
+         [-4.8547e-07,  0.0000e+00,  0.0000e+00,  8.9885e-01, -1.4200e+00,
+          -7.0732e+00, -1.4286e+00,  1.0289e+01, -4.8681e-01],
+         [-2.8236e-07,  0.0000e+00,  0.0000e+00,  4.4439e+00,  7.3617e+00,
+          -1.3400e+00,  7.3841e+00,  4.2948e+00,  2.0003e+00],
+         [-1.8506e-06,  0.0000e+00,  0.0000e+00,  5.9867e+00, -9.5597e-02,
+           2.0516e+00, -1.1066e-01,  3.8311e+01,  0.0000e+00]],
 
-        [[-3.8743e-05,  0.0000e+00,  0.0000e+00,  9.4039e+02,  1.9073e+03,
-          -8.7279e+01,  1.9221e+03, -1.4001e+04,  7.0009e+03],
-         [-2.0320e-04,  0.0000e+00,  0.0000e+00,  6.3952e+03,  4.6161e+02,
-          -1.9846e+01,  4.5019e+02,  7.4525e+04,  1.3497e+03],
-         [-2.6525e-04,  0.0000e+00,  0.0000e+00,  7.3904e+03,  6.8567e+03,
-           2.1211e+01,  6.9003e+03,  3.2288e+02,  0.0000e+00],
-         [-4.1060e-07,  0.0000e+00,  0.0000e+00,  9.0970e-01, -1.4152e+00,
-          -7.0734e+00, -1.4238e+00,  1.0362e+01, -4.6938e-01],
-         [-2.3576e-07,  0.0000e+00,  0.0000e+00,  4.4158e+00,  7.3629e+00,
-          -1.3400e+00,  7.3853e+00,  3.9239e+00,  2.0036e+00],
-         [-1.5632e-06,  0.0000e+00,  0.0000e+00,  6.0058e+00, -7.8480e-02,
-           2.0516e+00, -9.3434e-02,  3.8320e+01,  0.0000e+00]],
+        [[-1.1076e-04,  0.0000e+00,  0.0000e+00,  9.5686e+02,  1.8801e+03,
+          -2.2116e+02,  1.8948e+03, -1.3811e+04,  6.9906e+03],
+         [-5.2456e-04,  0.0000e+00,  0.0000e+00,  6.4810e+03,  6.0090e+02,
+          -4.5210e+01,  5.8989e+02,  7.4628e+04,  1.3873e+03],
+         [-7.2157e-04,  0.0000e+00,  0.0000e+00,  7.5026e+03,  6.8538e+03,
+           6.0044e+01,  6.8972e+03,  1.0473e+03,  0.0000e+00],
+         [-1.0288e-06,  0.0000e+00,  0.0000e+00,  8.1826e-01, -1.4548e+00,
+          -7.0702e+00, -1.4635e+00,  9.7410e+00, -6.1518e-01],
+         [-6.5546e-07,  0.0000e+00,  0.0000e+00,  4.6480e+00,  7.3522e+00,
+          -1.3396e+00,  7.3739e+00,  7.0248e+00,  1.9751e+00],
+         [-3.9587e-06,  0.0000e+00,  0.0000e+00,  5.8419e+00, -2.2173e-01,
+           2.0508e+00, -2.3758e-01,  3.8201e+01,  0.0000e+00]],
 
-        [[-1.1379e-04,  0.0000e+00,  0.0000e+00,  9.5745e+02,  1.8791e+03,
-          -2.2624e+02,  1.8938e+03, -1.3804e+04,  6.9901e+03],
-         [-5.3697e-04,  0.0000e+00,  0.0000e+00,  6.4844e+03,  6.0619e+02,
-          -4.6173e+01,  5.9519e+02,  7.4633e+04,  1.3888e+03],
-         [-7.4002e-04,  0.0000e+00,  0.0000e+00,  7.5068e+03,  6.8537e+03,
-           6.1519e+01,  6.8970e+03,  1.0748e+03,  0.0000e+00],
-         [-1.0518e-06,  0.0000e+00,  0.0000e+00,  8.1476e-01, -1.4563e+00,
-          -7.0700e+00, -1.4650e+00,  9.7168e+00, -6.2071e-01],
-         [-6.7271e-07,  0.0000e+00,  0.0000e+00,  4.6566e+00,  7.3517e+00,
-          -1.3395e+00,  7.3735e+00,  7.1424e+00,  1.9740e+00],
-         [-4.0492e-06,  0.0000e+00,  0.0000e+00,  5.8355e+00, -2.2717e-01,
-           2.0507e+00, -2.4305e-01,  3.8194e+01,  0.0000e+00]],
+        [[-8.9156e-06,  0.0000e+00,  0.0000e+00,  9.3171e+02,  1.9203e+03,
+          -2.1812e+01,  1.9352e+03, -1.4098e+04,  7.0049e+03],
+         [-4.9490e-05,  0.0000e+00,  0.0000e+00,  6.3549e+03,  3.9345e+02,
+          -7.4437e+00,  3.8182e+02,  7.4495e+04,  1.3311e+03],
+         [-6.2822e-05,  0.0000e+00,  0.0000e+00,  7.3344e+03,  6.8571e+03,
+           2.2218e+00,  6.9009e+03, -3.1879e+01,  0.0000e+00],
+         [-1.0140e-07,  0.0000e+00,  0.0000e+00,  9.5389e-01, -1.3957e+00,
+          -7.0740e+00, -1.4042e+00,  1.0655e+01, -3.9802e-01],
+         [-5.5148e-08,  0.0000e+00,  0.0000e+00,  4.2997e+00,  7.3670e+00,
+          -1.3401e+00,  7.3897e+00,  2.4050e+00,  2.0173e+00],
+         [-3.8407e-07,  0.0000e+00,  0.0000e+00,  6.0824e+00, -8.4310e-03,
+           2.0517e+00, -2.2942e-02,  3.8339e+01,  0.0000e+00]],
 
-        [[-1.6591e-04,  0.0000e+00,  0.0000e+00,  9.6672e+02,  1.8619e+03,
-          -3.0900e+02,  1.8765e+03, -1.3692e+04,  6.9824e+03],
-         [-7.4120e-04,  0.0000e+00,  0.0000e+00,  6.5397e+03,  6.9222e+02,
-          -6.1854e+01,  6.8148e+02,  7.4728e+04,  1.4118e+03],
-         [-1.0518e-03,  0.0000e+00,  0.0000e+00,  7.5746e+03,  6.8505e+03,
-           8.5526e+01,  6.8937e+03,  1.5213e+03,  0.0000e+00],
-         [-1.4239e-06,  0.0000e+00,  0.0000e+00,  7.5751e-01, -1.4804e+00,
-          -7.0665e+00, -1.4892e+00,  9.3178e+00, -7.1076e-01],
-         [-9.6702e-07,  0.0000e+00,  0.0000e+00,  4.7964e+00,  7.3436e+00,
-          -1.3389e+00,  7.3649e+00,  9.0547e+00,  1.9560e+00],
-         [-5.5178e-06,  0.0000e+00,  0.0000e+00,  5.7293e+00, -3.1573e-01,
-           2.0498e+00, -3.3215e-01,  3.8065e+01,  0.0000e+00]],
+        [[-2.3878e-04,  0.0000e+00,  0.0000e+00,  9.7738e+02,  1.8399e+03,
+          -4.1256e+02,  1.8544e+03, -1.3559e+04,  6.9711e+03],
+         [-1.0032e-03,  0.0000e+00,  0.0000e+00,  6.6113e+03,  7.9980e+02,
+          -8.1478e+01,  7.8937e+02,  7.4879e+04,  1.4403e+03],
+         [-1.4722e-03,  0.0000e+00,  0.0000e+00,  7.6577e+03,  6.8450e+03,
+           1.1557e+02,  6.8880e+03,  2.0778e+03,  0.0000e+00],
+         [-1.8788e-06,  0.0000e+00,  0.0000e+00,  6.8520e-01, -1.5104e+00,
+          -7.0607e+00, -1.5192e+00,  8.8030e+00, -8.2336e-01],
+         [-1.3704e-06,  0.0000e+00,  0.0000e+00,  4.9673e+00,  7.3318e+00,
+          -1.3379e+00,  7.3526e+00,  1.1442e+01,  1.9329e+00],
+         [-7.3420e-06,  0.0000e+00,  0.0000e+00,  5.5915e+00, -4.2655e-01,
+           2.0482e+00, -4.4362e-01,  3.7846e+01,  0.0000e+00]],
 
-        [[-6.7797e-05,  0.0000e+00,  0.0000e+00,  9.4765e+02,  1.8957e+03,
-          -1.4463e+02,  1.9105e+03, -1.3918e+04,  6.9968e+03],
-         [-3.3964e-04,  0.0000e+00,  0.0000e+00,  6.4314e+03,  5.2130e+02,
-          -3.0711e+01,  5.1005e+02,  7.4562e+04,  1.3659e+03],
-         [-4.5378e-04,  0.0000e+00,  0.0000e+00,  7.4388e+03,  6.8558e+03,
-           3.7846e+01,  6.8993e+03,  6.3345e+02,  0.0000e+00],
-         [-6.7775e-07,  0.0000e+00,  0.0000e+00,  8.7070e-01, -1.4323e+00,
-          -7.0724e+00, -1.4409e+00,  1.0099e+01, -5.3186e-01],
-         [-4.0732e-07,  0.0000e+00,  0.0000e+00,  4.5161e+00,  7.3587e+00,
-          -1.3399e+00,  7.3808e+00,  5.2532e+00,  1.9915e+00],
-         [-2.5921e-06,  0.0000e+00,  0.0000e+00,  5.9367e+00, -1.3985e-01,
-           2.0514e+00, -1.5518e-01,  3.8282e+01,  0.0000e+00]],
+        [[-8.0963e-05,  0.0000e+00,  0.0000e+00,  9.5065e+02,  1.8908e+03,
+          -1.6900e+02,  1.9055e+03, -1.3883e+04,  6.9949e+03],
+         [-3.9817e-04,  0.0000e+00,  0.0000e+00,  6.4471e+03,  5.4666e+02,
+          -3.5329e+01,  5.3549e+02,  7.4581e+04,  1.3727e+03],
+         [-5.3706e-04,  0.0000e+00,  0.0000e+00,  7.4593e+03,  6.8553e+03,
+           4.4916e+01,  6.8987e+03,  7.6535e+02,  0.0000e+00],
+         [-7.9023e-07,  0.0000e+00,  0.0000e+00,  8.5405e-01, -1.4394e+00,
+          -7.0718e+00, -1.4481e+00,  9.9863e+00, -5.5840e-01],
+         [-4.8398e-07,  0.0000e+00,  0.0000e+00,  4.5584e+00,  7.3567e+00,
+          -1.3398e+00,  7.3787e+00,  5.8177e+00,  1.9863e+00],
+         [-3.0282e-06,  0.0000e+00,  0.0000e+00,  5.9069e+00, -1.6593e-01,
+           2.0512e+00, -1.8143e-01,  3.8260e+01,  0.0000e+00]],
 
-        [[-6.5142e-05,  0.0000e+00,  0.0000e+00,  9.4703e+02,  1.8967e+03,
-          -1.3960e+02,  1.9115e+03, -1.3925e+04,  6.9972e+03],
-         [-3.2762e-04,  0.0000e+00,  0.0000e+00,  6.4282e+03,  5.1607e+02,
-          -2.9759e+01,  5.0481e+02,  7.4558e+04,  1.3645e+03],
-         [-4.3684e-04,  0.0000e+00,  0.0000e+00,  7.4346e+03,  6.8559e+03,
-           3.6388e+01,  6.8994e+03,  6.0625e+02,  0.0000e+00],
-         [-6.5448e-07,  0.0000e+00,  0.0000e+00,  8.7413e-01, -1.4308e+00,
-          -7.0725e+00, -1.4394e+00,  1.0123e+01, -5.2638e-01],
-         [-3.9179e-07,  0.0000e+00,  0.0000e+00,  4.5074e+00,  7.3590e+00,
-          -1.3399e+00,  7.3812e+00,  5.1368e+00,  1.9926e+00],
-         [-2.5021e-06,  0.0000e+00,  0.0000e+00,  5.9429e+00, -1.3447e-01,
-           2.0514e+00, -1.4977e-01,  3.8286e+01,  0.0000e+00]],
+        [[-2.2818e-04,  0.0000e+00,  0.0000e+00,  9.7596e+02,  1.8430e+03,
+          -3.9822e+02,  1.8575e+03, -1.3577e+04,  6.9728e+03],
+         [-9.6645e-04,  0.0000e+00,  0.0000e+00,  6.6013e+03,  7.8490e+02,
+          -7.8759e+01,  7.7443e+02,  7.4856e+04,  1.4364e+03],
+         [-1.4120e-03,  0.0000e+00,  0.0000e+00,  7.6463e+03,  6.8459e+03,
+           1.1141e+02,  6.8889e+03,  2.0009e+03,  0.0000e+00],
+         [-1.8164e-06,  0.0000e+00,  0.0000e+00,  6.9526e-01, -1.5062e+00,
+          -7.0616e+00, -1.5151e+00,  8.8753e+00, -8.0777e-01],
+         [-1.3122e-06,  0.0000e+00,  0.0000e+00,  4.9439e+00,  7.3336e+00,
+          -1.3381e+00,  7.3544e+00,  1.1112e+01,  1.9362e+00],
+         [-7.0903e-06,  0.0000e+00,  0.0000e+00,  5.6109e+00, -4.1120e-01,
+           2.0484e+00, -4.2818e-01,  3.7880e+01,  0.0000e+00]],
 
-        [[-2.2868e-04,  0.0000e+00,  0.0000e+00,  9.7603e+02,  1.8429e+03,
-          -3.9890e+02,  1.8573e+03, -1.3576e+04,  6.9727e+03],
-         [-9.6819e-04,  0.0000e+00,  0.0000e+00,  6.6018e+03,  7.8561e+02,
-          -7.8888e+01,  7.7514e+02,  7.4857e+04,  1.4365e+03],
-         [-1.4148e-03,  0.0000e+00,  0.0000e+00,  7.6468e+03,  6.8459e+03,
-           1.1160e+02,  6.8888e+03,  2.0046e+03,  0.0000e+00],
-         [-1.8194e-06,  0.0000e+00,  0.0000e+00,  6.9478e-01, -1.5064e+00,
-          -7.0615e+00, -1.5153e+00,  8.8719e+00, -8.0851e-01],
-         [-1.3150e-06,  0.0000e+00,  0.0000e+00,  4.9450e+00,  7.3335e+00,
-          -1.3381e+00,  7.3543e+00,  1.1128e+01,  1.9360e+00],
-         [-7.1022e-06,  0.0000e+00,  0.0000e+00,  5.6100e+00, -4.1193e-01,
-           2.0484e+00, -4.2891e-01,  3.7879e+01,  0.0000e+00]],
+        [[-2.3088e-04,  0.0000e+00,  0.0000e+00,  9.7633e+02,  1.8422e+03,
+          -4.0188e+02,  1.8567e+03, -1.3573e+04,  6.9723e+03],
+         [-9.7583e-04,  0.0000e+00,  0.0000e+00,  6.6038e+03,  7.8871e+02,
+          -7.9454e+01,  7.7825e+02,  7.4861e+04,  1.4374e+03],
+         [-1.4273e-03,  0.0000e+00,  0.0000e+00,  7.6492e+03,  6.8457e+03,
+           1.1247e+02,  6.8886e+03,  2.0206e+03,  0.0000e+00],
+         [-1.8324e-06,  0.0000e+00,  0.0000e+00,  6.9269e-01, -1.5073e+00,
+          -7.0613e+00, -1.5162e+00,  8.8568e+00, -8.1176e-01],
+         [-1.3270e-06,  0.0000e+00,  0.0000e+00,  4.9499e+00,  7.3331e+00,
+          -1.3381e+00,  7.3539e+00,  1.1196e+01,  1.9353e+00],
+         [-7.1547e-06,  0.0000e+00,  0.0000e+00,  5.6060e+00, -4.1512e-01,
+           2.0483e+00, -4.3213e-01,  3.7872e+01,  0.0000e+00]],
 
-        [[-9.0107e-06,  0.0000e+00,  0.0000e+00,  9.3174e+02,  1.9202e+03,
-          -2.2035e+01,  1.9352e+03, -1.4098e+04,  7.0049e+03],
-         [-5.0008e-05,  0.0000e+00,  0.0000e+00,  6.3550e+03,  3.9368e+02,
-          -7.4858e+00,  3.8205e+02,  7.4496e+04,  1.3311e+03],
-         [-6.3486e-05,  0.0000e+00,  0.0000e+00,  7.3346e+03,  6.8571e+03,
-           2.2863e+00,  6.9009e+03, -3.0675e+01,  0.0000e+00],
-         [-1.0246e-07,  0.0000e+00,  0.0000e+00,  9.5374e-01, -1.3958e+00,
-          -7.0740e+00, -1.4043e+00,  1.0654e+01, -3.9827e-01],
-         [-5.5733e-08,  0.0000e+00,  0.0000e+00,  4.3001e+00,  7.3670e+00,
-          -1.3401e+00,  7.3897e+00,  2.4101e+00,  2.0172e+00],
-         [-3.8808e-07,  0.0000e+00,  0.0000e+00,  6.0822e+00, -8.6688e-03,
-           2.0517e+00, -2.3181e-02,  3.8339e+01,  0.0000e+00]],
+        [[-4.2414e-05,  0.0000e+00,  0.0000e+00,  9.4136e+02,  1.9058e+03,
+          -9.4832e+01,  1.9206e+03, -1.3990e+04,  7.0004e+03],
+         [-2.2107e-04,  0.0000e+00,  0.0000e+00,  6.3999e+03,  4.6948e+02,
+          -2.1277e+01,  4.5807e+02,  7.4529e+04,  1.3518e+03],
+         [-2.8949e-04,  0.0000e+00,  0.0000e+00,  7.3968e+03,  6.8566e+03,
+           2.3402e+01,  6.9002e+03,  3.6380e+02,  0.0000e+00],
+         [-4.4599e-07,  0.0000e+00,  0.0000e+00,  9.0458e-01, -1.4175e+00,
+          -7.0733e+00, -1.4261e+00,  1.0328e+01, -4.7761e-01],
+         [-2.5764e-07,  0.0000e+00,  0.0000e+00,  4.4291e+00,  7.3623e+00,
+          -1.3400e+00,  7.3847e+00,  4.0991e+00,  2.0020e+00],
+         [-1.6990e-06,  0.0000e+00,  0.0000e+00,  5.9968e+00, -8.6562e-02,
+           2.0516e+00, -1.0157e-01,  3.8316e+01,  0.0000e+00]],
 
-        [[-2.1240e-04,  0.0000e+00,  0.0000e+00,  9.7378e+02,  1.8476e+03,
-          -3.7642e+02,  1.8622e+03, -1.3605e+04,  6.9752e+03],
-         [-9.1092e-04,  0.0000e+00,  0.0000e+00,  6.5861e+03,  7.6227e+02,
-          -7.4630e+01,  7.5173e+02,  7.4822e+04,  1.4304e+03],
-         [-1.3217e-03,  0.0000e+00,  0.0000e+00,  7.6289e+03,  6.8471e+03,
-           1.0508e+02,  6.8901e+03,  1.8840e+03,  0.0000e+00],
-         [-1.7214e-06,  0.0000e+00,  0.0000e+00,  7.1052e-01, -1.5000e+00,
-          -7.0629e+00, -1.5088e+00,  8.9846e+00, -7.8408e-01],
-         [-1.2253e-06,  0.0000e+00,  0.0000e+00,  4.9082e+00,  7.3361e+00,
-          -1.3383e+00,  7.3571e+00,  1.0610e+01,  1.9410e+00],
-         [-6.7072e-06,  0.0000e+00,  0.0000e+00,  5.6402e+00, -3.8788e-01,
-           2.0488e+00, -4.0472e-01,  3.7930e+01,  0.0000e+00]]])
+        [[-1.3912e-04,  0.0000e+00,  0.0000e+00,  9.6216e+02,  1.8705e+03,
+          -2.6755e+02,  1.8852e+03, -1.3747e+04,  6.9864e+03],
+         [-6.3837e-04,  0.0000e+00,  0.0000e+00,  6.5118e+03,  6.4914e+02,
+          -5.4001e+01,  6.3827e+02,  7.4678e+04,  1.4003e+03],
+         [-8.9294e-04,  0.0000e+00,  0.0000e+00,  7.5408e+03,  6.8522e+03,
+           7.3503e+01,  6.8955e+03,  1.2979e+03,  0.0000e+00],
+         [-1.2385e-06,  0.0000e+00,  0.0000e+00,  7.8624e-01, -1.4684e+00,
+          -7.0684e+00, -1.4771e+00,  9.5190e+00, -6.6567e-01],
+         [-8.1648e-07,  0.0000e+00,  0.0000e+00,  4.7268e+00,  7.3478e+00,
+          -1.3393e+00,  7.3693e+00,  8.0975e+00,  1.9650e+00],
+         [-4.7835e-06,  0.0000e+00,  0.0000e+00,  5.7830e+00, -2.7138e-01,
+           2.0503e+00, -2.8753e-01,  3.8135e+01,  0.0000e+00]]])
 </pre></div>
 </div>
 </div>
@@ -980,83 +988,83 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor([[[-3.6300e-04,  0.0000e+00,  0.0000e+00, -1.2625e+03,  8.3513e+02,
-           2.6117e+02,  8.1091e+02, -3.1898e+04, -6.4150e+03],
-         [-1.7426e-03,  0.0000e+00,  0.0000e+00,  2.2602e+03, -7.2605e+02,
-          -1.2525e+02, -7.7209e+02, -6.8122e+04,  3.0737e+03],
-         [ 2.7415e-03,  0.0000e+00,  0.0000e+00, -1.3910e+04,  7.0349e+03,
-          -4.1440e+01,  7.0199e+03,  1.3700e+03,  0.0000e+00],
-         [-1.2262e-06,  0.0000e+00,  0.0000e+00,  3.1034e+00, -3.2399e+00,
-           6.6776e+00, -3.2306e+00,  2.4097e+00,  8.1197e-01],
-         [-1.0600e-06,  0.0000e+00,  0.0000e+00,  6.7922e+00, -6.7426e+00,
-          -3.1506e+00, -6.7424e+00, -8.6042e+00,  8.5208e-01],
-         [-4.3293e-06,  0.0000e+00,  0.0000e+00, -5.9607e-01, -3.5999e-01,
-          -1.1145e+00, -3.0504e-01,  3.8790e+01,  0.0000e+00]],
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor([[[-2.2503e-05,  0.0000e+00,  0.0000e+00, -1.3742e+03,  9.5310e+02,
+           1.6543e+01,  9.2850e+02, -3.2034e+04, -6.4400e+03],
+         [-1.1139e-04,  0.0000e+00,  0.0000e+00,  2.0119e+03, -4.7872e+02,
+          -9.8395e+00, -5.2484e+02, -6.7907e+04,  3.0402e+03],
+         [ 1.7940e-04,  0.0000e+00,  0.0000e+00, -1.3878e+04,  7.0429e+03,
+          -6.1261e-01,  7.0258e+03, -5.5593e+01,  0.0000e+00],
+         [-7.7517e-08,  0.0000e+00,  0.0000e+00,  2.9948e+00, -3.2034e+00,
+           6.6833e+00, -3.1923e+00,  5.0349e+00,  5.5176e-01],
+         [-6.7651e-08,  0.0000e+00,  0.0000e+00,  6.7625e+00, -6.7663e+00,
+          -3.1532e+00, -6.7621e+00, -3.1171e+00,  9.7584e-01],
+         [-2.7185e-07,  0.0000e+00,  0.0000e+00, -1.1628e+00, -7.4274e-02,
+          -1.1154e+00, -1.9838e-02,  3.9015e+01,  0.0000e+00]],
 
-        [[-2.4017e-04,  0.0000e+00,  0.0000e+00, -4.9620e+03,  3.4379e+02,
-           1.0408e+02,  3.4182e+02, -6.5438e+04, -3.4831e+03],
-         [-2.5911e-04,  0.0000e+00,  0.0000e+00, -1.0499e+03, -1.0605e+03,
-          -1.8735e+02, -1.0626e+03, -3.7295e+04,  6.2074e+03],
-         [ 6.8868e-04,  0.0000e+00,  0.0000e+00, -9.8895e+03,  7.0353e+03,
-          -3.0850e+01,  7.0405e+03,  9.7639e+02,  0.0000e+00],
-         [-5.7893e-07,  0.0000e+00,  0.0000e+00,  4.7808e+00, -6.5318e+00,
-           3.6444e+00, -6.5341e+00, -1.1939e+00,  1.1145e+00],
-         [ 3.2187e-07,  0.0000e+00,  0.0000e+00,  1.7325e+00, -3.6646e+00,
-          -6.4271e+00, -3.6664e+00, -7.6090e+00,  3.5818e-01],
-         [-3.6382e-06,  0.0000e+00,  0.0000e+00,  5.4962e+00, -2.2851e-01,
-          -1.1435e+00, -2.2593e-01,  3.8993e+01,  0.0000e+00]],
+        [[-4.1004e-04,  0.0000e+00,  0.0000e+00, -4.8708e+03,  2.1678e+02,
+           1.7488e+02,  2.1476e+02, -6.5489e+04, -3.4607e+03],
+         [-4.2706e-04,  0.0000e+00,  0.0000e+00, -1.0176e+03, -1.1315e+03,
+          -3.1221e+02, -1.1336e+03, -3.7458e+04,  6.2131e+03],
+         [ 1.0902e-03,  0.0000e+00,  0.0000e+00, -9.7806e+03,  7.0293e+03,
+          -5.3066e+01,  7.0346e+03,  1.7322e+03,  0.0000e+00],
+         [-9.2643e-07,  0.0000e+00,  0.0000e+00,  4.5948e+00, -6.5381e+00,
+           3.6413e+00, -6.5406e+00, -4.0211e+00,  1.1890e+00],
+         [ 5.6697e-07,  0.0000e+00,  0.0000e+00,  1.5916e+00, -3.6413e+00,
+          -6.4218e+00, -3.6431e+00, -9.1729e+00,  2.2477e-01],
+         [-6.1125e-06,  0.0000e+00,  0.0000e+00,  5.6946e+00, -3.7999e-01,
+          -1.1426e+00, -3.7753e-01,  3.8768e+01,  0.0000e+00]],
 
-        [[-8.0807e-05,  0.0000e+00,  0.0000e+00,  7.3831e+02, -1.6742e+03,
-           2.1090e+01, -1.6953e+03,  1.3274e+04, -6.8076e+03],
-         [ 3.9816e-04,  0.0000e+00,  0.0000e+00, -6.8675e+03, -3.4842e+02,
-           7.0913e+00, -3.4582e+02, -6.9657e+04, -1.3019e+03],
-         [ 1.9245e-05,  0.0000e+00,  0.0000e+00,  2.1981e+03,  6.7183e+03,
-           1.7720e+00,  6.7978e+03, -3.5491e+01,  0.0000e+00],
-         [ 3.9265e-07,  0.0000e+00,  0.0000e+00, -1.5740e+00,  1.4287e+00,
-           7.2392e+00,  1.4390e+00, -9.3258e+00,  3.7461e-01],
-         [ 6.9264e-08,  0.0000e+00,  0.0000e+00, -1.6143e+00, -7.4806e+00,
-           1.3807e+00, -7.5246e+00, -2.1932e+00, -1.8363e+00],
-         [-1.5655e-06,  0.0000e+00,  0.0000e+00,  7.2719e+00, -1.6131e-02,
-           1.8697e+00, -2.3429e-02,  3.7762e+01,  0.0000e+00]],
+        [[-1.3018e-03,  0.0000e+00,  0.0000e+00,  6.6383e+02, -1.6000e+03,
+           3.8444e+02, -1.6205e+03,  1.2848e+04, -6.7785e+03],
+         [ 7.4483e-03,  0.0000e+00,  0.0000e+00, -6.9687e+03, -7.2343e+02,
+           7.6401e+01, -7.2301e+02, -6.9977e+04, -1.3921e+03],
+         [-4.4724e-04,  0.0000e+00,  0.0000e+00,  2.5595e+03,  6.7073e+03,
+           9.5632e+01,  6.7863e+03,  1.8534e+03,  0.0000e+00],
+         [ 7.0052e-06,  0.0000e+00,  0.0000e+00, -1.3759e+00,  1.5275e+00,
+           7.2269e+00,  1.5388e+00, -7.6197e+00,  7.8369e-01],
+         [ 2.6829e-06,  0.0000e+00,  0.0000e+00, -2.4100e+00, -7.4495e+00,
+           1.3787e+00, -7.4922e+00, -1.0559e+01, -1.7552e+00],
+         [-2.8993e-05,  0.0000e+00,  0.0000e+00,  7.0914e+00, -4.2152e-01,
+           1.8668e+00, -4.3356e-01,  3.7323e+01,  0.0000e+00]],
 
-        [[-3.1249e-03,  0.0000e+00,  0.0000e+00,  4.8906e+03, -3.9762e+02,
-           1.2057e+02, -3.7454e+02,  6.5082e+04, -2.7353e+03],
-         [-5.5746e-04,  0.0000e+00,  0.0000e+00,  6.7570e+02, -1.6959e+03,
-           2.8051e+02, -1.7196e+03, -2.9153e+04, -6.3809e+03],
-         [ 6.9714e-03,  0.0000e+00,  0.0000e+00, -1.0201e+04,  6.7294e+03,
-           7.3616e+01,  6.7781e+03,  1.4137e+03,  0.0000e+00],
-         [ 5.1399e-06,  0.0000e+00,  0.0000e+00, -5.4665e+00,  6.9785e+00,
-           2.9661e+00,  7.0028e+00,  2.6953e+00,  1.8615e+00],
-         [ 3.0929e-06,  0.0000e+00,  0.0000e+00,  9.7177e-01, -2.9831e+00,
-           6.7175e+00, -3.0018e+00, -1.1558e+01, -4.0495e-01],
-         [-1.9272e-05,  0.0000e+00,  0.0000e+00,  5.1999e+00, -3.6365e-01,
-           1.8623e+00, -3.3512e-01,  3.7429e+01,  0.0000e+00]],
+        [[-2.4919e-03,  0.0000e+00,  0.0000e+00,  4.9386e+03, -4.5834e+02,
+           9.4743e+01, -4.3548e+02,  6.5065e+04, -2.7513e+03],
+         [-4.5295e-04,  0.0000e+00,  0.0000e+00,  6.6700e+02, -1.6698e+03,
+           2.2203e+02, -1.6934e+03, -2.9055e+04, -6.3770e+03],
+         [ 5.5892e-03,  0.0000e+00,  0.0000e+00, -1.0246e+04,  6.7323e+03,
+           5.7401e+01,  6.7807e+03,  1.0874e+03,  0.0000e+00],
+         [ 4.1586e-06,  0.0000e+00,  0.0000e+00, -5.5482e+00,  6.9739e+00,
+           2.9673e+00,  6.9976e+00,  1.3380e+00,  1.8331e+00],
+         [ 2.3820e-06,  0.0000e+00,  0.0000e+00,  1.0358e+00, -3.0004e+00,
+           6.7200e+00, -3.0190e+00, -1.0986e+01, -4.7099e-01],
+         [-1.5159e-05,  0.0000e+00,  0.0000e+00,  5.0994e+00, -2.9377e-01,
+           1.8630e+00, -2.6469e-01,  3.7529e+01,  0.0000e+00]],
 
-        [[-3.4330e-03,  0.0000e+00,  0.0000e+00,  4.9066e+03, -1.1973e+03,
-           2.0350e+02, -1.1968e+03,  4.2993e+04, -5.4847e+03],
-         [ 2.5903e-03,  0.0000e+00,  0.0000e+00, -3.4961e+03, -1.2532e+03,
-           1.5861e+02, -1.2886e+03, -5.7034e+04, -4.2526e+03],
-         [ 4.5796e-03,  0.0000e+00,  0.0000e+00, -7.0342e+03,  6.7273e+03,
-           6.1624e+01,  6.8097e+03,  1.1758e+03,  0.0000e+00],
-         [ 4.7368e-06,  0.0000e+00,  0.0000e+00, -3.4831e+00,  4.6642e+00,
-           5.8547e+00,  4.6886e+00, -3.9384e+00,  1.3912e+00],
-         [ 9.2283e-07,  0.0000e+00,  0.0000e+00,  1.8478e+00, -6.0045e+00,
-           4.4547e+00, -6.0468e+00, -1.0591e+01, -1.2916e+00],
-         [-1.7005e-05,  0.0000e+00,  0.0000e+00,  6.5106e+00, -3.0884e-01,
-           1.8661e+00, -2.8432e-01,  3.7669e+01,  0.0000e+00]],
+        [[-2.6100e-04,  0.0000e+00,  0.0000e+00,  5.0232e+03, -1.3474e+03,
+           1.4002e+01, -1.3477e+03,  4.3176e+04, -5.5263e+03],
+         [ 1.9093e-04,  0.0000e+00,  0.0000e+00, -3.5624e+03, -1.0583e+03,
+           1.4431e+01, -1.0922e+03, -5.6761e+04, -4.2081e+03],
+         [ 3.6235e-04,  0.0000e+00,  0.0000e+00, -7.2409e+03,  6.7331e+03,
+           1.2226e+00,  6.8147e+03, -4.6836e+01,  0.0000e+00],
+         [ 3.7062e-07,  0.0000e+00,  0.0000e+00, -3.7118e+00,  4.6147e+00,
+           5.8591e+00,  4.6372e+00, -7.3057e+00,  1.1790e+00],
+         [ 3.3484e-08,  0.0000e+00,  0.0000e+00,  2.2586e+00, -6.0485e+00,
+           4.4578e+00, -6.0897e+00, -6.2404e+00, -1.4546e+00],
+         [-1.2384e-06,  0.0000e+00,  0.0000e+00,  6.2485e+00, -4.8722e-02,
+           1.8673e+00, -2.0971e-02,  3.7856e+01,  0.0000e+00]],
 
-        [[-2.1245e-05,  0.0000e+00,  0.0000e+00, -6.3723e+02,  7.8890e+02,
-           5.9676e+03,  7.8596e+02,  7.3350e+03,  4.1556e+03],
-         [ 1.1483e-04,  0.0000e+00,  0.0000e+00, -3.9128e+03, -6.0055e+03,
-           2.5068e+02, -5.9828e+03,  4.0236e+04, -6.0667e+02],
-         [ 1.1910e-04,  0.0000e+00,  0.0000e+00,  6.1242e+03, -4.0924e+03,
-           7.8134e+02, -4.0772e+03, -6.9041e+04,  0.0000e+00],
-         [-3.1486e-07,  0.0000e+00,  0.0000e+00, -8.0874e-01,  6.1390e-01,
-          -4.1271e+00,  6.1278e-01,  4.8837e+00,  6.0652e+00],
-         [ 2.4282e-06,  0.0000e+00,  0.0000e+00,  5.9852e+00,  4.1989e+00,
-          -1.7267e-01,  4.1908e+00, -2.9545e+01,  7.9612e-01],
-         [ 1.6208e-06,  0.0000e+00,  0.0000e+00,  4.2558e+00, -6.0456e+00,
-          -5.3824e-01, -6.0344e+00, -2.7895e+01,  0.0000e+00]]])
+        [[-1.8815e-06,  0.0000e+00,  0.0000e+00, -6.0323e+02,  7.6148e+02,
+           6.1411e+03,  7.5859e+02,  7.1354e+03,  3.8882e+03],
+         [ 5.8678e-06,  0.0000e+00,  0.0000e+00, -4.1809e+03, -6.1821e+03,
+           2.5794e+02, -6.1591e+03,  4.1609e+04, -6.4067e+02],
+         [ 1.1418e-05,  0.0000e+00,  0.0000e+00,  5.9510e+03, -3.8258e+03,
+           8.0397e+02, -3.8112e+03, -6.7954e+04,  0.0000e+00],
+         [-5.4036e-08,  0.0000e+00,  0.0000e+00, -7.5324e-01,  6.4826e-01,
+          -3.8581e+00,  6.4700e-01,  4.2957e+00,  6.2439e+00],
+         [ 4.3466e-07,  0.0000e+00,  0.0000e+00,  6.3410e+00,  3.9277e+00,
+          -1.6115e-01,  3.9206e+00, -3.3591e+01,  7.6841e-01],
+         [ 2.7245e-07,  0.0000e+00,  0.0000e+00,  3.7163e+00, -6.2212e+00,
+          -5.0327e-01, -6.2093e+00, -2.2079e+01,  0.0000e+00]]])
 </pre></div>
 </div>
 </div>
@@ -1071,11 +1079,10 @@ document.write(`
 
               
               
-                <footer class="bd-footer-article">
+              
+              
+                <footer class="prev-next-footer">
                   
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
        href="tle_propagation.html"
@@ -1087,18 +1094,15 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="covariance_transformation.html"
+       href="mldsgp4.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Similarity Transformation - from Cartesian to TLE Covariance</p>
+        <p class="prev-next-title">ML-dSGP4</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
-</div></div>
-  
 </div>
-
                 </footer>
               
             </div>
@@ -1144,9 +1148,10 @@ By Giacomo Acciarini, Atılım Güneş Baydin, Dario Izzo
   
   <div class="footer-item">
     
+
   <p class="copyright">
     
-      © Copyright 2022, 2023, 2024, Giacomo Acciarini and Atılım Güneş Baydin and Dario Izzo.
+      © Copyright 2022, 2023, 2024, 2025, Giacomo Acciarini and Atılım Güneş Baydin and Dario Izzo.
       <br/>
     
   </p>
@@ -1170,8 +1175,8 @@ By Giacomo Acciarini, Atılım Güneş Baydin, Dario Izzo
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
 
   <footer class="bd-footer">
   </footer>

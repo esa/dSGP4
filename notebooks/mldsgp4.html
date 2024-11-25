@@ -1,0 +1,686 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>ML-dSGP4 &#8212; dsgp4 1.1.2 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/mldsgp4';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Similarity Transformation - from Cartesian to TLE Covariance" href="covariance_transformation.html" />
+    <link rel="prev" title="Partial Derivatives Computation via Autodiff" href="sgp4_partial_derivatives.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo_dsgp4.png" class="logo__image only-light" alt="dsgp4 1.1.2 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo_dsgp4.png" class="logo__image only-dark" alt="dsgp4 1.1.2 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../capabilities.html">Capabilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../tutorials.html">Tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tle_object.html">TLE Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tle_propagation.html">Propagate TLEs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgp4_partial_derivatives.html">Partial Derivatives Computation via Autodiff</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">ML-dSGP4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="covariance_transformation.html">Similarity Transformation - from Cartesian to TLE Covariance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="covariance_propagation.html">Covariance Propagation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gradient_based_optimization.html">Gradient Based Optimization</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.plot.plot_orbit.html">dsgp4.plot.plot_orbit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.plot.plot_tles.html">dsgp4.plot.plot_tles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.tle.compute_checksum.html">dsgp4.tle.compute_checksum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.tle.read_satellite_catalog_number.html">dsgp4.tle.read_satellite_catalog_number</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.tle.load_from_lines.html">dsgp4.tle.load_from_lines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.tle.load_from_data.html">dsgp4.tle.load_from_data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.tle.load.html">dsgp4.tle.load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.tle.TLE.html">dsgp4.tle.TLE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.tle.TLE.copy.html">dsgp4.tle.TLE.copy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.tle.TLE.perigee_alt.html">dsgp4.tle.TLE.perigee_alt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.tle.TLE.apogee_alt.html">dsgp4.tle.TLE.apogee_alt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.tle.TLE.set_time.html">dsgp4.tle.TLE.set_time</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.tle.TLE.update.html">dsgp4.tle.TLE.update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.get_gravity_constants.html">dsgp4.util.get_gravity_constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.propagate_batch.html">dsgp4.util.propagate_batch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.propagate.html">dsgp4.util.propagate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.initialize_tle.html">dsgp4.util.initialize_tle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_year_day_to_date.html">dsgp4.util.from_year_day_to_date</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.gstime.html">dsgp4.util.gstime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.clone_w_grad.html">dsgp4.util.clone_w_grad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.jday.html">dsgp4.util.jday</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.invjday.html">dsgp4.util.invjday</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.days2mdhms.html">dsgp4.util.days2mdhms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_string_to_datetime.html">dsgp4.util.from_string_to_datetime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_mjd_to_epoch_days_after_1_jan.html">dsgp4.util.from_mjd_to_epoch_days_after_1_jan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_mjd_to_datetime.html">dsgp4.util.from_mjd_to_datetime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_jd_to_datetime.html">dsgp4.util.from_jd_to_datetime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.get_non_empty_lines.html">dsgp4.util.get_non_empty_lines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_datetime_to_fractional_day.html">dsgp4.util.from_datetime_to_fractional_day</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_datetime_to_mjd.html">dsgp4.util.from_datetime_to_mjd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_datetime_to_jd.html">dsgp4.util.from_datetime_to_jd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_cartesian_to_tle_elements.html">dsgp4.util.from_cartesian_to_tle_elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_cartesian_to_keplerian.html">dsgp4.util.from_cartesian_to_keplerian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_cartesian_to_keplerian_torch.html">dsgp4.util.from_cartesian_to_keplerian_torch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.sgp4.html">dsgp4.sgp4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.sgp4_batched.html">dsgp4.sgp4_batched</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.sgp4init.sgp4init.html">dsgp4.sgp4init.sgp4init</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.sgp4init_batch.sgp4init_batch.html">dsgp4.sgp4init_batch.sgp4init_batch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.sgp4init_batch.initl_batch.html">dsgp4.sgp4init_batch.initl_batch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.initl.html">dsgp4.initl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.newton_method.html">dsgp4.newton_method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.sgp4init.html">dsgp4.sgp4init</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.sgp4init_batch.html">dsgp4.sgp4init_batch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dsgp4.mldsgp4.html">mldsgp4 model</a></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/esa/dSGP4/master?urlpath=lab/tree/doc/notebooks/mldsgp4.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/esa/dSGP4" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/esa/dSGP4/issues/new?title=Issue%20on%20page%20%2Fnotebooks/mldsgp4.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/mldsgp4.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>ML-dSGP4</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-tles-and-ml-dsgp4-pre-trained-model">Load TLEs and ML-dSGP4 pre-trained model:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-data">Prepare data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-tle-propagation-with-ml-dsgp4">Batch TLE Propagation with ML-dSGP4</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#single-tle-propagation-with-ml-dsgp4">Single TLE Propagation with ML-dSGP4</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="ml-dsgp4">
+<h1>ML-dSGP4<a class="headerlink" href="#ml-dsgp4" title="Permalink to this heading">#</a></h1>
+<p>This tutorial introduces a hybrid model that uses neural networks to correct the input and outputs of dSGP4, to better match the precision of high-precision numerical integrators and/or simulated data.</p>
+<p>For more details on what this entails and some discussion on the obtained results on &lt;2,000 Starlink satellites, check out our publication: <a class="reference external" href="https://doi.org/10.1016/j.actaastro.2024.10.063">Acciarini, Giacomo, Atılım Güneş Baydin, and Dario Izzo. “<em>Closing the Gap Between SGP4 and High-Precision Propagation via Differentiable Programming</em>” (2024) Vol. 226(1), pages: 694-701</a>.</p>
+<p>The objective is to provide a way to improve the dSGP4 accuracy, when higher-precision simulated or observed data is available. This could also be a powerful tool for operators.</p>
+<p>For this, we leverage the differentiablity of dSGP4 to backpropagate through inputs and outputs of the model.</p>
+<p><img alt="ML-dSGP4" src="../_images/dsgp4_backprop_diagram.png" /></p>
+<section id="imports">
+<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dsgp4</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="load-tles-and-ml-dsgp4-pre-trained-model">
+<h2>Load TLEs and ML-dSGP4 pre-trained model:<a class="headerlink" href="#load-tles-and-ml-dsgp4-pre-trained-model" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#we load some TLEs, as usual:</span>
+<span class="n">tles</span> <span class="o">=</span> <span class="n">dsgp4</span><span class="o">.</span><span class="n">tle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;example.tle&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#we load a pre-trained ML-dSGP4 model:</span>
+<span class="n">ml_dsgp4</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">mldsgp4</span><span class="p">(</span><span class="n">hidden_size</span><span class="o">=</span><span class="mi">35</span><span class="p">)</span>
+<span class="n">ml_dsgp4</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;mldsgp4_example_model.pth&#39;</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<blockquote>
+<div><p><strong>💡 Note:</strong> the output is normalized, and the normalization constant can be defined through <code class="docutils literal notranslate"><span class="pre">normalization_R</span></code> and <code class="docutils literal notranslate"><span class="pre">normalization_V</span></code> argumnets in <code class="docutils literal notranslate"><span class="pre">dsgp4.mldsgp4</span></code>, if not defined, default will be used.</p>
+</div></blockquote>
+</section>
+<section id="prepare-data">
+<h2>Prepare data<a class="headerlink" href="#prepare-data" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#we now create a batch of TLE to later propagate it</span>
+<span class="n">tles_</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">tle</span> <span class="ow">in</span> <span class="n">tles</span><span class="p">:</span>
+    <span class="n">tles_</span><span class="o">+=</span><span class="p">[</span><span class="n">tle</span><span class="p">]</span><span class="o">*</span><span class="mi">10000</span>
+<span class="n">tsinces</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">24</span><span class="o">*</span><span class="mi">60</span><span class="p">,</span><span class="mi">10000</span><span class="p">)]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">tles</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="batch-tle-propagation-with-ml-dsgp4">
+<h2>Batch TLE Propagation with ML-dSGP4<a class="headerlink" href="#batch-tle-propagation-with-ml-dsgp4" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#we use torch.no_grad() to avoid keeping track of the derivatives:</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>    
+    <span class="n">states_normalized_out</span><span class="o">=</span><span class="n">ml_dsgp4</span><span class="p">(</span><span class="n">tles_</span><span class="p">,</span><span class="n">tsinces</span><span class="p">)</span>
+<span class="n">states_normalized_out</span><span class="o">=</span><span class="n">states_normalized_out</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#if we want to unnormalize:</span>
+<span class="n">position</span><span class="o">=</span><span class="n">states_normalized_out</span><span class="p">[:,:</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">ml_dsgp4</span><span class="o">.</span><span class="n">normalization_R</span>
+<span class="n">velocity</span><span class="o">=</span><span class="n">states_normalized_out</span><span class="p">[:,</span><span class="mi">3</span><span class="p">:]</span><span class="o">*</span><span class="n">ml_dsgp4</span><span class="o">.</span><span class="n">normalization_V</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#let&#39;s plot it:</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">position</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">position</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">position</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/e10d799e635f7e26569f0da7128112c8b57aa51cb4a6a3bd61294574081a2597.png" src="../_images/e10d799e635f7e26569f0da7128112c8b57aa51cb4a6a3bd61294574081a2597.png" />
+</div>
+</div>
+</section>
+<section id="single-tle-propagation-with-ml-dsgp4">
+<h2>Single TLE Propagation with ML-dSGP4<a class="headerlink" href="#single-tle-propagation-with-ml-dsgp4" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#we use torch.no_grad() to avoid keeping track of the derivatives:</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>    
+    <span class="n">state_normalized_out</span><span class="o">=</span><span class="n">ml_dsgp4</span><span class="p">(</span><span class="n">tles_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">tsinces</span><span class="p">)</span>
+<span class="n">state_normalized_out</span><span class="o">=</span><span class="n">state_normalized_out</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#if we want to unnormalize:</span>
+<span class="n">position</span><span class="o">=</span><span class="n">state_normalized_out</span><span class="p">[:,:</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">ml_dsgp4</span><span class="o">.</span><span class="n">normalization_R</span>
+<span class="n">velocity</span><span class="o">=</span><span class="n">state_normalized_out</span><span class="p">[:,</span><span class="mi">3</span><span class="p">:]</span><span class="o">*</span><span class="n">ml_dsgp4</span><span class="o">.</span><span class="n">normalization_V</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#let&#39;s plot it:</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">position</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">position</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">position</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/82c110c7b00a39b6203071c0015fd30814babf15de16837683aae7e0f565185f.png" src="../_images/82c110c7b00a39b6203071c0015fd30814babf15de16837683aae7e0f565185f.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="sgp4_partial_derivatives.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Partial Derivatives Computation via Autodiff</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="covariance_transformation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Similarity Transformation - from Cartesian to TLE Covariance</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-tles-and-ml-dsgp4-pre-trained-model">Load TLEs and ML-dSGP4 pre-trained model:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-data">Prepare data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-tle-propagation-with-ml-dsgp4">Batch TLE Propagation with ML-dSGP4</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#single-tle-propagation-with-ml-dsgp4">Single TLE Propagation with ML-dSGP4</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Giacomo Acciarini, Atılım Güneş Baydin, Dario Izzo
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022, 2023, 2024, 2025, Giacomo Acciarini and Atılım Güneş Baydin and Dario Izzo.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,4 +1,4 @@
-dsgp4.sgp4
+﻿dsgp4.sgp4
 ==========
 
 .. currentmodule:: dsgp4

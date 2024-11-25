@@ -1,4 +1,4 @@
-dsgp4.sgp4init
+﻿dsgp4.sgp4init
 ==============
 
 .. currentmodule:: dsgp4

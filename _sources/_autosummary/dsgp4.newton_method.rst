@@ -1,4 +1,4 @@
-dsgp4.newton\_method
+﻿dsgp4.newton\_method
 ====================
 
 .. currentmodule:: dsgp4
