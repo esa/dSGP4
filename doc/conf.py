@@ -25,7 +25,7 @@ author = "Giacomo Acciarini, Atılım Güneş Baydin, Dario Izzo"
 import dsgp4
 import sys
 import os
-sys.path.insert(0, os.path.abspath('../dsgp4'))
+sys.path.insert(0, os.path.abspath('../'))  # Add the root directory of your repo
 
 release = dsgp4.__version__
 
@@ -105,6 +105,7 @@ nb_execution_excludepatterns = [
     "covariance_propagation.ipynb",
     "mldsgp4.ipynb"
 ]
+autosummary_ignore_module = ['dsgp4.mldsgp4']
 
 latex_engine = "xelatex"
 

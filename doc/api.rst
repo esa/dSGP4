@@ -54,6 +54,11 @@ $\partial$SGP4 API
    newton_method
    sgp4init
    sgp4init_batch
-   mldsgp4
-   mldsgp4.mldsgp4
 
+.. currentmodule:: dsgp4
+
+.. toctree::
+   :maxdepth: 2
+   :caption: dsgp4 ML-dSGP4 Module
+
+   dsgp4.mldsgp4
