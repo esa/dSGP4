@@ -54,9 +54,3 @@ $\partial$SGP4 API
    dsgp4.sgp4init_batch
    dsgp4.mldsgp4
    dsgp4
-
-.. autosummary::
-   :toctree: _autosummary
-   :template: custom-class-template.rst
- 
-   dsgp4.mldsgp4.mldsgp4
