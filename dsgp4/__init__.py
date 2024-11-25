@@ -10,6 +10,6 @@ from .newton_method import newton_method, update_TLE
 from .sgp4_batched import sgp4_batched
 from .util import propagate, initialize_tle, propagate_batch
 from .plot import plot_orbit, plot_tles
+from .mldsgp4 import mldsgp4
 from . import tle
 from .tle import TLE
-from .mldsgp4 import mldsgp4

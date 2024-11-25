@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from . import initialize_tle, propagate, propagate_batch
+from .util import initialize_tle, propagate, propagate_batch
 from torch.nn.parameter import Parameter
 
 class mldsgp4(nn.Module):
