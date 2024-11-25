@@ -102,7 +102,8 @@ nb_execution_mode = "force"
 
 nb_execution_excludepatterns = [
     "tle_propagation.ipynb",
-    "covariance_propagation.ipynb"
+    "covariance_propagation.ipynb",
+    "mldsgp4.ipynb"
 ]
 
 latex_engine = "xelatex"
