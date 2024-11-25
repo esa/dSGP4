@@ -54,5 +54,6 @@ $\partial$SGP4 API
    newton_method
    sgp4init
    sgp4init_batch
+   mldsgp4
    mldsgp4.mldsgp4
 
