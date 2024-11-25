@@ -1,16 +1,15 @@
 .. _api:
 
 API
-====
+#######
 
 $\partial$SGP4 API
 
 .. autosummary::
    :toctree: _autosummary
-   :recursive:
+   :maxdepth: 3
 
    dsgp4
-   dsgp4.mldsgp4
    dsgp4.plot.plot_orbit
    dsgp4.plot.plot_tles
    dsgp4.tle.compute_checksum
@@ -50,3 +49,4 @@ $\partial$SGP4 API
    dsgp4.sgp4init.sgp4init
    dsgp4.sgp4init_batch.sgp4init_batch
    dsgp4.sgp4init_batch.initl_batch
+   dsgp4.mldsgp4.mldsgp4
