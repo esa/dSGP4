@@ -51,7 +51,7 @@ def propagate_batch(tles, tsinces, initialized=True):
     """
     from .sgp4_batched import sgp4_batched
     if not initialized:
-        initialize_tle(tles)
+        _,tles=initialize_tle(tles)
     state=sgp4_batched(tles, tsinces)
     return state
 
