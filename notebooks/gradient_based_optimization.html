@@ -454,33 +454,33 @@ document.write(`
 <h2>Problem description:<a class="headerlink" href="#problem-description" title="Permalink to this heading">#</a></h2>
 <p>We have a TLE at a given time, which we call TLE<span class="math notranslate nohighlight">\(_{0}\)</span>, and we look for a TLE at a future observation time (<span class="math notranslate nohighlight">\(t_{obs}\)</span>): TLE<span class="math notranslate nohighlight">\(_{t}\)</span>.</p>
 <p>We can propagate the state from <span class="math notranslate nohighlight">\(t_0 \rightarrow t_{obs}\)</span>, and obtain the state at <span class="math notranslate nohighlight">\(t_{obs}\)</span>. In general, we define the state (i.e., position and velocity), as:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-d0c0d78c-c0ca-44c9-a78a-33f2b40d7fd0">
-<span class="eqno">(1)<a class="headerlink" href="#equation-d0c0d78c-c0ca-44c9-a78a-33f2b40d7fd0" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-223eb322-1d59-4db8-a802-bfcc5b3e9cbf">
+<span class="eqno">(1)<a class="headerlink" href="#equation-223eb322-1d59-4db8-a802-bfcc5b3e9cbf" title="Permalink to this equation">#</a></span>\[\begin{equation}
 \vec{x}(t)=[x(t), y(t), z(t), \dot{x}(t), \dot{y}(t), \dot{z}(t)]^T
 \end{equation}\]</div>
 <p>We then have: TLE<span class="math notranslate nohighlight">\(_0\)</span>, <span class="math notranslate nohighlight">\(\vec{x}(t_0)\)</span>, and <span class="math notranslate nohighlight">\(\vec{x}(t_{obs})\)</span>, but we want to find TLE<span class="math notranslate nohighlight">\(_{obs}\)</span>. That is, the TLE at the observation time, that when propagated with SGP4 at its time, it corresponds to that <span class="math notranslate nohighlight">\(\vec{x}(t_{obs})\)</span>. In general, this means that we are able to invert from the state to the TLE, at any given time.</p>
 <p>In order to do this, we formulate the problem as looking for the minimum of a function of a free variables vector (i.e., <span class="math notranslate nohighlight">\(\vec{y}\)</span>) <span class="math notranslate nohighlight">\(F(\vec{y})\)</span>, where this function defines the difference between the given state propagated from TLE<span class="math notranslate nohighlight">\(_0\)</span> at <span class="math notranslate nohighlight">\(t_{obs}\)</span>, and the state generated from the free variables that make a TLE which is then propagated at its current time: TLE<span class="math notranslate nohighlight">\((\vec{y})(t_{0}\rightarrow t_{obs})\)</span>. So we can reformulate the problem as:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-fe7010b9-953c-401c-a678-12fbcd5aadb4">
-<span class="eqno">(2)<a class="headerlink" href="#equation-fe7010b9-953c-401c-a678-12fbcd5aadb4" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-6ecf752d-7e0b-4b8f-87a5-12bc39ea87de">
+<span class="eqno">(2)<a class="headerlink" href="#equation-6ecf752d-7e0b-4b8f-87a5-12bc39ea87de" title="Permalink to this equation">#</a></span>\[\begin{align}
 \textrm{given}: &amp; \ \textrm{TLE}_0, \vec{x}_0\\
 \textrm{find}: &amp; \ \vec{y}\\
 \textrm{that minimize}: &amp; F(\vec{y})=|SGP4(\textrm{TLE}(\vec{y}),t_{obs})-\vec{x}(t_{obs})| =|\vec{\tilde{x}}(t_{obs})-\vec{x}(t_{obs})|
 \end{align}\]</div>
 <p>We can do this via Newton method, by updating an initial guess <span class="math notranslate nohighlight">\(y_{0}\)</span> until convergence. Where the update is done as follows:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-68d23c13-c22a-4efa-bbdd-b2c6a43d099b">
-<span class="eqno">(3)<a class="headerlink" href="#equation-68d23c13-c22a-4efa-bbdd-b2c6a43d099b" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-6d3454b1-3138-4ffa-a842-6dcedb7e4722">
+<span class="eqno">(3)<a class="headerlink" href="#equation-6d3454b1-3138-4ffa-a842-6dcedb7e4722" title="Permalink to this equation">#</a></span>\[\begin{equation}
 y_{k+1}=y_{k}-DF^{-1}(y_k)F(y_k)
 \end{equation}\]</div>
 <p>with <span class="math notranslate nohighlight">\(DF\)</span> the Jacobian of <span class="math notranslate nohighlight">\(F\)</span> with respect to <span class="math notranslate nohighlight">\(y_k\)</span>. We can easily see that this Jacobian is made of the following elements:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-ae083ac4-1a73-495d-9bd7-8e8339a8c044">
-<span class="eqno">(4)<a class="headerlink" href="#equation-ae083ac4-1a73-495d-9bd7-8e8339a8c044" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-b47ab847-bf07-4a0e-b641-7f2224d8eddd">
+<span class="eqno">(4)<a class="headerlink" href="#equation-b47ab847-bf07-4a0e-b641-7f2224d8eddd" title="Permalink to this equation">#</a></span>\[\begin{equation}
 DF_{ij}=\dfrac{\partial \tilde{x}_{i}}{\partial y_{j}}|_{y_k}
 \end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\tilde{x}_{i} \in [\tilde{x}_1,\tilde{x}_2,\tilde{x}_3,\tilde{x}_4,\tilde{x}_5,\tilde{x}_6]=[\tilde{x},\tilde{y},\tilde{z},\tilde{\dot{x}},\tilde{\dot{y}},\tilde{\dot{z}}]\)</span>; and <span class="math notranslate nohighlight">\(y_i \in [no_{kozai}, ecco, inclo, mo, argpo, nodeo, n_{dot},n_{ddot},B^*]\)</span>.</p>
 <p>Since we built a differentiable SGP4, we can compute the gradient of the state w.r.t. the TLE inputs quite easily. Furthermore, the initial guess (<span class="math notranslate nohighlight">\(y_{0}\)</span>) will be found by the simple inversion from Cartesian to Keplerian, which does not correctly invert from state to TLE, but it is good as initial approximation.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dsgp4</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">dsgp4</span>
 <span class="n">tles</span><span class="o">=</span><span class="n">dsgp4</span><span class="o">.</span><span class="n">tle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="s2">&quot;example.tle&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -506,9 +506,7 @@ DF_{ij}=\dfrac{\partial \tilde{x}_{i}}{\partial y_{j}}|_{y_k}
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>F(y): 2.5506259552874917e-13
-Solution found, at iter: 9
-TLE(
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TLE(
 0 COSMOS 2251 DEB
 1 34454U 93036SX  22068.91971155  .00000319  00000-0  11812-3 0  9996
 2 34454  74.0583 280.7094 0037596 327.9100  31.9764 14.35844873683320
@@ -533,9 +531,7 @@ TLE(
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>F(y): 4.547475677268469e-13
-Solution found, at iter: 7
-TLE(
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TLE(
 0 COSMOS 2251 DEB
 1 34454U 93036SX  22068.91971155  .00000319  00000-0  11812-3 0  9996
 2 34454  74.0583 280.7094 0037596 327.9100  31.9764 14.35844873683320

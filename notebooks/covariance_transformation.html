@@ -454,10 +454,10 @@ document.write(`
 <p>In this notebook, we will discuss how to use <code class="docutils literal notranslate"><span class="pre">dsgp4</span></code> for the first case.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">import</span> <span class="nn">dsgp4</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dsgp4</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -471,13 +471,13 @@ document.write(`
 <li><p>first convert the RTN covariance into TEME</p></li>
 <li><p>then leverage <code class="docutils literal notranslate"><span class="pre">dsgp4</span></code> to transform the covariance matrix from position and velocity coordinates to TLE elements, leveraging the similarity transformation:</p></li>
 </ul>
-<div class="amsmath math notranslate nohighlight" id="equation-6631d6c0-1223-4fd6-82b7-d3f59eb65d8a">
-<span class="eqno">(1)<a class="headerlink" href="#equation-6631d6c0-1223-4fd6-82b7-d3f59eb65d8a" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-a84da85d-5b86-4b4c-9188-71403981fc4f">
+<span class="eqno">(1)<a class="headerlink" href="#equation-a84da85d-5b86-4b4c-9188-71403981fc4f" title="Permalink to this equation">#</a></span>\[\begin{equation}
 P_{y} = m P_x m^T\text{,}
 \end{equation}\]</div>
 <p>where:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-4ad5702a-58a4-4e1d-9eef-9884637f17cb">
-<span class="eqno">(2)<a class="headerlink" href="#equation-4ad5702a-58a4-4e1d-9eef-9884637f17cb" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-59a37846-0c6c-45c8-a51a-ed289aa1c1e1">
+<span class="eqno">(2)<a class="headerlink" href="#equation-59a37846-0c6c-45c8-a51a-ed289aa1c1e1" title="Permalink to this equation">#</a></span>\[\begin{equation}
 m_{ij}=\dfrac{\partial y_i}{\partial x_j}
 \end{equation}\]</div>
 <ul class="simple">
@@ -499,7 +499,7 @@ m_{ij}=\dfrac{\partial y_i}{\partial x_j}
 <p>Let’s now construct the initial RTN covariance matrix, and the initial TEME state:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">matrix_rtn</span><span class="p">(</span><span class="n">cov</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">matrix_rtn</span><span class="p">(</span><span class="n">cov</span><span class="p">):</span>
     <span class="n">cov_matrix_rtn</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">cov</span><span class="p">[</span><span class="s1">&#39;sigma_rr&#39;</span><span class="p">],</span>
                              <span class="n">cov</span><span class="p">[</span><span class="s1">&#39;sigma_rt&#39;</span><span class="p">],</span>
                              <span class="n">cov</span><span class="p">[</span><span class="s1">&#39;sigma_rn&#39;</span><span class="p">],</span>
@@ -539,7 +539,7 @@ Initial state in Cartesian TEME is: tensor([[ 4.1941e+03, -5.6009e+03,  4.2616e-
 <p>Let’s now transform the covariance from RTN to Cartesian TEME:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">rotation_matrix</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">rotation_matrix</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computes the UVW rotation matrix.</span>
 
@@ -557,7 +557,7 @@ Initial state in Cartesian TEME is: tensor([[ 4.1941e+03, -5.6009e+03,  4.2616e-
     <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
 
-<span class="k">def</span> <span class="nf">from_cartesian_to_rtn</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">cartesian_to_rtn_rotation_matrix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">from_cartesian_to_rtn</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">cartesian_to_rtn_rotation_matrix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts a cartesian state to the RTN frame.</span>
 
