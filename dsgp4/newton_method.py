@@ -157,7 +157,7 @@ def update_TLE(old_tle,y0):
     tle_elements['element_number']=old_tle.element_number
     return TLE(tle_elements)
 
-def newton_method(tle_0, time_mjd, target_state=None, new_tol=1e-12,max_iter=50):
+def newton_method(tle_0, time_mjd, target_state=None, new_tol=1e-12,max_iter=50, verbose=False):
     """
     This method performs Newton method starting from an initial TLE and a given propagation time. The objective 
     is to find a TLE that accurately reconstructs the propagated state, at observation time.
@@ -220,8 +220,9 @@ def newton_method(tle_0, time_mjd, target_state=None, new_tol=1e-12,max_iter=50)
             dY[0]=-float(y0[3])*0.9999
         dY=torch.tensor([0.,0.,0.]+list(dY)+[0.], requires_grad=True)
         if tol<new_tol:
-            print(f"F(y): {np.linalg.norm(F)}")
-            print(f"Solution found, at iter: {i}")
+            if verbose:    
+                print(f"F(y): {np.linalg.norm(F)}")
+                print(f"Solution found, at iter: {i}")
             return next_tle, y0#+dY
         else:
             #Newton update:
@@ -229,6 +230,7 @@ def newton_method(tle_0, time_mjd, target_state=None, new_tol=1e-12,max_iter=50)
             y0=torch.tensor([float(el1)+float(el2) for el1, el2 in zip(list(y0),list(dY))],requires_grad=True)
             next_tle=update_TLE(next_tle, y0)
         i+=1
-    print("Solution not found, returning best found so far")
-    print(f"F(y): {np.linalg.norm(F)}")
+    if verbose:    
+        print("Solution not found, returning best found so far")
+        print(f"F(y): {np.linalg.norm(F)}")
     return next_tle, y0
