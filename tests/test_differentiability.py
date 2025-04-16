@@ -5,7 +5,6 @@ import sgp4
 import sgp4.io
 import torch
 import unittest
-from dsgp4.newton_method import _propagate
 
 error_string="Error: deep space propagation not supported (yet). The provided satellite has \
 an orbital period above 225 minutes. If you want to let us know you need it or you want to \
@@ -87,6 +86,24 @@ class UtilTestCase(unittest.TestCase):
                 state_teme.flatten()[i].backward(retain_graph=True)
                 partial_derivatives[i,:] = tles_elements[idx].grad
             #now, let's compare with finite differences:
+            def _propagate(x, tle_sat, tsince, gravity_constant_name="wgs-84"):
+                whichconst=dsgp4.util.get_gravity_constants(gravity_constant_name)
+                dsgp4.sgp4init(whichconst=whichconst,
+                                    opsmode='i',
+                                    satn=tle_sat.satellite_catalog_number,
+                                    epoch=(tle_sat._jdsatepoch+tle_sat._jdsatepochF)-2433281.5,
+                                    xbstar=x[0],
+                                    xndot=x[1],
+                                    xnddot=x[2],
+                                    xecco=x[3],
+                                    xargpo=x[4],
+                                    xinclo=x[5],
+                                    xmo=x[6],
+                                    xno_kozai=x[7],
+                                    xnodeo=x[8],
+                                    satellite=tle_sat)
+                state=dsgp4.sgp4(tle_sat, tsince*torch.ones(1,1))
+                return state
             fun=lambda xx: _propagate(xx,tle,time)
             #I create 6 copies of the inputs to be used for each function (three
             #position and three velocity coordinates)
