@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Similarity Transformation - from Cartesian to TLE Covariance &#8212; dsgp4 1.1.4 documentation</title>
+    <title>Similarity Transformation - from Cartesian to TLE Covariance &#8212; dsgp4 1.1.5 documentation</title>
   
   
   
@@ -138,8 +138,8 @@
       
     
     
-    <img src="../_static/logo_dsgp4.png" class="logo__image only-light" alt="dsgp4 1.1.4 documentation - Home"/>
-    <script>document.write(`<img src="../_static/logo_dsgp4.png" class="logo__image only-dark" alt="dsgp4 1.1.4 documentation - Home"/>`);</script>
+    <img src="../_static/logo_dsgp4.png" class="logo__image only-light" alt="dsgp4 1.1.5 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo_dsgp4.png" class="logo__image only-dark" alt="dsgp4 1.1.5 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -195,9 +195,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_datetime_to_fractional_day.html">dsgp4.util.from_datetime_to_fractional_day</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_datetime_to_mjd.html">dsgp4.util.from_datetime_to_mjd</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_datetime_to_jd.html">dsgp4.util.from_datetime_to_jd</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_cartesian_to_tle_elements.html">dsgp4.util.from_cartesian_to_tle_elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_cartesian_to_keplerian.html">dsgp4.util.from_cartesian_to_keplerian</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_cartesian_to_keplerian_torch.html">dsgp4.util.from_cartesian_to_keplerian_torch</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.sgp4.html">dsgp4.sgp4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.sgp4_batched.html">dsgp4.sgp4_batched</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.sgp4init.sgp4init.html">dsgp4.sgp4init.sgp4init</a></li>
@@ -471,13 +469,13 @@ document.write(`
 <li><p>first convert the RTN covariance into TEME</p></li>
 <li><p>then leverage <code class="docutils literal notranslate"><span class="pre">dsgp4</span></code> to transform the covariance matrix from position and velocity coordinates to TLE elements, leveraging the similarity transformation:</p></li>
 </ul>
-<div class="amsmath math notranslate nohighlight" id="equation-8301e7f5-f28b-4fc2-9bd0-2f4ba992faf1">
-<span class="eqno">(1)<a class="headerlink" href="#equation-8301e7f5-f28b-4fc2-9bd0-2f4ba992faf1" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-26af144c-6408-4ab3-ab81-3c135a2f756d">
+<span class="eqno">(1)<a class="headerlink" href="#equation-26af144c-6408-4ab3-ab81-3c135a2f756d" title="Permalink to this equation">#</a></span>\[\begin{equation}
 P_{y} = m P_x m^T\text{,}
 \end{equation}\]</div>
 <p>where:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-1561a582-65bc-420b-8923-06de8b1a5435">
-<span class="eqno">(2)<a class="headerlink" href="#equation-1561a582-65bc-420b-8923-06de8b1a5435" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-6c913787-c499-4a12-a089-52e6503f765b">
+<span class="eqno">(2)<a class="headerlink" href="#equation-6c913787-c499-4a12-a089-52e6503f765b" title="Permalink to this equation">#</a></span>\[\begin{equation}
 m_{ij}=\dfrac{\partial y_i}{\partial x_j}
 \end{equation}\]</div>
 <ul class="simple">

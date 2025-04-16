@@ -42,9 +42,7 @@ $\partial$SGP4 API
    util.from_datetime_to_fractional_day
    util.from_datetime_to_mjd
    util.from_datetime_to_jd
-   util.from_cartesian_to_tle_elements
    util.from_cartesian_to_keplerian
-   util.from_cartesian_to_keplerian_torch
    sgp4
    sgp4_batched
    sgp4init.sgp4init

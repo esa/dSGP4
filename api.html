@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>API &#8212; dsgp4 1.1.4 documentation</title>
+    <title>API &#8212; dsgp4 1.1.5 documentation</title>
   
   
   
@@ -136,8 +136,8 @@
       
     
     
-    <img src="_static/logo_dsgp4.png" class="logo__image only-light" alt="dsgp4 1.1.4 documentation - Home"/>
-    <script>document.write(`<img src="_static/logo_dsgp4.png" class="logo__image only-dark" alt="dsgp4 1.1.4 documentation - Home"/>`);</script>
+    <img src="_static/logo_dsgp4.png" class="logo__image only-light" alt="dsgp4 1.1.5 documentation - Home"/>
+    <script>document.write(`<img src="_static/logo_dsgp4.png" class="logo__image only-dark" alt="dsgp4 1.1.5 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -193,9 +193,7 @@
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/dsgp4.util.from_datetime_to_fractional_day.html">dsgp4.util.from_datetime_to_fractional_day</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/dsgp4.util.from_datetime_to_mjd.html">dsgp4.util.from_datetime_to_mjd</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/dsgp4.util.from_datetime_to_jd.html">dsgp4.util.from_datetime_to_jd</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_autosummary/dsgp4.util.from_cartesian_to_tle_elements.html">dsgp4.util.from_cartesian_to_tle_elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/dsgp4.util.from_cartesian_to_keplerian.html">dsgp4.util.from_cartesian_to_keplerian</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_autosummary/dsgp4.util.from_cartesian_to_keplerian_torch.html">dsgp4.util.from_cartesian_to_keplerian_torch</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/dsgp4.sgp4.html">dsgp4.sgp4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/dsgp4.sgp4_batched.html">dsgp4.sgp4_batched</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/dsgp4.sgp4init.sgp4init.html">dsgp4.sgp4init.sgp4init</a></li>
@@ -503,14 +501,8 @@ document.write(`
 <tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/dsgp4.util.from_datetime_to_jd.html#dsgp4.util.from_datetime_to_jd" title="dsgp4.util.from_datetime_to_jd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">util.from_datetime_to_jd</span></code></a>(datetime_obj)</p></td>
 <td><p>Converts a datetime object to a Julian Date.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_autosummary/dsgp4.util.from_cartesian_to_tle_elements.html#dsgp4.util.from_cartesian_to_tle_elements" title="dsgp4.util.from_cartesian_to_tle_elements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">util.from_cartesian_to_tle_elements</span></code></a>(state[, ...])</p></td>
-<td><p>This function converts the provided state from Cartesian to TLE elements.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/dsgp4.util.from_cartesian_to_keplerian.html#dsgp4.util.from_cartesian_to_keplerian" title="dsgp4.util.from_cartesian_to_keplerian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">util.from_cartesian_to_keplerian</span></code></a>(state, mu)</p></td>
-<td><p>This function takes the state in cartesian coordinates and the gravitational parameter of the central body, and returns the state in Keplerian elements.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_autosummary/dsgp4.util.from_cartesian_to_keplerian_torch.html#dsgp4.util.from_cartesian_to_keplerian_torch" title="dsgp4.util.from_cartesian_to_keplerian_torch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">util.from_cartesian_to_keplerian_torch</span></code></a>(state, mu)</p></td>
-<td><p>Same as from_cartesian_to_keplerian, but for torch tensors.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="_autosummary/dsgp4.util.from_cartesian_to_keplerian.html#dsgp4.util.from_cartesian_to_keplerian" title="dsgp4.util.from_cartesian_to_keplerian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">util.from_cartesian_to_keplerian</span></code></a>(r_vec, ...)</p></td>
+<td><p>This function converts the provided state from Cartesian to Keplerian elements.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/dsgp4.sgp4.html#dsgp4.sgp4" title="dsgp4.sgp4"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sgp4</span></code></a>(satellite, tsince)</p></td>
 <td><p>This function represents the SGP4 propagator.</p></td>
@@ -530,8 +522,8 @@ document.write(`
 <tr class="row-even"><td><p><a class="reference internal" href="_autosummary/dsgp4.initl.html#dsgp4.initl" title="dsgp4.initl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initl</span></code></a>(xke, j2, ecco, epoch, inclo, no, opsmode)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/dsgp4.newton_method.html#dsgp4.newton_method" title="dsgp4.newton_method"><code class="xref py py-obj docutils literal notranslate"><span class="pre">newton_method</span></code></a>(tle_0, time_mjd[, ...])</p></td>
-<td><p>This method performs Newton method starting from an initial TLE and a given propagation time.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/dsgp4.newton_method.html#dsgp4.newton_method" title="dsgp4.newton_method"><code class="xref py py-obj docutils literal notranslate"><span class="pre">newton_method</span></code></a>(tle0, time_mjd[, max_iter, ...])</p></td>
+<td><p>This function implements the Newton-Raphson method to find the TLE elements that match a given target state.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="_autosummary/dsgp4.sgp4init.html#dsgp4.sgp4init" title="dsgp4.sgp4init"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sgp4init</span></code></a>(whichconst, opsmode, satn, epoch, ...)</p></td>
 <td><p>This function initializes the sgp4 propagator.</p></td>

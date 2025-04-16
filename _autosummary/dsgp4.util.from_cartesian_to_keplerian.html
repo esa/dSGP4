@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>dsgp4.util.from_cartesian_to_keplerian &#8212; dsgp4 1.1.4 documentation</title>
+    <title>dsgp4.util.from_cartesian_to_keplerian &#8212; dsgp4 1.1.5 documentation</title>
   
   
   
@@ -48,8 +48,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '_autosummary/dsgp4.util.from_cartesian_to_keplerian';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="dsgp4.util.from_cartesian_to_keplerian_torch" href="dsgp4.util.from_cartesian_to_keplerian_torch.html" />
-    <link rel="prev" title="dsgp4.util.from_cartesian_to_tle_elements" href="dsgp4.util.from_cartesian_to_tle_elements.html" />
+    <link rel="next" title="dsgp4.sgp4" href="dsgp4.sgp4.html" />
+    <link rel="prev" title="dsgp4.util.from_datetime_to_jd" href="dsgp4.util.from_datetime_to_jd.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -136,8 +136,8 @@
       
     
     
-    <img src="../_static/logo_dsgp4.png" class="logo__image only-light" alt="dsgp4 1.1.4 documentation - Home"/>
-    <script>document.write(`<img src="../_static/logo_dsgp4.png" class="logo__image only-dark" alt="dsgp4 1.1.4 documentation - Home"/>`);</script>
+    <img src="../_static/logo_dsgp4.png" class="logo__image only-light" alt="dsgp4 1.1.5 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo_dsgp4.png" class="logo__image only-dark" alt="dsgp4 1.1.5 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -193,9 +193,7 @@
 <li class="toctree-l2"><a class="reference internal" href="dsgp4.util.from_datetime_to_fractional_day.html">dsgp4.util.from_datetime_to_fractional_day</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dsgp4.util.from_datetime_to_mjd.html">dsgp4.util.from_datetime_to_mjd</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dsgp4.util.from_datetime_to_jd.html">dsgp4.util.from_datetime_to_jd</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dsgp4.util.from_cartesian_to_tle_elements.html">dsgp4.util.from_cartesian_to_tle_elements</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">dsgp4.util.from_cartesian_to_keplerian</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dsgp4.util.from_cartesian_to_keplerian_torch.html">dsgp4.util.from_cartesian_to_keplerian_torch</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dsgp4.sgp4.html">dsgp4.sgp4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dsgp4.sgp4_batched.html">dsgp4.sgp4_batched</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dsgp4.sgp4init.sgp4init.html">dsgp4.sgp4init.sgp4init</a></li>
@@ -419,24 +417,21 @@ document.write(`
 <h1>dsgp4.util.from_cartesian_to_keplerian<a class="headerlink" href="#dsgp4-util-from-cartesian-to-keplerian" title="Permalink to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="dsgp4.util.from_cartesian_to_keplerian">
-<span class="sig-prename descclassname"><span class="pre">dsgp4.util.</span></span><span class="sig-name descname"><span class="pre">from_cartesian_to_keplerian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dsgp4.util.from_cartesian_to_keplerian" title="Permalink to this definition">#</a></dt>
-<dd><p>This function takes the state in cartesian coordinates and the gravitational
-parameter of the central body, and returns the state in Keplerian elements.</p>
+<span class="sig-prename descclassname"><span class="pre">dsgp4.util.</span></span><span class="sig-name descname"><span class="pre">from_cartesian_to_keplerian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_vec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_vec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dsgp4.util.from_cartesian_to_keplerian" title="Permalink to this definition">#</a></dt>
+<dd><p>This function converts the provided state from Cartesian to Keplerian elements.</p>
 <section id="parameters">
 <h2>Parameters:<a class="headerlink" href="#parameters" title="Permalink to this heading">#</a></h2>
-<dl class="simple">
-<dt>state (<code class="docutils literal notranslate"><span class="pre">np.array</span></code>): numpy array of 2 rows and 3 columns, where</dt><dd><p>the first row represents position, and the second velocity.
+<p>r_vec (<code class="docutils literal notranslate"><span class="pre">np.array</span></code>): position vector in Cartesian coordinates
+v_vec (<code class="docutils literal notranslate"><span class="pre">np.array</span></code>): velocity vector in Cartesian coordinates
 mu (<code class="docutils literal notranslate"><span class="pre">float</span></code>): gravitational parameter of the central body</p>
-</dd>
-</dl>
 </section>
 <section id="returns">
 <h2>Returns:<a class="headerlink" href="#returns" title="Permalink to this heading">#</a></h2>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">np.array</span></code>: numpy array of the six keplerian elements: (a,e,i,omega,Omega,mean_anomaly)</dt><dd><p>(i.e., semi major axis, eccentricity, inclination,
+<dt><code class="docutils literal notranslate"><span class="pre">np.array</span></code>: array of Keplerian elements: (a, e, i, Omega, omega, M)</dt><dd><p>(i.e., semi-major axis, eccentricity, inclination,
 right ascension of ascending node, argument of perigee,
-mean anomaly). All the angles are in radiants, eccentricity is unitless
-and semi major axis is in SI.</p>
+mean anomaly). All the angles are in radians, eccentricity is unitless
+and semi-major axis is in SI.</p>
 </dd>
 </dl>
 </section>
@@ -456,20 +451,20 @@ and semi major axis is in SI.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="dsgp4.util.from_cartesian_to_tle_elements.html"
+       href="dsgp4.util.from_datetime_to_jd.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">dsgp4.util.from_cartesian_to_tle_elements</p>
+        <p class="prev-next-title">dsgp4.util.from_datetime_to_jd</p>
       </div>
     </a>
     <a class="right-next"
-       href="dsgp4.util.from_cartesian_to_keplerian_torch.html"
+       href="dsgp4.sgp4.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">dsgp4.util.from_cartesian_to_keplerian_torch</p>
+        <p class="prev-next-title">dsgp4.sgp4</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

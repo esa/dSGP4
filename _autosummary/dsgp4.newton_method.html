@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>dsgp4.newton_method &#8212; dsgp4 1.1.4 documentation</title>
+    <title>dsgp4.newton_method &#8212; dsgp4 1.1.5 documentation</title>
   
   
   
@@ -136,8 +136,8 @@
       
     
     
-    <img src="../_static/logo_dsgp4.png" class="logo__image only-light" alt="dsgp4 1.1.4 documentation - Home"/>
-    <script>document.write(`<img src="../_static/logo_dsgp4.png" class="logo__image only-dark" alt="dsgp4 1.1.4 documentation - Home"/>`);</script>
+    <img src="../_static/logo_dsgp4.png" class="logo__image only-light" alt="dsgp4 1.1.5 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo_dsgp4.png" class="logo__image only-dark" alt="dsgp4 1.1.5 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -193,9 +193,7 @@
 <li class="toctree-l2"><a class="reference internal" href="dsgp4.util.from_datetime_to_fractional_day.html">dsgp4.util.from_datetime_to_fractional_day</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dsgp4.util.from_datetime_to_mjd.html">dsgp4.util.from_datetime_to_mjd</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dsgp4.util.from_datetime_to_jd.html">dsgp4.util.from_datetime_to_jd</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dsgp4.util.from_cartesian_to_tle_elements.html">dsgp4.util.from_cartesian_to_tle_elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dsgp4.util.from_cartesian_to_keplerian.html">dsgp4.util.from_cartesian_to_keplerian</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dsgp4.util.from_cartesian_to_keplerian_torch.html">dsgp4.util.from_cartesian_to_keplerian_torch</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dsgp4.sgp4.html">dsgp4.sgp4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dsgp4.sgp4_batched.html">dsgp4.sgp4_batched</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dsgp4.sgp4init.sgp4init.html">dsgp4.sgp4init.sgp4init</a></li>
@@ -419,21 +417,23 @@ document.write(`
 <h1>dsgp4.newton_method<a class="headerlink" href="#dsgp4-newton-method" title="Permalink to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="dsgp4.newton_method">
-<span class="sig-prename descclassname"><span class="pre">dsgp4.</span></span><span class="sig-name descname"><span class="pre">newton_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tle_0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_mjd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dsgp4.newton_method" title="Permalink to this definition">#</a></dt>
-<dd><p>This method performs Newton method starting from an initial TLE and a given propagation time. The objective
-is to find a TLE that accurately reconstructs the propagated state, at observation time.</p>
-<section id="parameters">
-<h2>Parameters:<a class="headerlink" href="#parameters" title="Permalink to this heading">#</a></h2>
-<p>tle_0 (<code class="docutils literal notranslate"><span class="pre">dsgp4.tle.TLE</span></code>): starting TLE (i.e., TLE at a given initial time)
-time_mjd (<code class="docutils literal notranslate"><span class="pre">float</span></code>): time at which we want to propagate the TLE (in Modified Julian Date)
-target_state (<code class="docutils literal notranslate"><span class="pre">torch.tensor</span></code>): a 2x3 tensor for the position and velocity of the state. If None, then this is computed by propagating <cite>tle_0</cite> at the <cite>new_date</cite>.
-new_tol (<code class="docutils literal notranslate"><span class="pre">float</span></code>): tolerance for the Newton method
-max_iter (<code class="docutils literal notranslate"><span class="pre">int</span></code>): maximum number of iterations for the Newton method</p>
-</section>
+<span class="sig-prename descclassname"><span class="pre">dsgp4.</span></span><span class="sig-name descname"><span class="pre">newton_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tle0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_mjd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity_constant_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'wgs-84'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dsgp4.newton_method" title="Permalink to this definition">#</a></dt>
+<dd><p>This function implements the Newton-Raphson method to find the TLE elements that match a given target state.
+It uses the SGP4 propagator to propagate the TLE elements and compare them with the target state.
+The function returns the updated TLE object and the final state vector.
+Parameters:
+—————-
+tle0 (<code class="docutils literal notranslate"><span class="pre">dsgp4.TLE</span></code>): The initial TLE object to be updated.
+time_mjd (<code class="docutils literal notranslate"><span class="pre">float</span></code>): The time in MJD format.
+max_iter (<code class="docutils literal notranslate"><span class="pre">int</span></code>): The maximum number of iterations for the Newton-Raphson method. Default is 50.
+new_tol (<code class="docutils literal notranslate"><span class="pre">float</span></code>): The tolerance for convergence. Default is 1e-12.
+verbose (<code class="docutils literal notranslate"><span class="pre">bool</span></code>): If True, prints the convergence information. Default is False.
+target_state (<code class="docutils literal notranslate"><span class="pre">torch.tensor</span></code>): The target state vector to be matched. If None, the function will propagate the initial TLE object to find the target state.
+gravity_constant_name (<code class="docutils literal notranslate"><span class="pre">str</span></code>): The name of the gravity constant to be used. Default is “wgs-84”.</p>
 <section id="returns">
 <h2>Returns:<a class="headerlink" href="#returns" title="Permalink to this heading">#</a></h2>
-<p>next_tle (<code class="docutils literal notranslate"><span class="pre">dsgp4.tle.TLE</span></code>): TLE corresponding to the propagated state
-y0 (<code class="docutils literal notranslate"><span class="pre">torch.tensor</span></code>): initial guess for the TLE elements. In particular, y0 contains the following elements (see SGP4 for a thorough description of these parameters):</p>
+<p>TLE: The updated TLE object.
+torch.tensor: The tensor of the updated elements.</p>
 </section>
 </dd></dl>
 

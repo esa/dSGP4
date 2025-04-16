@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Covariance Propagation &#8212; dsgp4 1.1.4 documentation</title>
+    <title>Covariance Propagation &#8212; dsgp4 1.1.5 documentation</title>
   
   
   
@@ -138,8 +138,8 @@
       
     
     
-    <img src="../_static/logo_dsgp4.png" class="logo__image only-light" alt="dsgp4 1.1.4 documentation - Home"/>
-    <script>document.write(`<img src="../_static/logo_dsgp4.png" class="logo__image only-dark" alt="dsgp4 1.1.4 documentation - Home"/>`);</script>
+    <img src="../_static/logo_dsgp4.png" class="logo__image only-light" alt="dsgp4 1.1.5 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo_dsgp4.png" class="logo__image only-dark" alt="dsgp4 1.1.5 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -195,9 +195,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_datetime_to_fractional_day.html">dsgp4.util.from_datetime_to_fractional_day</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_datetime_to_mjd.html">dsgp4.util.from_datetime_to_mjd</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_datetime_to_jd.html">dsgp4.util.from_datetime_to_jd</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_cartesian_to_tle_elements.html">dsgp4.util.from_cartesian_to_tle_elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_cartesian_to_keplerian.html">dsgp4.util.from_cartesian_to_keplerian</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.util.from_cartesian_to_keplerian_torch.html">dsgp4.util.from_cartesian_to_keplerian_torch</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.sgp4.html">dsgp4.sgp4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.sgp4_batched.html">dsgp4.sgp4_batched</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../_autosummary/dsgp4.sgp4init.sgp4init.html">dsgp4.sgp4init.sgp4init</a></li>
@@ -441,8 +439,8 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="covariance-propagation">
 <h1>Covariance Propagation<a class="headerlink" href="#covariance-propagation" title="Permalink to this heading">#</a></h1>
 <p>In this notebook, we discuss how to use <code class="docutils literal notranslate"><span class="pre">dsgp4</span></code> to apply the first order approximation for propagating a covariance matrix:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-a480a0de-27ee-4250-88e7-74f94bc76469">
-<span class="eqno">(1)<a class="headerlink" href="#equation-a480a0de-27ee-4250-88e7-74f94bc76469" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-f71d4662-f948-470d-aabb-8ccde0ceac3e">
+<span class="eqno">(1)<a class="headerlink" href="#equation-f71d4662-f948-470d-aabb-8ccde0ceac3e" title="Permalink to this equation">#</a></span>\[\begin{equation}
 P_{\pmb{x}_f}=\dfrac{\partial \pmb{x}}{\partial \textrm{TLE}_0}  P_{\textrm{TLE}_{0}}\dfrac{\partial \pmb{x}}{\partial \textrm{TLE}_0}^T\text{,}
 \end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\textrm{TLE}_0\)</span> is the initial TLE, at time <span class="math notranslate nohighlight">\(t_0\)</span>, and <span class="math notranslate nohighlight">\(\pmb{x}\)</span> is the state vector in Cartesian TEME, at a certain propagation time <span class="math notranslate nohighlight">\(t_f\)</span>.</p>
