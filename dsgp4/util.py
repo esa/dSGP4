@@ -416,120 +416,79 @@ def from_datetime_to_jd(datetime_obj):
     """
     return sum(jday(year=datetime_obj.year, mon=datetime_obj.month, day=datetime_obj.day, hr=datetime_obj.hour, minute=datetime_obj.minute, sec=datetime_obj.second+float('0.'+str(datetime_obj.microsecond))))
 
-def from_cartesian_to_tle_elements(state, gravity_constant_name='wgs-72'):
+def from_cartesian_to_keplerian(r_vec, v_vec, mu):
     """
-    This function converts the provided state from Cartesian to TLE elements.
-    
-    Parameters:
-    ----------------
-    state (``np.array``): state in Cartesian coordinates
-    gravity_constant_name (``str``): name of the gravity constant to be used (default: 'wgs-72')
-    
-    Returns:
-    ----------------
-    ``dict``: dictionary of TLE elements
-    """
-    _,mu_earth,_,_,_,_,_,_=get_gravity_constants(gravity_constant_name)
-    mu_earth=float(mu_earth)*1e9
-    kepl_el = from_cartesian_to_keplerian(state, mu_earth)
-    tle_elements={}
-    tle_elements['mean_motion']         = np.sqrt(mu_earth/((kepl_el[0])**(3.0)))
-    tle_elements['eccentricity']        = kepl_el[1]
-    tle_elements['inclination']         = kepl_el[2]
-    tle_elements['raan']                = kepl_el[3]
-    tle_elements['argument_of_perigee'] = kepl_el[4]
-    mean_anomaly = kepl_el[5] - kepl_el[1]*np.sin(kepl_el[5])
-    tle_elements['mean_anomaly']        = mean_anomaly%(2*np.pi)
-    return tle_elements
+    This function converts the provided state from Cartesian to Keplerian elements.
 
-def from_cartesian_to_keplerian(state, mu):
-    """
-    This function takes the state in cartesian coordinates and the gravitational
-    parameter of the central body, and returns the state in Keplerian elements.
-    
     Parameters:
     ----------------
-    state (``np.array``): numpy array of 2 rows and 3 columns, where
-                                    the first row represents position, and the second velocity.
-                                    mu (``float``): gravitational parameter of the central body
+    r_vec (``np.array``): position vector in Cartesian coordinates
+    v_vec (``np.array``): velocity vector in Cartesian coordinates
+    mu (``float``): gravitational parameter of the central body
 
     Returns:
     ----------------
-    ``np.array``: numpy array of the six keplerian elements: (a,e,i,omega,Omega,mean_anomaly)
-                                             (i.e., semi major axis, eccentricity, inclination,
+    ``np.array``: array of Keplerian elements: (a, e, i, Omega, omega, M)
+                                             (i.e., semi-major axis, eccentricity, inclination,
                                              right ascension of ascending node, argument of perigee,
-                                             mean anomaly). All the angles are in radiants, eccentricity is unitless
-                                             and semi major axis is in SI.
+                                             mean anomaly). All the angles are in radians, eccentricity is unitless
+                                             and semi-major axis is in SI.
     """
-    h_bar = np.cross(np.array([state[0,0], state[0,1], state[0,2]]), np.array([state[1,0], state[1,1], state[1,2]]))
-    h = np.linalg.norm(h_bar)
-    r = np.linalg.norm(np.array([state[0,0], state[0,1], state[0,2]]))
-    v = np.linalg.norm(np.array([state[1,0], state[1,1], state[1,2]]))
-    E = 0.5*(v**2)-mu/r
-    a = -mu/(2*E)
-    e = np.sqrt(1-(h**2)/(a*mu))
-    i = np.arccos(h_bar[2]/h)
-    Omega = np.arctan2(h_bar[0],-h_bar[1])
-
-    lat = np.arctan2(np.divide(state[0,2],(np.sin(i))), (state[0,0]*np.cos(Omega) + state[0,1]*np.sin(Omega)))
-    p = a*(1-e**2)
-    nu = np.arctan2(np.sqrt(p/mu)*np.dot(np.array([state[0,0], state[0,1], state[0,2]]),np.array([state[1,0], state[1,1], state[1,2]])), p-r)
-    omega = (lat-nu)
-    eccentric_anomaly = 2*np.arctan(np.sqrt((1-e)/(1+e))*np.tan(nu/2))
-    n = np.sqrt(mu/(a**3))
-    mean_anomaly=eccentric_anomaly-e*np.sin(eccentric_anomaly)
-    #I make sure they are always in 0,2pi
-    if mean_anomaly<0:
-        mean_anomaly = 2*np.pi-abs(mean_anomaly)
-    if omega<0:
-        omega=2*np.pi-abs(omega)
-    if Omega<0:
-        Omega=2*np.pi-abs(Omega)
-    if abs(mean_anomaly)>2*np.pi:
-        mean_anomaly=mean_anomaly%(2*np.pi)
-    if abs(omega)>2*np.pi:
-        omega=omega%(2*np.pi)
-    if abs(Omega)>2*np.pi:
-        Omega=Omega%(2*np.pi)
-    return np.array([a, e, i, Omega, omega, mean_anomaly])
-
-def from_cartesian_to_keplerian_torch(state, mu):
-    """
-    Same as from_cartesian_to_keplerian, but for torch tensors.
+    # Norms
+    r = np.linalg.norm(r_vec)
+    v = np.linalg.norm(v_vec)
     
-    Parameters:
-    ----------------
-    state (``torch.tensor``): torch tensor of 2 rows and 3 columns, where
-                                    the first row represents position, and the second velocity.
-                                    mu (``float``): gravitational parameter of the central body
+    # Angular momentum vector and its magnitude
+    h_vec = np.cross(r_vec, v_vec)
+    h = np.linalg.norm(h_vec)
+    
+    # Inclination
+    i = np.arccos(h_vec[2] / h) if h != 0 else 0
+    
+    # Node vector
+    K = np.array([0, 0, 1])
+    n_vec = np.cross(K, h_vec)
+    n = np.linalg.norm(n_vec)
+    
+    # Eccentricity vector
+    e_vec = (1/mu) * ((v**2 - mu/r) * r_vec - np.dot(r_vec, v_vec) * v_vec)
+    e = np.linalg.norm(e_vec)
 
-    Returns:
-    ----------------
-    ``torch.tensor``: torch tensor of the six keplerian elements: (a,e,i,omega,Omega,mean_anomaly)
-                                             (i.e., semi major axis, eccentricity, inclination,
-                                             right ascension of ascending node, argument of perigee,
-                                             mean anomaly). All the angles are in radiants, eccentricity is unitless
-                                             and semi major axis is in SI.
-    """
-    h_bar = torch.cross(state[0], state[1])
-    h = h_bar.norm()
-    r = state[0].norm()
-    v = torch.norm(state[1])
-    E = 0.5*(v**2)-mu/r
-    a = -mu/(2*E)
-    e = torch.sqrt(1-(h**2)/(a*mu))
-    i = torch.arccos(h_bar[2]/h)
-    Omega = torch.arctan2(h_bar[0],-h_bar[1])
-    lat = torch.arctan2(torch.divide(state[0,2],(torch.sin(i))), (state[0,0]*torch.cos(Omega) + state[0,1]*torch.sin(Omega)))
-    p = a*(1-e**2)
-    nu = torch.arctan2(torch.sqrt(p/mu)*torch.dot(state[0],state[1]), p-r)
-    omega = (lat-nu)
-    eccentric_anomaly = 2*torch.arctan(torch.sqrt((1-e)/(1+e))*torch.tan(nu/2))
-    n = torch.sqrt(mu/(a**3))
-    mean_anomaly=eccentric_anomaly-e*torch.sin(eccentric_anomaly)
-    #I make sure they are always in 0,2pi
-    mean_motion=torch.sqrt(mu/((a)**(3.0)))
-    xpdotp   =  1440.0 / (2.0 *np.pi)
-    no_kozai_conversion_factor=xpdotp/43200.0* np.pi
-    no_kozai=mean_motion/no_kozai_conversion_factor
-    return [no_kozai, e, i, Omega, omega, mean_anomaly]
+    # Semi-major axis (a)
+    energy = v**2 / 2 - mu / r
+    if abs(e - 1.0) > 1e-8:  # Elliptical or hyperbolic orbit
+        a = -mu / (2 * energy)
+    else:  # Parabolic orbit
+        a = np.inf
+
+    # Right ascension of ascending node (RAAN)
+    Omega = 0
+    if n != 0:
+        Omega = np.arccos(n_vec[0] / n) if n_vec[1] >= 0 else 2 * np.pi - np.arccos(n_vec[0] / n)
+
+    # Argument of perigee (ω)
+    omega = 0
+    if n != 0 and e != 0:
+        omega = np.arccos(np.dot(n_vec, e_vec) / (n * e)) if e_vec[2] >= 0 else 2 * np.pi - np.arccos(np.dot(n_vec, e_vec) / (n * e))
+
+    # True anomaly (ν)
+    nu = 0
+    if e != 0:
+        nu = np.arccos(np.dot(e_vec, r_vec) / (e * r)) if np.dot(r_vec, v_vec) >= 0 else 2 * np.pi - np.arccos(np.dot(e_vec, r_vec) / (e * r))
+
+    # Eccentric anomaly (E) and Mean anomaly (M)
+    if e < 1.0:  # Elliptical orbit
+        E = 2 * np.arctan(np.tan(nu / 2) * np.sqrt((1 - e) / (1 + e)))
+        M = E - e * np.sin(E)
+    elif e > 1.0:  # Hyperbolic orbit
+        F = 2 * np.arctanh(np.tan(nu / 2) * np.sqrt((e - 1) / (e + 1)))
+        M = e * np.sinh(F) - F
+    else:  # Parabolic orbit
+        M = np.nan  # Mean anomaly is undefined for parabolic orbits
+
+    # Normalize angles to [0, 2π)
+    Omega %= 2 * np.pi
+    omega %= 2 * np.pi
+    M %= 2 * np.pi
+
+    return np.array([a, e, i, Omega, omega, M])

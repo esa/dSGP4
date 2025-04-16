@@ -85,6 +85,13 @@ html_static_path = ["_static"]
 
 html_logo = "_static/logo_dsgp4.png"
 
+
+linkcheck_ignore = [
+     r'https://www\.esa\.int/gsp/ACT/team/giacomo_acciarini/',
+     r'https://www.esa.int/gsp/ACT/team/dario_izzo/',
+ ]
+ 
+
 html_theme_options = {
     "repository_url": "https://github.com/esa/dSGP4/",
     "repository_branch": "master",
