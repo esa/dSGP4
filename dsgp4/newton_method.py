@@ -6,6 +6,18 @@ from . import util
 from .tle import TLE
 
 def update_TLE(old_tle, y0):
+    """
+    This function updates the TLE object with the new keplerian elements.
+
+    Parameters:
+    ----------------
+    old_tle (``dsgp4.TLE``): The old TLE object to be updated.
+    y0 (``torch.tensor``): The new keplerian elements.
+
+    Returns:
+    ----------------
+    TLE: The updated TLE object.
+    """
     xpdotp = 1440.0 / (2.0 * np.pi)
     mean_motion = float(y0[4]) * xpdotp * (np.pi / 43200.0)
 
@@ -32,11 +44,26 @@ def update_TLE(old_tle, y0):
     return TLE(tle_elements)
 
 def initial_guess_tle(time_mjd, tle_object, gravity_constant_name="wgs-84"):
+    """
+    This function generates an initial guess for the TLE object at a given time.
+    It uses the current TLE object to propagate the state and extract the keplerian elements.
+    The function returns a new TLE object with the updated elements.
+    
+    Parameters:
+    ----------------
+    time_mjd (``float``): The time in MJD format.
+    tle_object (``dsgp4.TLE``): The TLE object to be updated.
+    gravity_constant_name (``str``): The name of the gravity constant to be used. Default is "wgs-84".
+    
+    Returns:
+    ----------------
+    TLE: The updated TLE object.
+    """
     #first, let's decompose the time into -> epoch of the year and days 
     datetime_obj=util.from_mjd_to_datetime(time_mjd)
     epoch_days=util.from_datetime_to_fractional_day(datetime_obj)
     #then we need to propagate the state, and extract the keplerian elements:
-    util.initialize_tle(tle_object)
+    util.initialize_tle(tle_object,gravity_constant_name=gravity_constant_name)
     tsince=(time_mjd-util.from_datetime_to_mjd(tle_object._epoch))*1440.
     target_state=util.propagate(tle_object, tsince).detach().numpy()*1e3
     _,mu_earth,_,_,_,_,_,_=util.get_gravity_constants(gravity_constant_name)
@@ -82,13 +109,32 @@ def _propagate(x, tle_sat, tsince, gravity_constant_name="wgs-84"):
     state=sgp4(tle_sat, tsince*torch.ones(1,1))
     return state
 
-def newton_method(tle0, time_mjd, max_iter=50, new_tol=1e-12, verbose=False, target_state=None):
+def newton_method(tle0, time_mjd, max_iter=50, new_tol=1e-12, verbose=False, target_state=None, gravity_constant_name="wgs-84"):
+    """
+    This function implements the Newton-Raphson method to find the TLE elements that match a given target state.
+    It uses the SGP4 propagator to propagate the TLE elements and compare them with the target state.
+    The function returns the updated TLE object and the final state vector.
+    Parameters:
+    ----------------
+    tle0 (``dsgp4.TLE``): The initial TLE object to be updated.
+    time_mjd (``float``): The time in MJD format.
+    max_iter (``int``): The maximum number of iterations for the Newton-Raphson method. Default is 50.
+    new_tol (``float``): The tolerance for convergence. Default is 1e-12.
+    verbose (``bool``): If True, prints the convergence information. Default is False.
+    target_state (``torch.tensor``): The target state vector to be matched. If None, the function will propagate the initial TLE object to find the target state.
+    gravity_constant_name (``str``): The name of the gravity constant to be used. Default is "wgs-84".
+
+    Returns:
+    ----------------
+    TLE: The updated TLE object.
+    torch.tensor: The tensor of the updated elements.
+    """
     if target_state is None:
-        util.initialize_tle(tle0)
+        util.initialize_tle(tle0,gravity_constant_name=gravity_constant_name)
         target_state=util.propagate(tle0, (time_mjd-util.from_datetime_to_mjd(tle0._epoch))*1440.)
 
     i,tol=0,1e9
-    next_tle=initial_guess_tle(time_mjd, tle0)
+    next_tle=initial_guess_tle(time_mjd, tle0,gravity_constant_name=gravity_constant_name)
     y0 = torch.tensor([
                         next_tle._ecco,
                         next_tle._argpo,
@@ -99,7 +145,7 @@ def newton_method(tle0, time_mjd, max_iter=50, new_tol=1e-12, verbose=False, tar
                     ], requires_grad=True)
     def propagate_fn(x):
         tsince=(time_mjd-util.from_datetime_to_mjd(next_tle._epoch))*1440.
-        return _propagate(x,next_tle,tsince)
+        return _propagate(x,next_tle,tsince,gravity_constant_name=gravity_constant_name)
     while i<max_iter and tol>new_tol:
         grads=[]
         F=[]
