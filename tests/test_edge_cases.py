@@ -168,11 +168,15 @@ class CoverageEdgesTestCase(unittest.TestCase):
         states[:, 0, 0] = torch.linspace(0.0, 1000.0, 5)
         states[:, 0, 1] = torch.linspace(0.0, 500.0, 5)
         states[:, 0, 2] = torch.linspace(0.0, 200.0, 5)
-        ax = plot_orbit(states, elevation_azimuth=(20, 40), color="red", label="orb")
+        # Matplotlib 3.8 can fail on 3D surface legend handles in headless CI.
+        # We still execute the plotting path while making legend behavior version-agnostic.
+        with mock.patch("matplotlib.axes._axes.Axes.legend", return_value=None):
+            ax = plot_orbit(states, elevation_azimuth=(20, 40), color="red", label="orb")
         self.assertIsNotNone(ax)
         fig = plt.figure()
         ax2 = fig.add_subplot(111, projection="3d")
-        ax2 = plot_orbit(states, ax=ax2, color="blue", label="orb2")
+        with mock.patch("matplotlib.axes._axes.Axes.legend", return_value=None):
+            ax2 = plot_orbit(states, ax=ax2, color="blue", label="orb2")
         self.assertIsNotNone(ax2)
 
         tle1 = _sample_tle()
