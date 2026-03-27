@@ -4,10 +4,6 @@ import random
 import torch
 import unittest
 
-error_string="Error: deep space propagation not supported (yet). The provided satellite has \
-an orbital period above 225 minutes. If you want to let us know you need it or you want to \
-contribute to implement it, open a PR or raise an issue at: https://github.com/esa/dSGP4."
-
 class UtilTestCase(unittest.TestCase):
     def test_mldsgp4_single_tles(self):
         lines=file.splitlines()
@@ -40,12 +36,12 @@ class UtilTestCase(unittest.TestCase):
                 states_mldsgp4_out[:,:3]*=ml_dsgp4.normalization_R
                 states_mldsgp4_out[:,3:]*=ml_dsgp4.normalization_V
             except Exception as e:
-                self.assertTrue((str(e).split()==error_string.split()))
+                self.fail(f"Unexpected exception during ML-dSGP4 propagation: {e}")
             #now with the SGP4:
             try:
                 states_dsgp4_out=dsgp4.propagate(tle, tsinces, initialized=False)
             except Exception as e:
-                self.assertTrue((str(e).split()==error_string.split()))
+                self.fail(f"Unexpected exception during dSGP4 propagation: {e}")
             #testing the results:
             self.assertTrue(np.allclose(states_mldsgp4_out.detach().numpy().reshape(-1,2,3),states_dsgp4_out.detach().numpy(),atol=1e-13))
 
