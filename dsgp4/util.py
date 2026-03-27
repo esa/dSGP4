@@ -51,7 +51,12 @@ def propagate_batch(tles, tsinces, initialized=True):
     """
     from .sgp4_batched import sgp4_batched
     if not initialized:
-        _,tles=initialize_tle(tles)
+        _, tles = initialize_tle(tles)
+    if isinstance(tles, list):
+        states = []
+        for tle, tsince in zip(tles, tsinces):
+            states.append(propagate(tle, tsince, initialized=True))
+        return torch.stack(states)
     state=sgp4_batched(tles, tsinces)
     return state
 
@@ -100,7 +105,6 @@ def initialize_tle(tles,
     from .sgp4init import sgp4init
     from .sgp4init_batch import sgp4init_batch
     whichconst=get_gravity_constants(gravity_constant_name)
-    deep_space_counter=0
     if isinstance(tles,list):
         tle_elements=[]#torch.zeros((len(tles),9),requires_grad=with_grad)
         for tle in tles:
@@ -116,33 +120,43 @@ def initialize_tle(tles,
                             ],requires_grad=with_grad)
                 tle_elements.append(x)
         xx=torch.stack(tle_elements)
-        try:
-            tles_batch=tles[0].copy()
-            sgp4init_batch(whichconst=whichconst,
-                            opsmode='i',
-                            satn=tle.satellite_catalog_number,
-                            epoch=(tle._jdsatepoch+tle._jdsatepochF)-2433281.5,
-                            xbstar=xx[:,0],
-                            xndot=xx[:,1],
-                            xnddot=xx[:,2],
-                            xecco=xx[:,3],
-                            xargpo=xx[:,4],
-                            xinclo=xx[:,5],
-                            xmo=xx[:,6],
-                            xno_kozai=xx[:,7],
-                            xnodeo=xx[:,8],
-                            satellite_batch=tles_batch,
-                            )
-        except Exception as e:
-            _error_string="Error: deep space propagation not supported (yet). The provided satellite has \
-an orbital period above 225 minutes. If you want to let us know you need it or you want to \
-contribute to implement it, open a PR or raise an issue at: https://github.com/esa/dSGP4."
-            if str(e)==_error_string:
-                deep_space_counter+=1
-            else:
-                raise e
-        if deep_space_counter>0:
-            print("Warning: "+str(deep_space_counter)+" TLEs were not initialized because they are in deep space. Deep space propagation is currently not supported.")
+        tles_batch=tles[0].copy()
+        sgp4init_batch(whichconst=whichconst,
+                        opsmode='i',
+                        satn=tle.satellite_catalog_number,
+                        epoch=(tle._jdsatepoch+tle._jdsatepochF)-2433281.5,
+                        xbstar=xx[:,0],
+                        xndot=xx[:,1],
+                        xnddot=xx[:,2],
+                        xecco=xx[:,3],
+                        xargpo=xx[:,4],
+                        xinclo=xx[:,5],
+                        xmo=xx[:,6],
+                        xno_kozai=xx[:,7],
+                        xnodeo=xx[:,8],
+                        satellite_batch=tles_batch,
+                        )
+
+        # The batched propagator currently supports near-earth terms only.
+        # Fall back to per-TLE initialized objects when deep-space satellites are present.
+        if torch.any(2 * np.pi / tles_batch._no_unkozai >= 225.0):
+            for idx, tle in enumerate(tles):
+                sgp4init(whichconst=whichconst,
+                         opsmode='i',
+                         satn=tle.satellite_catalog_number,
+                         epoch=(tle._jdsatepoch+tle._jdsatepochF)-2433281.5,
+                         xbstar=tle_elements[idx][0],
+                         xndot=tle_elements[idx][1],
+                         xnddot=tle_elements[idx][2],
+                         xecco=tle_elements[idx][3],
+                         xargpo=tle_elements[idx][4],
+                         xinclo=tle_elements[idx][5],
+                         xmo=tle_elements[idx][6],
+                         xno_kozai=tle_elements[idx][7],
+                         xnodeo=tle_elements[idx][8],
+                         satellite=tle)
+            return tle_elements, tles
+
         return tle_elements, tles_batch
 
     else:

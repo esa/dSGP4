@@ -238,12 +238,7 @@ def sgp4init_batch(
     satellite_batch._sinmao = satellite_batch._mo.sin()
     satellite_batch._x7thm1 = 7.0 * cosio2 - 1.0
 
-    # Deep space initialization
-    deep_space_condition = (2 * np.pi / satellite_batch._no_unkozai >= 225.0)
-    if torch.any(deep_space_condition):
-        raise RuntimeError("Error: deep space propagation not supported (yet). One of the provided satellites has"
-                        "an orbital period above 225 minutes. If you want to let us know you need it or you want to "
-                        "contribute to implement it, open a PR or raise an issue at: https://github.com/esa/dSGP4.")
+    # Deep-space members are handled by a scalar fallback in util.initialize_tle.
 
     isimp_condition = (satellite_batch._isimp != 1)
     if torch.any(isimp_condition):
