@@ -8,9 +8,6 @@ import random
 
 class UtilTestCase(unittest.TestCase):
     def test_initl(self):
-        error_string="Error: deep space propagation not supported (yet). The provided satellite has \
-        an orbital period above 225 minutes. If you want to let us know you need it or you want to \
-        contribute to implement it, open a PR or raise an issue at: https://github.com/esa/dSGP4."
         lines=file.splitlines()
         #I randomly select 50 indexes out of 500 satellites
         indexes=random.sample(list(range(1,len(lines),3)), 50)
@@ -72,7 +69,7 @@ class UtilTestCase(unittest.TestCase):
                 self.assertAlmostEqual(satrec_sinio, float(tle_sat_sinio))
                 self.assertAlmostEqual(satrec_gsto, float(tle_sat_gsto))
             except Exception as e:
-                self.assertTrue((str(e).split()==error_string.split()))
+                self.fail(f"Unexpected exception during initl comparison: {e}")
 
     def test_coverage(self):
         tle=dsgp4.tle.TLE(file.splitlines()[1:4])

@@ -284,23 +284,23 @@ class CoverageEdgesTestCase(unittest.TestCase):
         self.assertEqual(len(out[1]), 1)
 
         batch = tle.copy()
-        with self.assertRaises(RuntimeError):
-            sgp4init_batch(
-                whichconst=whichconst,
-                opsmode="i",
-                satn=tle.satellite_catalog_number,
-                epoch=(tle._jdsatepoch + tle._jdsatepochF) - 2433281.5,
-                xbstar=torch.tensor([tle._bstar]),
-                xndot=torch.tensor([tle._ndot]),
-                xnddot=torch.tensor([tle._nddot]),
-                xecco=torch.tensor([tle._ecco]),
-                xargpo=torch.tensor([tle._argpo]),
-                xinclo=torch.tensor([tle._inclo]),
-                xmo=torch.tensor([tle._mo]),
-                xno_kozai=torch.tensor([0.01]),
-                xnodeo=torch.tensor([tle._nodeo]),
-                satellite_batch=batch,
-            )
+        sgp4init_batch(
+            whichconst=whichconst,
+            opsmode="i",
+            satn=tle.satellite_catalog_number,
+            epoch=(tle._jdsatepoch + tle._jdsatepochF) - 2433281.5,
+            xbstar=torch.tensor([tle._bstar]),
+            xndot=torch.tensor([tle._ndot]),
+            xnddot=torch.tensor([tle._nddot]),
+            xecco=torch.tensor([tle._ecco]),
+            xargpo=torch.tensor([tle._argpo]),
+            xinclo=torch.tensor([tle._inclo]),
+            xmo=torch.tensor([tle._mo]),
+            xno_kozai=torch.tensor([0.01]),
+            xnodeo=torch.tensor([tle._nodeo]),
+            satellite_batch=batch,
+        )
+        self.assertTrue(torch.isfinite(batch._no_unkozai).all())
 
     def test_tle_missing_paths(self):
         self.assertEqual(read_satellite_catalog_number("A1234"), 101234)
@@ -391,13 +391,6 @@ class CoverageEdgesTestCase(unittest.TestCase):
             util.get_gravity_constants("bad")
 
         tle = _sample_tle()
-        err = "Error: deep space propagation not supported (yet). The provided satellite has an orbital period above 225 minutes. If you want to let us know you need it or you want to contribute to implement it, open a PR or raise an issue at: https://github.com/esa/dSGP4."
-        with mock.patch.object(SGP4INIT_BATCH_MODULE, "sgp4init_batch", side_effect=Exception(err)):
-            buf = io.StringIO()
-            with contextlib.redirect_stdout(buf):
-                util.initialize_tle([tle])
-            self.assertIn("were not initialized", buf.getvalue())
-
         with mock.patch.object(SGP4INIT_BATCH_MODULE, "sgp4init_batch", side_effect=Exception("other")):
             with self.assertRaises(Exception):
                 util.initialize_tle([tle])

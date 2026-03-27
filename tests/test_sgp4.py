@@ -7,10 +7,6 @@ import sgp4.earth_gravity
 import torch
 import unittest
 
-error_string="Error: deep space propagation not supported (yet). The provided satellite has \
-an orbital period above 225 minutes. If you want to let us know you need it or you want to \
-contribute to implement it, open a PR or raise an issue at: https://github.com/esa/dSGP4."
-
 class UtilTestCase(unittest.TestCase):
     def test_sgp4(self):
         lines=file.splitlines()
@@ -52,7 +48,7 @@ class UtilTestCase(unittest.TestCase):
                     self.assertAlmostEqual(satrec_state[1][1], float(tle_sat_state[1][1]))
                     self.assertAlmostEqual(satrec_state[1][2], float(tle_sat_state[1][2]))
             except Exception as e:
-                self.assertTrue((str(e).split()==error_string.split()))
+                                self.fail(f"Unexpected exception during single-satellite propagation test: {e}")
 
     def test_batch_propagation(self):
         lines=file.splitlines()
@@ -74,7 +70,7 @@ class UtilTestCase(unittest.TestCase):
                 if tle_satellite._error==0:
                     tles_filtered.append(tle_satellite)
             except Exception as e:
-                self.assertTrue((str(e).split()==error_string.split()))
+                                self.fail(f"Unexpected exception during batch propagation setup: {e}")
 
         for tle in tles_filtered:
             satrec=sgp4.io.twoline2rv(tle.line1,tle.line2, whichconst=sgp4.earth_gravity.wgs84)

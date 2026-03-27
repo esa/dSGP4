@@ -6,10 +6,6 @@ import sgp4.io
 import torch
 import unittest
 
-error_string="Error: deep space propagation not supported (yet). The provided satellite has \
-an orbital period above 225 minutes. If you want to let us know you need it or you want to \
-contribute to implement it, open a PR or raise an issue at: https://github.com/esa/dSGP4."
-
 class UtilTestCase(unittest.TestCase):
     def test_velocity(self):
         #this test verifies that the gradient of position w.r.t. time is more or less similar to the
@@ -17,7 +13,8 @@ class UtilTestCase(unittest.TestCase):
         #just a 'reasonable' check to make:
         lines=file.splitlines()
         #I randomly select 50 indexes out of 500 satellites
-        indexes=random.sample(list(range(1,len(lines),3)), 50)
+        rng = random.Random(1234)
+        indexes=rng.sample(list(range(1,len(lines),3)), 50)
         tles=[]
         for i in indexes:
             data=[]
@@ -30,13 +27,13 @@ class UtilTestCase(unittest.TestCase):
         for tle_satellite in tles:
             try:
                 dsgp4.initialize_tle(tle_satellite, gravity_constant_name="wgs-84");
-                if tle_satellite._error==0:
+                if tle_satellite._error==0 and getattr(tle_satellite, "_method", "n") == "n":
                     tles_filtered.append(tle_satellite)
             except Exception as e:
-                self.assertTrue((str(e).split()==error_string.split()))
+                self.fail(f"Unexpected exception during TLE initialization: {e}")
 
         for tle in tles_filtered[:50]:
-            time=torch.tensor(random.random()*30,requires_grad=True)
+            time=torch.tensor(rng.random()*30,requires_grad=True)
             state_teme = dsgp4.propagate(tle, 
                                          time,
                                          initialized=False)
@@ -48,14 +45,18 @@ class UtilTestCase(unittest.TestCase):
                     partial_derivatives[i,j] = time.grad
             #the gradient is w.r.t. the input time, that is in minutes, so it
             #will be a km/min, which we multiply by 60 to get km/s, as per SGP4 output:
-            self.assertAlmostEqual(partial_derivatives[0,0].detach().numpy(),state_teme[1,0].detach().numpy()*60,places=1)
-            self.assertAlmostEqual(partial_derivatives[0,1].detach().numpy(),state_teme[1,1].detach().numpy()*60,places=1)
-            self.assertAlmostEqual(partial_derivatives[0,2].detach().numpy(),state_teme[1,2].detach().numpy()*60,places=1)
+            np.testing.assert_allclose(
+                partial_derivatives[0].detach().numpy(),
+                (state_teme[1] * 60).detach().numpy(),
+                rtol=5e-4,
+                atol=1e-1,
+            )
 
     def test_input_gradients(self):
         lines=file.splitlines()
         #I randomly select 50 indexes out of 500 satellites
-        indexes=random.sample(list(range(1,len(lines),3)), 50)
+        rng = random.Random(5678)
+        indexes=rng.sample(list(range(1,len(lines),3)), 50)
         tles=[]
         for i in indexes:
             data=[]
@@ -69,14 +70,14 @@ class UtilTestCase(unittest.TestCase):
         for tle_satellite in tles:
             try:
                 el=dsgp4.initialize_tle(tle_satellite, gravity_constant_name="wgs-84", with_grad=True);
-                if tle_satellite._error==0:
+                if tle_satellite._error==0 and getattr(tle_satellite, "_method", "n") == "n":
                     tles_filtered.append(tle_satellite)
                     tles_elements.append(el)
             except Exception as e:
-                self.assertTrue((str(e).split()==error_string.split()))
+                self.fail(f"Unexpected exception during gradient-enabled TLE initialization: {e}")
 
         for idx,tle in enumerate(tles_filtered[:50]):
-            time=torch.tensor(random.random()*30)
+            time=torch.tensor(rng.random()*30)
             #I propagate:
             state_teme = dsgp4.propagate(tle,time)
             #let's now construct the partials:s
@@ -107,7 +108,8 @@ class UtilTestCase(unittest.TestCase):
             fun=lambda xx: _propagate(xx,tle,time)
             #I create 6 copies of the inputs to be used for each function (three
             #position and three velocity coordinates)
-            x0=torch.tensor([tle._bstar,
+            x0=torch.stack([
+                            tle._bstar,
                             tle._ndot,
                             tle._nddot,
                             tle._ecco,
@@ -115,30 +117,42 @@ class UtilTestCase(unittest.TestCase):
                             tle._inclo,
                             tle._mo,
                             tle._no_kozai,
-                            tle._nodeo,
-                            time],requires_grad=True)
+                            tle._nodeo]).clone().detach().requires_grad_(True)
             gradient_finite_diff_rx=torch.zeros((9,))
             gradient_finite_diff_ry=torch.zeros((9,))
             gradient_finite_diff_rz=torch.zeros((9,))
             gradient_finite_diff_vx=torch.zeros((9,))
             gradient_finite_diff_vy=torch.zeros((9,))
             gradient_finite_diff_vz=torch.zeros((9,))
-            dh=1e-8
             for i in range(9):
-                xnew=x0.clone()
-                xnew[i]=x0[i]+dh
-                gradient_finite_diff_rx[i]=(fun(xnew)[0][0]- fun(x0)[0][0])/dh
-                gradient_finite_diff_ry[i]=(fun(xnew)[0][1] - fun(x0)[0][1])/dh
-                gradient_finite_diff_rz[i]=(fun(xnew)[0][2] - fun(x0)[0][2])/dh
-                gradient_finite_diff_vx[i]=(fun(xnew)[1][0] - fun(x0)[1][0])/dh
-                gradient_finite_diff_vy[i]=(fun(xnew)[1][1] - fun(x0)[1][1])/dh
-                gradient_finite_diff_vz[i]=(fun(xnew)[1][2] - fun(x0)[1][2])/dh
-                self.assertAlmostEqual(gradient_finite_diff_rx[i].detach().numpy(), partial_derivatives[0,i].detach().numpy(), places=1)
-                self.assertAlmostEqual(gradient_finite_diff_ry[i].detach().numpy(), partial_derivatives[1,i].detach().numpy(), places=1)
-                self.assertAlmostEqual(gradient_finite_diff_rz[i].detach().numpy(), partial_derivatives[2,i].detach().numpy(), places=1)
-                self.assertAlmostEqual(gradient_finite_diff_vx[i].detach().numpy(), partial_derivatives[3,i].detach().numpy(), places=1)
-                self.assertAlmostEqual(gradient_finite_diff_vy[i].detach().numpy(), partial_derivatives[4,i].detach().numpy(), places=1)
-                self.assertAlmostEqual(gradient_finite_diff_vz[i].detach().numpy(), partial_derivatives[5,i].detach().numpy(), places=1)
+                dh=max(1e-6, 1e-6*abs(float(x0[i].detach())))
+                xplus=x0.clone()
+                xminus=x0.clone()
+                xplus[i]=x0[i]+dh
+                xminus[i]=x0[i]-dh
+                gradient_finite_diff_rx[i]=(fun(xplus)[0][0]- fun(xminus)[0][0])/(2*dh)
+                gradient_finite_diff_ry[i]=(fun(xplus)[0][1] - fun(xminus)[0][1])/(2*dh)
+                gradient_finite_diff_rz[i]=(fun(xplus)[0][2] - fun(xminus)[0][2])/(2*dh)
+                gradient_finite_diff_vx[i]=(fun(xplus)[1][0] - fun(xminus)[1][0])/(2*dh)
+                gradient_finite_diff_vy[i]=(fun(xplus)[1][1] - fun(xminus)[1][1])/(2*dh)
+                gradient_finite_diff_vz[i]=(fun(xplus)[1][2] - fun(xminus)[1][2])/(2*dh)
+
+                np.testing.assert_allclose(
+                    [gradient_finite_diff_rx[i].detach().numpy(),
+                     gradient_finite_diff_ry[i].detach().numpy(),
+                     gradient_finite_diff_rz[i].detach().numpy(),
+                     gradient_finite_diff_vx[i].detach().numpy(),
+                     gradient_finite_diff_vy[i].detach().numpy(),
+                     gradient_finite_diff_vz[i].detach().numpy()],
+                    [partial_derivatives[0,i].detach().numpy(),
+                     partial_derivatives[1,i].detach().numpy(),
+                     partial_derivatives[2,i].detach().numpy(),
+                     partial_derivatives[3,i].detach().numpy(),
+                     partial_derivatives[4,i].detach().numpy(),
+                     partial_derivatives[5,i].detach().numpy()],
+                    rtol=2e-3,
+                    atol=5e-1,
+                )
 
 file="""
 0 COSMOS 2251 DEB

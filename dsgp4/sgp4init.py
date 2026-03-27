@@ -2,6 +2,7 @@ import numpy
 import torch
 from .initl import initl
 from .sgp4 import sgp4
+from .deep_space import dpper, dscom, dsinit
 
 def sgp4init(
       whichconst,   opsmode,  satn, epoch,
@@ -51,6 +52,25 @@ def sgp4init(
     satellite._t4cof   = torch.tensor(0.0); satellite._t5cof  = torch.tensor(0.0); satellite._x1mth2   = torch.tensor(0.0);
     satellite._x7thm1  = torch.tensor(0.0); satellite._mdot   = torch.tensor(0.0); satellite._nodedot  = torch.tensor(0.0);
     satellite._xlcof   = torch.tensor(0.0); satellite._xmcof  = torch.tensor(0.0); satellite._nodecf   = torch.tensor(0.0);
+    satellite._irez    = 0;                 satellite._atime  = torch.tensor(0.0); satellite._d2201    = torch.tensor(0.0);
+    satellite._d2211   = torch.tensor(0.0); satellite._d3210  = torch.tensor(0.0); satellite._d3222    = torch.tensor(0.0);
+    satellite._d4410   = torch.tensor(0.0); satellite._d4422  = torch.tensor(0.0); satellite._d5220    = torch.tensor(0.0);
+    satellite._d5232   = torch.tensor(0.0); satellite._d5421  = torch.tensor(0.0); satellite._d5433    = torch.tensor(0.0);
+    satellite._dedt    = torch.tensor(0.0); satellite._didt   = torch.tensor(0.0); satellite._dmdt     = torch.tensor(0.0);
+    satellite._dnodt   = torch.tensor(0.0); satellite._domdt  = torch.tensor(0.0); satellite._del1     = torch.tensor(0.0);
+    satellite._del2    = torch.tensor(0.0); satellite._del3   = torch.tensor(0.0); satellite._xfact    = torch.tensor(0.0);
+    satellite._xlamo   = torch.tensor(0.0); satellite._xli    = torch.tensor(0.0); satellite._xni      = torch.tensor(0.0);
+    satellite._zmol    = torch.tensor(0.0); satellite._zmos   = torch.tensor(0.0); satellite._e3       = torch.tensor(0.0);
+    satellite._ee2     = torch.tensor(0.0); satellite._peo    = torch.tensor(0.0); satellite._pgho     = torch.tensor(0.0);
+    satellite._pho     = torch.tensor(0.0); satellite._pinco  = torch.tensor(0.0); satellite._plo      = torch.tensor(0.0);
+    satellite._se2     = torch.tensor(0.0); satellite._se3    = torch.tensor(0.0); satellite._sgh2     = torch.tensor(0.0);
+    satellite._sgh3    = torch.tensor(0.0); satellite._sgh4   = torch.tensor(0.0); satellite._sh2      = torch.tensor(0.0);
+    satellite._sh3     = torch.tensor(0.0); satellite._si2    = torch.tensor(0.0); satellite._si3      = torch.tensor(0.0);
+    satellite._sl2     = torch.tensor(0.0); satellite._sl3    = torch.tensor(0.0); satellite._sl4      = torch.tensor(0.0);
+    satellite._xgh2    = torch.tensor(0.0); satellite._xgh3   = torch.tensor(0.0); satellite._xgh4     = torch.tensor(0.0);
+    satellite._xh2     = torch.tensor(0.0); satellite._xh3    = torch.tensor(0.0); satellite._xi2      = torch.tensor(0.0);
+    satellite._xi3     = torch.tensor(0.0); satellite._xl2    = torch.tensor(0.0); satellite._xl3      = torch.tensor(0.0);
+    satellite._xl4     = torch.tensor(0.0);
 
     #  ------------------------ earth constants -----------------------
     #  sgp4fix identify constants and allow alternate values
@@ -180,9 +200,78 @@ def sgp4init(
 
         #  --------------- deep space initialization -------------
         if 2*numpy.pi / satellite._no_unkozai >= 225.0:
-            raise RuntimeError("Error: deep space propagation not supported (yet). The provided satellite has\
-            an orbital period above 225 minutes. If you want to let us know you need it or you want to \
-            contribute to implement it, open a PR or raise an issue at: https://github.com/esa/dSGP4.")
+            satellite._method = 'd'
+            satellite._isimp = 1
+            deep_out = dscom(
+                epoch=epoch,
+                ep=satellite._ecco,
+                argpp=satellite._argpo,
+                tc=torch.tensor(0.0),
+                inclp=satellite._inclo,
+                nodep=satellite._nodeo,
+                np_in=satellite._no_unkozai,
+            )
+            for key, value in deep_out.items():
+                if hasattr(satellite, f"_{key}"):
+                    setattr(satellite, f"_{key}", value)
+
+            satellite._ecco, satellite._inclo, satellite._nodeo, satellite._argpo, satellite._mo = dpper(
+                satellite=satellite,
+                inclo=satellite._inclo,
+                init=satellite._init,
+                ep=satellite._ecco,
+                inclp=satellite._inclo,
+                nodep=satellite._nodeo,
+                argpp=satellite._argpo,
+                mp=satellite._mo,
+                opsmode=satellite._operationmode,
+            )
+
+            deep_init = dsinit(
+                satellite=satellite,
+                cosim=deep_out["cosim"],
+                emsq=deep_out["emsq"],
+                argpo=satellite._argpo,
+                s1=deep_out["s1"],
+                s2=deep_out["s2"],
+                s3=deep_out["s3"],
+                s4=deep_out["s4"],
+                s5=deep_out["s5"],
+                sinim=deep_out["sinim"],
+                ss1=deep_out["ss1"],
+                ss2=deep_out["ss2"],
+                ss3=deep_out["ss3"],
+                ss4=deep_out["ss4"],
+                ss5=deep_out["ss5"],
+                sz1=deep_out["sz1"],
+                sz3=deep_out["sz3"],
+                sz11=deep_out["sz11"],
+                sz13=deep_out["sz13"],
+                sz21=deep_out["sz21"],
+                sz23=deep_out["sz23"],
+                sz31=deep_out["sz31"],
+                sz33=deep_out["sz33"],
+                z1=deep_out["z1"],
+                z3=deep_out["z3"],
+                z11=deep_out["z11"],
+                z13=deep_out["z13"],
+                z21=deep_out["z21"],
+                z23=deep_out["z23"],
+                z31=deep_out["z31"],
+                z33=deep_out["z33"],
+                ecco=satellite._ecco,
+                eccsq=eccsq,
+                em=deep_out["em"],
+                argpm=torch.tensor(0.0),
+                inclm=satellite._inclo,
+                mm=torch.tensor(0.0),
+                nm=deep_out["nm"],
+                nodem=torch.tensor(0.0),
+                xpidot=xpidot,
+            )
+            for key, value in deep_init.items():
+                if hasattr(satellite, f"_{key}"):
+                    setattr(satellite, f"_{key}", value)
 
         if satellite._isimp != 1:
             cc1sq          = satellite._cc1 * satellite._cc1

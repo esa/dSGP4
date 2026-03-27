@@ -1,6 +1,7 @@
 import numpy
 import torch
 from .tle import TLE
+from .deep_space import dspace, dpper
 
 #@torch.jit.script
 def sgp4(satellite, tsince):
@@ -27,6 +28,11 @@ def sgp4(satellite, tsince):
     #in case an int, float or list are passed, convert them to torch.tensor
     if isinstance(tsince, (int, float, list)):
         tsince = torch.tensor(tsince)
+    if hasattr(satellite, '_method') and satellite._method == 'd' and torch.numel(tsince) > 1:
+        out = []
+        for t in tsince.reshape(-1):
+            out.append(sgp4(satellite, t.reshape(1, 1)).squeeze())
+        return torch.stack(out)
     mrt = torch.zeros(tsince.size())
     temp4 = torch.ones(tsince.size())*1.5e-12
     x2o3  = torch.tensor(2.0 / 3.0)
@@ -71,6 +77,17 @@ def sgp4(satellite, tsince):
     em    = satellite._ecco.clone()
     inclm = satellite._inclo.clone()
 
+    if hasattr(satellite, '_method') and satellite._method == 'd':
+        em, argpm, inclm, mm, nodem, nm = dspace(
+            satellite=satellite,
+            em=em,
+            argpm=argpm,
+            inclm=inclm,
+            mm=mm,
+            nodem=nodem,
+            nm=nm,
+        )
+
     satellite._error=torch.any(nm<=0)*2
 
     am = torch.pow((satellite._xke / nm),x2o3) * tempa * tempa
@@ -113,6 +130,34 @@ def sgp4(satellite, tsince):
     mp     = mm
     sinip  = sinim
     cosip  = cosim
+
+    if hasattr(satellite, '_method') and satellite._method == 'd':
+        ep, xincp, nodep, argpp, mp = dpper(
+            satellite=satellite,
+            inclo=satellite._inclo,
+            init='n',
+            ep=ep,
+            inclp=xincp,
+            nodep=nodep,
+            argpp=argpp,
+            mp=mp,
+            opsmode=satellite._operationmode,
+        )
+        if torch.any(xincp < 0.0):
+            xincp = -xincp
+            nodep = nodep + torch.tensor(numpy.pi)
+            argpp = argpp - torch.tensor(numpy.pi)
+        if torch.any((ep < 0.0) | (ep > 1.0)):
+            satellite._error = torch.tensor(3)
+
+    if hasattr(satellite, '_method') and satellite._method == 'd':
+        sinip = xincp.sin()
+        cosip = xincp.cos()
+        satellite._aycof = -0.5 * satellite._j3oj2 * sinip
+        if torch.abs(cosip + 1.0) > 1.5e-12:
+            satellite._xlcof = -0.25 * satellite._j3oj2 * sinip * (3.0 + 5.0 * cosip) / (1.0 + cosip)
+        else:
+            satellite._xlcof = -0.25 * satellite._j3oj2 * sinip * (3.0 + 5.0 * cosip) / temp4
 
     axnl = ep * argpp.cos()
     temp = 1.0 / (am * (1.0 - ep * ep))
@@ -157,6 +202,12 @@ def sgp4(satellite, tsince):
     temp   = 1.0 / pl
     temp1  = 0.5 * satellite._j2 * temp
     temp2  = temp1 * temp
+
+    if hasattr(satellite, '_method') and satellite._method == 'd':
+        cosisq = cosip * cosip
+        satellite._con41 = 3.0 * cosisq - 1.0
+        satellite._x1mth2 = 1.0 - cosisq
+        satellite._x7thm1 = 7.0 * cosisq - 1.0
 
     mrt   = rl * (1.0 - 1.5 * temp2 * betal * satellite._con41) + \
              0.5 * temp1 * satellite._x1mth2 * cos2u
