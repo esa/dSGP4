@@ -120,7 +120,7 @@ print(states.shape)  # (2, 2, 3)
 
 - Time input (`tsince`) is in minutes from the TLE epoch.
 - Output units are km (position) and km/s (velocity).
-- Supported gravity constants: `wgs-72`, `wgs-84`, `wgs-72old`.
+- Supported gravity models: `wgs-72`, `wgs-84`, `wgs-72old`.
 - Deep-space propagation is supported.
 - Default torch dtype is set to `float64` when importing `dsgp4`.
 
