@@ -81,6 +81,62 @@ def write_satellite_catalog_number(satellite_catalog_number):
     return chr(code) + str(low).zfill(4)
 
 
+def add_derived_quantities(data, year, epochdays, opsmode):
+    """
+    This function takes a dictionary of elements (in which at least the mean motion is already
+    stored), and adds the quantities that are derived from the epoch (i.e. the Julian dates
+    used by SGP4), together with the semi-major axis and the operation mode. The dictionary is
+    modified in place.
+
+    Parameters:
+    ----------------
+    data (``dict``): dictionary of elements
+    year (``int``): epoch year
+    epochdays (``float``): epoch day of the year (with its fraction)
+    opsmode (``str``): operation mode, either 'i' or 'a'
+
+    Returns:
+    ----------------
+    ``dict``: dictionary of elements
+    """
+    mon,day,hr,minute,sec = util.days2mdhms(year, epochdays);
+    sec_whole, sec_fraction = divmod(sec, 1.0)
+    data['_epochyr'] = torch.tensor(year)
+    data['_jdsatepoch'] = torch.tensor(util.jday(year,mon,day,hr,minute,sec)[0]);
+    data['_jdsatepochF'] = torch.tensor(util.jday(year,mon,day,hr,minute,sec)[1]);
+
+    #I also add the semi-major axis:
+    data['semi_major_axis'] = (MU_EARTH/(data['mean_motion']**2))**(1.0/3.0)
+
+    try:
+        data['_epoch'] = datetime.datetime(year, mon, day, hr, minute, int(sec_whole),
+                                int(sec_fraction * 1000000.0 // 1.0))
+    except ValueError:
+        # Sometimes a TLE says something like "2019 + 366.82137887 days"
+        # which would be December 32nd which causes a ValueError.
+        year, mon, day, hr, minute, sec = util.invjday(data['_jdsatepoch'])
+        data['_epoch'] = datetime.datetime(year, mon, day, hr, minute, int(sec_whole),
+                                int(sec_fraction * 1000000.0 // 1.0))
+    data['_opsmode']=opsmode
+    return data
+
+
+def copy_data(data):
+    """
+    This function returns a copy of a dictionary of elements, cloning the tensors it contains
+    (so that the copy does not share memory, nor the autograd graph, with the original one).
+
+    Parameters:
+    ----------------
+    data (``dict``): dictionary of elements
+
+    Returns:
+    ----------------
+    ``dict``: copy of the dictionary of elements
+    """
+    return {k: (v.clone() if isinstance(v, torch.Tensor) else copy.deepcopy(v)) for k, v in data.items()}
+
+
 # Parts of this function is based on python-sgp4 released under MIT License, (c) 2012–2016 Brandon Rhodes
 def load_from_lines(lines, opsmode='i'):
     """
@@ -196,25 +252,7 @@ def load_from_lines(lines, opsmode='i'):
     else:
         raise ValueError('Second line not compatible with TLE format.')
 
-    mon,day,hr,minute,sec = util.days2mdhms(year, epochdays);
-    sec_whole, sec_fraction = divmod(sec, 1.0)
-    data['_epochyr'] = torch.tensor(year)
-    data['_jdsatepoch'] = torch.tensor(util.jday(year,mon,day,hr,minute,sec)[0]);
-    data['_jdsatepochF'] = torch.tensor(util.jday(year,mon,day,hr,minute,sec)[1]);
-
-    #I also add the semi-major axis:
-    data['semi_major_axis'] = (MU_EARTH/(data['mean_motion']**2))**(1.0/3.0)
-
-    try:
-        data['_epoch'] = datetime.datetime(year, mon, day, hr, minute, int(sec_whole),
-                                int(sec_fraction * 1000000.0 // 1.0))
-    except ValueError:
-        # Sometimes a TLE says something like "2019 + 366.82137887 days"
-        # which would be December 32nd which causes a ValueError.
-        year, mon, day, hr, minute, sec = util.invjday(data['_jdsatepoch'])
-        data['_epoch'] = datetime.datetime(year, mon, day, hr, minute, int(sec_whole),
-                                int(sec_fraction * 1000000.0 // 1.0))
-    data['_opsmode']=opsmode
+    add_derived_quantities(data, year, epochdays, opsmode)
     # Process optional line zero
     if line0 is not None:
         data['line0'] = line0
@@ -304,26 +342,8 @@ def load_from_data(data, opsmode='i'):
     date_string = date_datetime.strftime(format = '%Y-%m-%d %H:%M:%S.%f')
     data['date_string'] = date_string
     data['date_mjd'] = util.from_datetime_to_mjd(util.from_string_to_datetime(date_string))
-    data['semi_major_axis'] = (MU_EARTH/(data['mean_motion']**2))**(1.0/3.0)
     lines = [line1, line2]
-    mon,day,hr,minute,sec = util.days2mdhms(year, epochdays);
-    sec_whole, sec_fraction = divmod(sec, 1.0)
-    data['_epochyr'] = torch.tensor(year)
-    data['_jdsatepoch'] = torch.tensor(util.jday(year,mon,day,hr,minute,sec)[0]);
-    data['_jdsatepochF'] = torch.tensor(util.jday(year,mon,day,hr,minute,sec)[1]);
-
-    #I also add the semi-major axis:
-    data['semi_major_axis'] = (MU_EARTH/(data['mean_motion']**2))**(1.0/3.0)
-    try:
-        data['_epoch'] = datetime.datetime(year, mon, day, hr, minute, int(sec_whole),
-                                int(sec_fraction * 1000000.0 // 1.0))
-    except ValueError:
-        # Sometimes a TLE says something like "2019 + 366.82137887 days"
-        # which would be December 32nd which causes a ValueError.
-        year, mon, day, hr, minute, sec = util.invjday(data['_jdsatepoch'])
-        data['_epoch'] = datetime.datetime(year, mon, day, hr, minute, int(sec_whole),
-                                int(sec_fraction * 1000000.0 // 1.0))
-    data['_opsmode']=opsmode
+    add_derived_quantities(data, year, epochdays, opsmode)
     if 'name' in data:
         data['line0'] = '0 '+data['name']
     return lines, data
@@ -376,6 +396,10 @@ class TLE():
     ----------------
     `dsgp4.tle.TLE` object
     """
+    #NOTE: the classes that inherit from `TLE` (e.g. `dsgp4.omm.OMM`) carry the same elements,
+    #but not necessarily the two lines: any method added here that touches `self._lines` (or
+    #that writes them out of the elements) must therefore be overridden there. The list of the
+    #public methods is pinned in `tests/test_omm.py`, so that new ones are not forgotten.
     def __init__(self, data):
         if isinstance(data, list) or isinstance(data, str):
             self._lines, self._data = load_from_lines(data)
@@ -384,6 +408,19 @@ class TLE():
         else:
             raise RuntimeError('Expecting a string of TLE, list of strings with TLE lines, or a dictionary of TLE data.')
 
+    def _set_from(self, other):
+        """
+        This function replaces the content of the object with the one of another object of the
+        same type. It is kept separate from the rest so that classes that inherit from `TLE`
+        (e.g. `dsgp4.omm.OMM`) can store their own representation of the data.
+
+        Parameters:
+        ----------------
+        other (`dsgp4.tle.TLE`): object whose content is copied into `self`
+        """
+        self._data = other._data
+        self._lines = other._lines
+
     def copy(self):
         """
         This function returns a copy of the TLE object.
@@ -391,8 +428,18 @@ class TLE():
         Returns:
             `dsgp4.tle.TLE` object
         """
-        d = {k: (v.clone() if isinstance(v, torch.Tensor) else copy.deepcopy(v)) for k, v in self._data.items()}
-        return TLE(d)
+        return type(self)(copy_data(self._data))
+
+    def to_omm(self):
+        """
+        This function returns the OMM (i.e. CCSDS Orbit Mean-Elements Message) representation
+        of the TLE object.
+
+        Returns:
+            `dsgp4.omm.OMM` object
+        """
+        from .omm import OMM
+        return OMM(copy_data(self._data))
 
     def set_time(self, date_mjd):
         """
@@ -411,9 +458,8 @@ class TLE():
         d['_epochyr'] = torch.tensor(d['epoch_year'])
         d['_jdsatepoch'] = torch.tensor(util.jday(d['epoch_year'],mon,day,hr,minute,sec)[0]);
         d['_jdsatepochF'] = torch.tensor(util.jday(d['epoch_year'],mon,day,hr,minute,sec)[1]);
-        tle = TLE(d)
-        self._data = tle._data
-        self._lines = tle._lines
+        tle = type(self)(d)
+        self._set_from(tle)
 
     def update(self, tle_data):
         """
@@ -427,7 +473,7 @@ class TLE():
         d = copy.deepcopy(self._data)
         for k, v in tle_data.items():
             d[k] = v
-        tle = TLE(d)
+        tle = type(self)(d)
         self._mo=tle['_mo']
         self._bstar=tle['_bstar']
         self._ndot=tle['_ndot']
@@ -437,8 +483,7 @@ class TLE():
         self._inclo=tle['_inclo']
         self._no_kozai=tle['_no_kozai']
         self._nodeo=tle['_nodeo']
-        self._data = tle._data
-        self._lines = tle._lines
+        self._set_from(tle)
 
     def perigee_alt(self, R_eq = 6378135.0):
         """
@@ -477,10 +522,10 @@ class TLE():
         return self._data[index]
 
     def __getattr__(self, attr):
-        if attr == '_data' or attr == '_lines':
-            return super().__getattr__(attr)
-        elif attr in self._data.keys():
-            return self[attr]
-        else:
-            return super().__getattr__(attr)
+        #`__getattr__` is only called when the attribute was not found the usual way, so
+        #`self.__dict__` is used here to avoid an infinite recursion while the object is built:
+        data = self.__dict__.get('_data')
+        if data is not None and attr in data:
+            return data[attr]
+        raise AttributeError("'{}' object has no attribute '{}'".format(type(self).__name__, attr))
 

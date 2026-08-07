@@ -16,15 +16,35 @@ $\partial$SGP4 API
    tle.compute_checksum
    tle.read_satellite_catalog_number
    tle.write_satellite_catalog_number
+   tle.add_derived_quantities
+   tle.copy_data
    tle.load_from_lines
    tle.load_from_data
    tle.load
    tle.TLE
    tle.TLE.copy
+   tle.TLE.to_omm
    tle.TLE.perigee_alt
    tle.TLE.apogee_alt
    tle.TLE.set_time
    tle.TLE.update
+   omm.from_omm_epoch_to_datetime
+   omm.from_datetime_to_omm_epoch
+   omm.from_object_id_to_international_designator
+   omm.from_international_designator_to_object_id
+   omm.parse_json
+   omm.parse_xml
+   omm.parse_kvn
+   omm.parse_csv
+   omm.loads
+   omm.dumps
+   omm.detect_format
+   omm.to_omm_fields
+   omm.load_from_omm
+   omm.load_from_data
+   omm.load
+   omm.OMM
+   omm.OMM.to_tle
    util.get_gravity_constants
    util.propagate_batch
    util.propagate

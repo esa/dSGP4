@@ -13,3 +13,5 @@ from .util import propagate, initialize_tle, propagate_batch
 from .plot import plot_orbit, plot_tles
 from . import tle
 from .tle import TLE
+from . import omm
+from .omm import OMM
