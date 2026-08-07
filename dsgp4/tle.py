@@ -46,6 +46,41 @@ def read_satellite_catalog_number(string):
     return n * 10000 + int(string[1:])
 
 
+def write_satellite_catalog_number(satellite_catalog_number):
+    """
+    This function takes a satellite catalog number and returns the corresponding
+    5-character field to be written in a TLE line. Numbers below 100000 are written
+    as-is (zero padded), while numbers between 100000 and 339999 are encoded using the
+    Alpha-5 convention adopted by Space-Track (the first digit is replaced by a letter,
+    with 'I' and 'O' skipped). Numbers above 339999 cannot be represented in the TLE
+    format and raise a `ValueError` (use the OMM format instead).
+
+    Parameters:
+    ----------------
+    satellite_catalog_number (``int``): satellite catalog number
+
+    Returns:
+    ----------------
+    ``str``: 5-character satellite catalog number field
+    """
+    n = int(satellite_catalog_number)
+    if n < 0:
+        raise ValueError('Satellite catalog number cannot be negative, got {}.'.format(n))
+    if n < 100000:
+        return str(n).zfill(5)
+    if n > 339999:
+        raise ValueError(
+            'Satellite catalog number {} cannot be represented in the TLE format: the '
+            'Alpha-5 convention only covers numbers up to 339999. Use the OMM format '
+            '(XML/JSON/KVN/CSV) for this object.'.format(n)
+        )
+    high, low = divmod(n, 10000)
+    code = ord('A') + high - 10
+    code += code >= ord('I')
+    code += code >= ord('O')
+    return chr(code) + str(low).zfill(4)
+
+
 # Parts of this function is based on python-sgp4 released under MIT License, (c) 2012–2016 Brandon Rhodes
 def load_from_lines(lines, opsmode='i'):
     """
@@ -211,7 +246,7 @@ def load_from_data(data, opsmode='i'):
     data['argument_of_perigee']=data['argument_of_perigee']%(2*np.pi)
     data['mean_anomaly']=data['mean_anomaly']%(2*np.pi)
     line1 = ['1 ']
-    line1.append(str(data['satellite_catalog_number']).zfill(5)[:5])
+    line1.append(write_satellite_catalog_number(data['satellite_catalog_number']))
     line1.append(str(data['classification'])[0] + ' ')
     line1.append(str(data['international_designator']).ljust(8, ' ')[:8] + ' ')
     line1.append(str(data['epoch_year'])[-2:].zfill(2) + '{:012.8f}'.format(data['epoch_days']) + ' ')
@@ -239,7 +274,7 @@ def load_from_data(data, opsmode='i'):
     data['_nddot']= torch.tensor(float(line1[44] + '.' + line1[45:50])/(xpdotp*1440.0*1440))
 
     line2 = ['2 ']
-    line2.append(str(data['satellite_catalog_number']).zfill(5)[:5] + ' ')
+    line2.append(write_satellite_catalog_number(data['satellite_catalog_number']) + ' ')
     line2.append('{0:8.4f}'.format(data['inclination'] * (180 / np.pi)).rjust(8, ' ') + ' ')
     line2.append('{0:8.4f}'.format(data['raan'] * (180 / np.pi)).rjust(8, ' ') + ' ')
     line2.append(str(round(float(data['eccentricity']) * 1e7)).rjust(7, '0')[:7] + ' ')

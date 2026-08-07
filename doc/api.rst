@@ -15,6 +15,7 @@ $\partial$SGP4 API
    plot.plot_tles
    tle.compute_checksum
    tle.read_satellite_catalog_number
+   tle.write_satellite_catalog_number
    tle.load_from_lines
    tle.load_from_data
    tle.load
