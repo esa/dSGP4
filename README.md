@@ -8,7 +8,7 @@ Differentiable SGP4 in PyTorch.
 
 <p align="center">
   <a href="https://github.com/esa/dSGP4">
-    <img src="doc/_static/logo_dsgp4.png" alt="Logo" width="280">
+    <img src="https://raw.githubusercontent.com/esa/dSGP4/master/doc/_static/logo_dsgp4.png" alt="Logo" width="280">
   </a>
 </p>
 
