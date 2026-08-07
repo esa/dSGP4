@@ -22,7 +22,13 @@ from dsgp4.sgp4 import sgp4
 from dsgp4.sgp4_batched import sgp4_batched
 from dsgp4.sgp4init import sgp4init
 from dsgp4.sgp4init_batch import initl_batch, sgp4init_batch
-from dsgp4.tle import TLE, load, load_from_lines, read_satellite_catalog_number
+from dsgp4.tle import (
+    TLE,
+    load,
+    load_from_lines,
+    read_satellite_catalog_number,
+    write_satellite_catalog_number,
+)
 
 
 SAMPLE_LINE1 = "1 43437U 18100A   20143.90384230  .00041418  00000-0  10000-3 0 99968"
@@ -317,6 +323,33 @@ class CoverageEdgesTestCase(unittest.TestCase):
         bad_l2 = SAMPLE_LINE2.replace("43437", "43438", 1)
         with self.assertRaises(ValueError):
             load_from_lines([SAMPLE_LINE1, bad_l2])
+
+    def test_alpha5_catalog_number(self):
+        # 5-digit numbers are unaffected, 6-digit ones use the Alpha-5 encoding
+        # ('I' and 'O' are skipped), and anything above 339999 is not representable.
+        for number, field in [(0, "00000"), (43437, "43437"), (99999, "99999"),
+                              (100000, "A0000"), (102554, "A2554"), (148493, "E8493"),
+                              (180000, "J0000"), (230000, "P0000"), (339999, "Z9999")]:
+            self.assertEqual(write_satellite_catalog_number(number), field)
+            self.assertEqual(read_satellite_catalog_number(field), number)
+
+        with self.assertRaises(ValueError):
+            write_satellite_catalog_number(340000)
+        with self.assertRaises(ValueError):
+            write_satellite_catalog_number(-1)
+
+    def test_alpha5_tle_roundtrip(self):
+        # a TLE of an object with a 6-digit catalog number must survive a
+        # parse -> rebuild -> parse cycle without losing the catalog number
+        lines = [l.replace("43437", "A2554", 1) for l in (SAMPLE_LINE1, SAMPLE_LINE2)]
+        lines = [l[:68] + str(dsgp4.tle.compute_checksum(l)) for l in lines]
+        tle = TLE(lines)
+        self.assertEqual(tle.satellite_catalog_number, 102554)
+        rebuilt = tle.copy()
+        self.assertEqual(rebuilt.satellite_catalog_number, 102554)
+        self.assertEqual(rebuilt.line1[2:7], "A2554")
+        self.assertEqual(rebuilt.line2[2:7], "A2554")
+        self.assertEqual(TLE(rebuilt._lines).satellite_catalog_number, 102554)
 
         with self.assertRaises(ValueError):
             load_from_lines([SAMPLE_LINE1, "2 bad"])
