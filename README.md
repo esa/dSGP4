@@ -20,6 +20,7 @@ Acciarini, Baydin, Izzo, *Closing the gap between SGP4 and high-precision propag
 
 - A PyTorch implementation of SGP4 with autograd support.
 - Gradients of propagated states with respect to time and TLE-derived parameters.
+- Parsing, writing and conversion of both TLEs and CCSDS OMMs (JSON/XML/KVN/CSV).
 - Single-object and batched propagation APIs.
 - A hybrid model (`mldsgp4`) for learning corrections around SGP4 dynamics.
 
@@ -74,7 +75,48 @@ state = dsgp4.propagate(tle, tsince)
 print(state.shape)
 ```
 
-### 2. Differentiate through propagation
+### 2. Parse an OMM and propagate
+
+Space-Track distributes the same SGP4 mean elements in the CCSDS OMM (Orbit Mean-Elements
+Message) format, which dSGP4 reads in all its four serializations (JSON, XML, KVN and CSV):
+
+```python
+import torch
+import dsgp4
+
+omm = dsgp4.OMM({
+    "OBJECT_NAME": "ISS (ZARYA)",
+    "OBJECT_ID": "1998-067A",
+    "EPOCH": "2024-02-29T12:00:00.000000",
+    "MEAN_MOTION": "15.50010353",
+    "ECCENTRICITY": "0.0005102",
+    "INCLINATION": "51.6403",
+    "RA_OF_ASC_NODE": "124.7938",
+    "ARG_OF_PERICENTER": "220.2782",
+    "MEAN_ANOMALY": "248.4427",
+    "NORAD_CAT_ID": "25544",
+    "BSTAR": "0.00030134",
+    "MEAN_MOTION_DOT": "0.00016717",
+    "MEAN_MOTION_DDOT": "0",
+})
+
+# OMM objects are used exactly like TLE ones:
+dsgp4.initialize_tle(omm)
+state = dsgp4.propagate(omm, torch.tensor([0.0, 10.0]))
+
+# whole files (one message or many) are read with:
+omms = dsgp4.omm.load("gp.json")
+
+# and the two formats convert into each other:
+tle = omm.to_tle()
+omm = tle.to_omm()
+```
+
+Unlike a TLE, an OMM is not constrained by two fixed-width lines: objects whose catalog number
+is above 339999 (i.e. beyond what the Alpha-5 convention can encode) can only be represented
+this way, and `to_tle()` raises a `ValueError` for them.
+
+### 3. Differentiate through propagation
 
 ```python
 import torch
@@ -94,7 +136,7 @@ loss.backward()
 print(time_min.grad)
 ```
 
-### 3. Batched propagation
+### 4. Batched propagation
 
 ```python
 import torch

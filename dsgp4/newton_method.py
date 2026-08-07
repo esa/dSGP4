@@ -3,7 +3,6 @@ import torch
 from .sgp4 import sgp4
 from .sgp4init import sgp4init
 from . import util
-from .tle import TLE
 
 def update_TLE(old_tle, y0):
     """
@@ -11,12 +10,12 @@ def update_TLE(old_tle, y0):
 
     Parameters:
     ----------------
-    old_tle (``dsgp4.TLE``): The old TLE object to be updated.
+    old_tle (``dsgp4.TLE``): The old TLE object to be updated (an OMM object is also accepted).
     y0 (``torch.tensor``): The new keplerian elements.
 
     Returns:
     ----------------
-    TLE: The updated TLE object.
+    TLE: The updated TLE object (of the same type as the one that was passed).
     """
     xpdotp = 1440.0 / (2.0 * np.pi)
     mean_motion = float(y0[4]) * xpdotp * (np.pi / 43200.0)
@@ -41,7 +40,7 @@ def update_TLE(old_tle, y0):
         'element_number': old_tle.element_number,
     }
 
-    return TLE(tle_elements)
+    return type(old_tle)(tle_elements)
 
 def initial_guess_tle(time_mjd, tle_object, gravity_constant_name="wgs-84"):
     """
@@ -88,7 +87,7 @@ def initial_guess_tle(time_mjd, tle_object, gravity_constant_name="wgs-84"):
                 raan=kepl_el[3],
                 mean_anomaly=kepl_el[5],
                 b_star=tle_object.b_star)
-    return TLE(data)
+    return type(tle_object)(data)
 
 def _propagate(x, tle_sat, tsince, gravity_constant_name="wgs-84"):
     whichconst=util.get_gravity_constants(gravity_constant_name)

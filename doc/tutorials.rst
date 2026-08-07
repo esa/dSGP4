@@ -11,6 +11,7 @@ These tutorials include some basic examples on how to use dSGP4 for simple tasks
   :maxdepth: 1
   
   notebooks/tle_object.ipynb
+  notebooks/omm_object.ipynb
   notebooks/tle_propagation.ipynb
   notebooks/sgp4_partial_derivatives.ipynb
   notebooks/mldsgp4.ipynb
