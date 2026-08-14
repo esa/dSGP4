@@ -228,7 +228,8 @@ def parse_kvn(text):
 def parse_csv(text):
     """
     This function parses OMM data in CSV format (i.e. one header line with the OMM keywords,
-    followed by one line per object), and returns the corresponding list of dictionaries of OMM fields.
+    followed by one line per object), and returns the corresponding list of dictionaries of
+    OMM fields.
 
     Parameters:
     ----------------
