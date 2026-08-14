@@ -15,6 +15,7 @@ These tutorials include some basic examples on how to use dSGP4 for simple tasks
   notebooks/tle_propagation.ipynb
   notebooks/sgp4_partial_derivatives.ipynb
   notebooks/mldsgp4.ipynb
+  notebooks/mldsgp4_training.ipynb
 
 
 Advanced
