@@ -25,6 +25,10 @@ from .tle import TLE, add_derived_quantities, copy_data
 CCSDS_OMM_VERS = '3.0'
 #mean element theories that dSGP4 can propagate (SGP4-XP, for instance, is not supported):
 SUPPORTED_MEAN_ELEMENT_THEORIES = ('SGP4', 'SGP/SGP4', 'SGP')
+#reference context assumed by the SGP4 implementation:
+SUPPORTED_CENTER_NAME = 'EARTH'
+SUPPORTED_REF_FRAME = 'TEME'
+SUPPORTED_TIME_SYSTEM = 'UTC'
 #OMM fields that make up the header of the message:
 OMM_HEADER = ('CCSDS_OMM_VERS', 'CREATION_DATE', 'ORIGINATOR')
 #OMM fields that make up the metadata section of the message:
@@ -224,8 +228,7 @@ def parse_kvn(text):
 def parse_csv(text):
     """
     This function parses OMM data in CSV format (i.e. one header line with the OMM keywords,
-    followed by one line per object), and returns the corresponding list of dictionaries of
-    OMM fields.
+    followed by one line per object), and returns the corresponding list of dictionaries of OMM fields.
 
     Parameters:
     ----------------
@@ -365,9 +368,9 @@ def to_omm_fields(data):
     if 'name' in data:
         fields['OBJECT_NAME'] = str(data['name'])
     fields['OBJECT_ID'] = from_international_designator_to_object_id(data['international_designator'])
-    fields['CENTER_NAME'] = 'EARTH'
-    fields['REF_FRAME'] = 'TEME'
-    fields['TIME_SYSTEM'] = 'UTC'
+    fields['CENTER_NAME'] = SUPPORTED_CENTER_NAME
+    fields['REF_FRAME'] = SUPPORTED_REF_FRAME
+    fields['TIME_SYSTEM'] = SUPPORTED_TIME_SYSTEM
     fields['MEAN_ELEMENT_THEORY'] = 'SGP4'
     fields['EPOCH'] = from_datetime_to_omm_epoch(date_datetime)
     #the OMM stores the mean motion in rev/day and the angles in degrees:
@@ -415,6 +418,18 @@ def load_from_omm(fields, opsmode='i'):
     if theory not in SUPPORTED_MEAN_ELEMENT_THEORIES:
         raise ValueError('Supported mean element theories: {} while {} was provided'.format(
             ', '.join(SUPPORTED_MEAN_ELEMENT_THEORIES), theory))
+
+    reference_context = (
+        ('CENTER_NAME', SUPPORTED_CENTER_NAME),
+        ('REF_FRAME', SUPPORTED_REF_FRAME),
+        ('TIME_SYSTEM', SUPPORTED_TIME_SYSTEM),
+    )
+    for key, supported in reference_context:
+        value = str(_field(fields, key, supported)).strip().upper()
+        if value != supported:
+            raise ValueError('{} must be {} for dSGP4 propagation, while {} was provided'.format(
+                key, supported, value))
+
     missing = [key for key in OMM_MEAN_ELEMENTS if _field(fields, key) is None]
     if missing:
         raise ValueError('The following mandatory OMM fields are missing: {}'.format(', '.join(missing)))
