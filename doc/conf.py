@@ -110,7 +110,8 @@ nb_execution_mode = "force"
 nb_execution_excludepatterns = [
     "tle_propagation.ipynb",
     "covariance_propagation.ipynb",
-    "mldsgp4.ipynb"
+    "mldsgp4.ipynb",
+    "mldsgp4_training.ipynb"
 ]
 autosummary_ignore_module = ['dsgp4.mldsgp4']
 
