@@ -4,6 +4,17 @@ from .sgp4 import sgp4
 from .sgp4init import sgp4init
 from . import util
 
+
+def _bounded_eccentricity_step(current_eccentricity, proposed_step, epsilon=1e-10):
+    """Return a Newton step that keeps eccentricity inside the elliptic SGP4 domain."""
+    current = float(current_eccentricity)
+    candidate = current + float(proposed_step)
+    lower = epsilon
+    upper = 1.0 - epsilon
+    bounded = min(max(candidate, lower), upper)
+    return bounded - current
+
+
 def update_TLE(old_tle, y0):
     """
     This function updates the TLE object with the new keplerian elements.
@@ -41,6 +52,7 @@ def update_TLE(old_tle, y0):
     }
 
     return type(old_tle)(tle_elements)
+
 
 def initial_guess_tle(time_mjd, tle_object, gravity_constant_name="wgs-84"):
     """
@@ -89,6 +101,7 @@ def initial_guess_tle(time_mjd, tle_object, gravity_constant_name="wgs-84"):
                 b_star=tle_object.b_star)
     return type(tle_object)(data)
 
+
 def _propagate(x, tle_sat, tsince, gravity_constant_name="wgs-84"):
     whichconst=util.get_gravity_constants(gravity_constant_name)
     sgp4init(whichconst=whichconst,
@@ -107,6 +120,7 @@ def _propagate(x, tle_sat, tsince, gravity_constant_name="wgs-84"):
                         satellite=tle_sat)
     state=sgp4(tle_sat, tsince*torch.ones(1,1))
     return state
+
 
 def newton_method(tle0, time_mjd, max_iter=50, new_tol=1e-12, verbose=False, target_state=None, gravity_constant_name="wgs-84"):
     """
@@ -163,11 +177,8 @@ def newton_method(tle0, time_mjd, max_iter=50, new_tol=1e-12, verbose=False, tar
         #dY=-np.linalg.pinv(DF.T@DF)@DF.T@F
         dY=np.linalg.solve(DF, -np.array(F))
         dY=dY#/np.linalg.norm(dY)
-        #avoid negative eccentricity:
-        if y0[0]+dY[0]<0:
-            dY[0]=1e-10
-        if y0[0]+dY[0]>1.:
-            dY[0]=1-1e-10
+        # Keep the candidate eccentricity strictly inside the elliptic SGP4 domain.
+        dY[0] = _bounded_eccentricity_step(y0[0], dY[0])
         dY=torch.tensor(dY, requires_grad=True)
         #update the state:
         y0 = torch.tensor([float(a) + float(b) for a, b in zip(y0, dY)], requires_grad=True)
