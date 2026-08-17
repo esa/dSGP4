@@ -429,7 +429,8 @@ def from_datetime_to_jd(datetime_obj):
     ----------------
     ``float``: Julian Date
     """
-    return sum(jday(year=datetime_obj.year, mon=datetime_obj.month, day=datetime_obj.day, hr=datetime_obj.hour, minute=datetime_obj.minute, sec=datetime_obj.second+float('0.'+str(datetime_obj.microsecond))))
+    seconds = datetime_obj.second + datetime_obj.microsecond / 1e6
+    return sum(jday(year=datetime_obj.year, mon=datetime_obj.month, day=datetime_obj.day, hr=datetime_obj.hour, minute=datetime_obj.minute, sec=seconds))
 
 def from_cartesian_to_keplerian(r_vec, v_vec, mu):
     """
