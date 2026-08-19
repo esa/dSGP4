@@ -89,6 +89,22 @@ class mldsgp4(nn.Module):
         x=x_out*(1+self.output_correction*self.tanh(self.fc6(x)))
         return x
 
+    def save_model(self, path):
+        """
+        This method saves the model state to a file.
+
+        Parameters:
+        ----------------
+        path (``str``): path to the file where the model state will be stored.
+
+        Notes:
+        ----------------
+        The model architecture and normalization settings are not included in the
+        state dictionary. Recreate the model with the same constructor arguments
+        before calling :meth:`load_model`.
+        """
+        torch.save(self.state_dict(), path)
+
     def load_model(self, path, device='cpu'):
         """
         This method loads a model from a file.
