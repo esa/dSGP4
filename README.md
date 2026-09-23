@@ -166,6 +166,49 @@ print(states.shape)  # (2, 2, 3)
 - Deep-space propagation is supported.
 - Default torch dtype is set to `float64` when importing `dsgp4`.
 
+## MCP server (LLM/agent integration, experimental)
+
+dSGP4 ships an optional [Model Context Protocol](https://modelcontextprotocol.io) server that exposes the library to
+LLM clients and agents (Claude Desktop, Claude Code, IDEs, ...) as tools, resources and prompts.
+
+> **Note:** this layer is experimental. The library functionality behind it is stable, but the MCP Python SDK is
+> still evolving quickly, so the server surface (tool names, output fields) may be adjusted in future releases.
+
+Install the extra (requires Python >= 3.10) and run it:
+
+```bash
+pip install dsgp4[mcp]
+dsgp4-mcp                        # stdio transport, all tool domains
+dsgp4-mcp --domains tle,propagation
+dsgp4-mcp --transport streamable-http --port 8000
+```
+
+For a Claude Desktop / Claude Code style client configuration:
+
+```json
+{
+  "mcpServers": {
+    "dsgp4": {
+      "command": "dsgp4-mcp"
+    }
+  }
+}
+```
+
+The tools are organized in six domains, each selectable via `--domains`:
+
+- `tle`: parse, describe, validate, build and convert element sets (TLE and CCSDS OMM formats);
+- `propagation`: dSGP4 propagation (single and batched), Cartesian-to-Keplerian and time conversions;
+- `gradients`: autodiff Jacobians of the state w.r.t. the TLE parameters and time, covariance transformations;
+- `estimation`: differentiable Newton-Raphson TLE determination (re-epoch a TLE, fit a TLE to a state);
+- `ml`: forecasts with trained ML-dSGP4 models;
+- `plot`: rendered PNG orbit and element-distribution plots.
+
+Reference resources (`dsgp4://reference/...`, e.g. the TLE format, the differentiable SGP4 parameters and their
+units, example element sets) and workflow prompts (orbit characterization, orbit comparison, uncertainty analysis,
+TLE determination, ML-dSGP4 training) are always available. The server can also be created programmatically with
+`dsgp4.mcp.create_server()`.
+
 ## Development
 
 Run tests:
