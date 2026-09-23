@@ -37,7 +37,7 @@ def create_server(domains=None, name='dsgp4'):
     except ModuleNotFoundError as error:
         if getattr(error, 'name', '') and error.name.split('.')[0] == 'mcp' and error.name != 'dsgp4.mcp':
             raise ModuleNotFoundError(_INSTALL_HINT) from error
-        raise
+        raise  # pragma: no cover - unrelated import failure
     return _create_server(domains=domains, name=name)
 
 

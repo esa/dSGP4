@@ -283,3 +283,207 @@ def test_tool_errors_carry_messages(server):
     with pytest.raises(ToolError, match='at most'):
         asyncio.run(server.call_tool('propagate', {'element_set': TLE,
                                                    'minutes_since_epoch': list(range(1500))}))
+
+
+# ---------------------------------------------------------------------------
+# edge cases and error paths
+# ---------------------------------------------------------------------------
+
+from mcp.server.mcpserver.exceptions import ResourceError, ToolError  # noqa: E402
+
+#a TLE whose orbit is below the surface of the Earth at epoch (SGP4 error code 6):
+SUBORBITAL_TLE = ('1 99999U 24001A   24087.50000000  .00000000  00000-0  10000-3 0  9992\n'
+                  '2 99999  51.5662  57.2958 0010000  57.2958  57.2958 17.20000000    01')
+
+
+def call_error(server, name, arguments, match):
+    with pytest.raises(ToolError, match=match):
+        asyncio.run(server.call_tool(name, arguments))
+
+
+def test_element_set_parsing_errors(server):
+    call_error(server, 'parse_element_set', {'element_set': '   '}, 'Empty element set')
+    #a tool that expects a single element set refuses several:
+    call_error(server, 'parse_element_set', {'element_set': TLE + '\n' + TLE_2}, 'single element set')
+    #line2 before line1 passes the checksum test but not the parser:
+    swapped = call(server, 'validate_tle', {'tle': '\n'.join(TLE_LINES[::-1])})
+    assert not swapped['valid'] and any('could not be parsed' in error for error in swapped['errors'])
+    #wrong number of lines and short lines:
+    assert not call(server, 'validate_tle', {'tle': TLE_LINES[0]})['valid']
+    short = call(server, 'validate_tle', {'tle': TLE_LINES[0][:60] + '\n' + TLE_LINES[1]})
+    assert any('instead of 69' in error for error in short['errors'])
+    assert any('no checksum digit' in error for error in short['errors'])
+    call_error(server, 'fix_tle_checksum', {'line': '1 25544U'}, '68 characters')
+
+
+def test_time_input_errors(server):
+    call_error(server, 'convert_time', {'date_utc': 'not-a-date'}, 'ISO 8601')
+    #timezone-aware dates are converted to UTC:
+    result = call(server, 'convert_time', {'date_utc': '2024-03-27T14:00:00+02:00'})
+    assert result['date_utc'] == '2024-03-27T12:00:00'
+    #a trailing 'Z' (Zulu/UTC) suffix is accepted:
+    zulu = call(server, 'convert_time', {'date_utc': '2024-03-27T12:00:00Z'})
+    assert zulu['mjd'] == result['mjd']
+    #mjd and jd inputs round-trip through the same date:
+    assert call(server, 'convert_time', {'mjd': result['mjd']})['date_utc'] == result['date_utc']
+    assert call(server, 'convert_time', {'jd': result['jd']})['date_utc'] == result['date_utc']
+    #exactly one time input is required by the propagation tools:
+    call_error(server, 'propagate', {'element_set': TLE}, 'exactly one')
+    call_error(server, 'propagate', {'element_set': TLE, 'minutes_since_epoch': [0.0],
+                                     'dates_utc': ['2024-03-27T12:00:00']}, 'exactly one')
+    call_error(server, 'propagate', {'element_set': TLE, 'minutes_since_epoch': []}, 'At least one')
+
+
+def test_propagation_warnings_decayed(server):
+    result = call(server, 'propagate', {'element_set': SUBORBITAL_TLE, 'minutes_since_epoch': [0.0]})
+    assert any('SGP4 error code 6' in warning for warning in result['warnings'])
+
+
+def test_orbit_classification(server):
+    def orbit_class(mean_motion, eccentricity, inclination_deg):
+        built = call(server, 'build_tle', {
+            'satellite_catalog_number': 99999, 'epoch_utc': '2024-03-27T12:00:00',
+            'mean_motion_revs_per_day': mean_motion, 'eccentricity': eccentricity,
+            'inclination_deg': inclination_deg, 'raan_deg': 0.0,
+            'argument_of_perigee_deg': 0.0, 'mean_anomaly_deg': 0.0, 'name': 'SYNTHETIC'})
+        assert built.get('name') == 'SYNTHETIC'
+        return built['derived']['orbit_class']
+
+    assert orbit_class(2.00565, 0.01, 55.0) == 'MEO'            #GPS-like
+    assert orbit_class(2.0, 0.7, 63.4) == 'HEO'                 #Molniya-like
+    assert orbit_class(1.0027, 0.01, 60.0) == 'inclined GSO'
+    assert orbit_class(0.5, 0.1, 0.0) == 'high Earth orbit'
+
+
+def test_describe_omm_has_no_lines(server):
+    as_json = call(server, 'convert_element_sets', {'element_sets': TLE, 'output_format': 'json'})
+    described = call(server, 'parse_element_set', {'element_set': as_json['content']})
+    assert described['format'] == 'OMM'
+    assert 'lines' not in described
+    #and the other OMM serializations are produced too:
+    for output_format in ('xml', 'kvn', 'csv'):
+        converted = call(server, 'convert_element_sets', {'element_sets': TLE,
+                                                          'output_format': output_format})
+        assert converted['content'].strip()
+    call_error(server, 'convert_element_sets', {'element_sets': TLE, 'output_format': 'yaml'},
+               'Supported output formats')
+
+
+def test_batch_input_errors(server):
+    both = TLE + '\n' + TLE_2
+    call_error(server, 'propagate_batch', {'element_sets': both}, 'exactly one')
+    call_error(server, 'propagate_batch', {'element_sets': both,
+                                           'minutes_since_epoch': [0.0, 1.0, 2.0]}, 'one time per object')
+    call_error(server, 'propagate_batch', {'element_sets': both,
+                                           'dates_utc': ['2022-03-10T00:00:00'] * 3}, 'one date per object')
+    #a single common date is broadcast, and the per-object times then differ:
+    result = call(server, 'propagate_batch', {'element_sets': both,
+                                              'dates_utc': ['2022-03-10T00:00:00']})
+    times = [state['tsince_minutes'] for state in result['states']]
+    assert times[0] != times[1]
+    call_error(server, 'propagate_batch', {'element_sets': (TLE + '\n') * 1001,
+                                           'minutes_since_epoch': [0.0]}, 'at most')
+
+
+def test_vector_length_errors(server):
+    call_error(server, 'cartesian_to_keplerian', {'position_km': [1.0], 'velocity_km_s': [0.0, 0.0, 1.0]},
+               'two 3-vectors')
+    call_error(server, 'fit_tle_to_state', {'template_element_set': TLE, 'position_km': [1.0, 2.0],
+                                            'velocity_km_s': [0.0, 0.0, 1.0],
+                                            'date_utc': '2022-03-10T00:00:00'}, 'two 3-vectors')
+
+
+def test_gradient_input_errors(server):
+    call_error(server, 'transform_covariance', {'element_set': TLE, 'covariance': [[1.0]],
+                                                'parameters': ['bogus'], 'minutes_since_epoch': [0.0]},
+               'Unknown parameter')
+    call_error(server, 'transform_covariance', {'element_set': TLE, 'covariance': [[1.0]],
+                                                'minutes_since_epoch': [0.0]}, '6x6')
+
+
+def test_ml_input_errors(server):
+    call_error(server, 'mldsgp4_propagate', {'element_set': TLE + '\n' + TLE_2,
+                                             'minutes_since_epoch': [0.0]}, 'single element set')
+
+
+def test_plot_input_errors(server):
+    call_error(server, 'plot_orbits', {'element_sets': (TLE + '\n') * 21}, 'at most 20')
+    call_error(server, 'plot_orbits', {'element_sets': TLE, 'number_of_points': 1}, 'number_of_points')
+    call_error(server, 'plot_element_distributions', {'element_sets': TLE}, 'At least two')
+    #the view-angle branch:
+    result = asyncio.run(server.call_tool('plot_orbits', {'element_sets': TLE, 'number_of_points': 30,
+                                                          'elevation_deg': 30.0, 'azimuth_deg': 45.0}))
+    assert not result.is_error and _image_bytes(result)[:8] == b'\x89PNG\r\n\x1a\n'
+
+
+def test_all_resources_and_prompts(server):
+    for uri, needle in [('dsgp4://reference/overview', 'TEME'),
+                        ('dsgp4://reference/tle-format', 'Checksum'),
+                        ('dsgp4://reference/omm-format', 'CCSDS'),
+                        ('dsgp4://reference/sgp4-parameters', 'rad/min'),
+                        ('dsgp4://reference/mldsgp4', 'hidden size')]:
+        content = list(asyncio.run(server.read_resource(uri)))[0].content
+        assert needle in content
+    with pytest.raises(ResourceError, match='Supported gravity constant names'):
+        asyncio.run(server.read_resource('dsgp4://reference/gravity-models/bogus'))
+    for name, arguments in [('compare_orbits', {'element_set_a': TLE, 'element_set_b': TLE_2}),
+                            ('uncertainty_analysis', {'element_set': TLE}),
+                            ('tle_determination', {'element_set': TLE})]:
+        prompt = asyncio.run(server.get_prompt(name, arguments))
+        assert prompt.messages[0].content.text.strip()
+
+
+# ---------------------------------------------------------------------------
+# command line entry point and missing-dependency guard
+# ---------------------------------------------------------------------------
+
+import sys  # noqa: E402
+
+
+def test_cli(monkeypatch, capsys):
+    import dsgp4.mcp.server as server_module
+    from dsgp4.mcp.__main__ import main
+    calls = {}
+
+    class DummyServer:
+        def run(self, transport=None, **kwargs):
+            calls.clear()
+            calls['transport'] = transport
+            calls.update(kwargs)
+
+    monkeypatch.setattr(server_module, 'create_server',
+                        lambda domains=None, name='dsgp4': DummyServer())
+    main([])
+    assert calls == {'transport': 'stdio'}
+    main(['--transport', 'streamable-http', '--port', '8123', '--host', '0.0.0.0',
+          '--domains', 'tle,propagation'])
+    assert calls == {'transport': 'streamable-http', 'host': '0.0.0.0', 'port': 8123}
+    with pytest.raises(SystemExit):
+        main(['--help'])
+    assert 'dsgp4-mcp' in capsys.readouterr().out
+
+
+class _BlockMcpImports:
+    """Meta path finder that makes the `mcp` package unimportable."""
+
+    def find_spec(self, name, path=None, target=None):
+        if name == 'mcp' or name.startswith('mcp.'):
+            raise ModuleNotFoundError("No module named 'mcp'", name='mcp')
+        return None
+
+
+def test_missing_mcp_dependency_hint():
+    import dsgp4.mcp as package
+    blocker = _BlockMcpImports()
+    removed = {name: sys.modules.pop(name) for name in list(sys.modules)
+               if name == 'mcp' or name.startswith('mcp.') or name.startswith('dsgp4.mcp.')}
+    sys.meta_path.insert(0, blocker)
+    try:
+        with pytest.raises(ModuleNotFoundError, match=r'pip install -U dsgp4\[mcp\]'):
+            package.create_server()
+        with pytest.raises(SystemExit, match='mcp'):
+            package.main([])
+    finally:
+        sys.meta_path.remove(blocker)
+        for name, module in removed.items():
+            sys.modules[name] = module
