@@ -209,6 +209,9 @@ units, example element sets) and workflow prompts (orbit characterization, orbit
 TLE determination, ML-dSGP4 training) are always available. The server can also be created programmatically with
 `dsgp4.mcp.create_server()`.
 
+See the [MCP page of the documentation](https://esa.github.io/dSGP4/mcp.html) for how to connect the server to
+Claude Desktop, Claude Code and other MCP clients, the full tool listing, and the HTTP transport.
+
 ## Development
 
 Run tests:
