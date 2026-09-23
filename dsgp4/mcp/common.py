@@ -74,7 +74,7 @@ def friendly_errors(fn):
     def wrapper(*args, **kwargs):
         try:
             return fn(*args, **kwargs)
-        except ToolError:
+        except ToolError:  # pragma: no cover - tools currently raise plain exceptions
             raise
         except (ValueError, RuntimeError, TypeError, AttributeError, KeyError, IndexError, OSError) as error:
             raise ToolError(str(error)) from error
@@ -112,7 +112,7 @@ def _parse_tles(text):
         else:
             tles.append(TLE(lines[i:i + 2]))
             i += 2
-    if not tles:
+    if not tles:  # pragma: no cover - defensive, empty input is rejected earlier
         raise ValueError('No TLE lines found.')
     return tles
 

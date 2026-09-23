@@ -32,7 +32,7 @@ def main(argv=None):
     except ModuleNotFoundError as error:
         if getattr(error, 'name', '') and error.name.split('.')[0] == 'mcp' and error.name != 'dsgp4.mcp':
             sys.exit(_INSTALL_HINT)
-        raise
+        raise  # pragma: no cover - unrelated import failure
 
     domains = [domain.strip() for domain in args.domains.split(',') if domain.strip()] if args.domains else None
     server = create_server(domains=domains, name=args.name)
@@ -42,5 +42,5 @@ def main(argv=None):
         server.run(transport=args.transport, host=args.host, port=args.port)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover - exercised via the stdio subprocess
     main()

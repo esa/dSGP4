@@ -1,7 +1,7 @@
 """
-MCP tools of the `gradients` domain: partial derivatives of the propagated state
-(the very reason dSGP4 exists), obtained via PyTorch automatic differentiation, and
-the covariance transformations built on top of them.
+MCP tools of the `gradients` domain: partial derivatives of the propagated state,
+obtained via PyTorch automatic differentiation, and the covariance transformations
+built on top of them.
 """
 from typing import List, Optional
 
