@@ -59,7 +59,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install "numpy<2"
           pip install torch torchvision torchaudio
-          pip install .[dev]
+          # the [mcp] extra runs the tests of the experimental MCP server on these
+          # jobs; on the older Pythons above they are skipped instead
+          pip install .[dev,mcp]
+
+      - name: Check the MCP server builds (Python 3.11+)
+        # canary against silent skips: if a future mcp SDK release breaks the import,
+        # the MCP tests would be skipped (not failed) by pytest.importorskip, and this
+        # step is what fails loudly instead
+        if: ${{ !contains(fromJSON('["3.8", "3.9", "3.10"]'), matrix.python-version) }}
+        run: python -c "from dsgp4.mcp import create_server; create_server()"
 
       - name: Run tests with coverage
         run: |
