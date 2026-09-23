@@ -37,8 +37,12 @@ pip
 `dsgp4` is available on [Pypi](https://pypi.org/project/dsgp4/). You can install it via `pip` as:
 
 .. code-block:: console
-   
+
    $ pip install dsgp4
+
+Optional extras: ``pip install dsgp4[mcp]`` (Python >= 3.10) also installs the
+experimental MCP server that exposes the library to LLM clients and agents — see
+:doc:`mcp` for how to connect it.
 
 Installation from source
 ------------------------

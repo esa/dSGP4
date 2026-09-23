@@ -22,5 +22,6 @@ credits
 :caption: Contents
 
 tutorials
+mcp
 api
 ```
