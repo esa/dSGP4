@@ -169,3 +169,16 @@ class UtilTestCase(unittest.TestCase):
         self.assertAlmostEqual(tle._epoch.minute,50, places = 8)
         self.assertAlmostEqual(tle._epoch.second,26, places = 8)
         self.assertAlmostEqual(round(tle._epoch.microsecond*1e-6,4),0.5350, places = 8)
+
+    def test_nddot_exponent(self):
+        #the second derivative of the mean motion has an exponent (here -4), which must be applied
+        #to `_nddot` as python-sgp4 does, both when reading the lines and when writing them:
+        from sgp4.api import Satrec
+        tle_lines=['1 00005U 58002B   00179.78495062  .00000023  12345-4  28098-4 0  4752',
+                   '2 00005  34.2682 348.7242 1859667 331.7664  19.3264 10.82419157413667']
+        satrec=Satrec.twoline2rv(*tle_lines)
+        tle=dsgp4.tle.TLE(tle_lines)
+        tle_from_data=dsgp4.tle.TLE(dict(tle._data))
+        self.assertEqual(tle_from_data.line1, tle_lines[0])
+        for t in [tle, tle_from_data, tle.to_omm()]:
+            self.assertAlmostEqual(float(t._nddot)/satrec.nddot, 1.0, places = 10)
