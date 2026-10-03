@@ -210,7 +210,7 @@ def load_from_lines(lines, opsmode='i'):
         data['_epochdays'] = epochdays
         data['_bstar'] = torch.tensor(float(line[53]+'.'+line[54:59])*pow(10, int(line[59:61])))
         data['_ndot'] = torch.tensor(float(line[33:43])/(xpdotp*1440.0))
-        data['_nddot']= torch.tensor(float(line[44] + '.' + line[45:50])/(xpdotp*1440.0*1440))
+        data['_nddot']= torch.tensor(float(line[44] + '.' + line[45:50])*pow(10, int(line[50:52]))/(xpdotp*1440.0*1440))
 
     else:
         raise ValueError('First line not compatible with TLE format.')
@@ -309,7 +309,7 @@ def load_from_data(data, opsmode='i'):
     #for SGP4:
     data['_bstar'] = torch.tensor(float(line1[53]+'.'+line1[54:59])*pow(10, int(line1[59:61])))
     data['_ndot'] = torch.tensor(float(line1[33:43])/(xpdotp*1440.0))
-    data['_nddot']= torch.tensor(float(line1[44] + '.' + line1[45:50])/(xpdotp*1440.0*1440))
+    data['_nddot']= torch.tensor(float(line1[44] + '.' + line1[45:50])*pow(10, int(line1[50:52]))/(xpdotp*1440.0*1440))
 
     line2 = ['2 ']
     line2.append(write_satellite_catalog_number(data['satellite_catalog_number']) + ' ')
