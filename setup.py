@@ -35,8 +35,9 @@ setup(
     author_email='giacomo.acciarini@gmail.com',
     packages=find_packages(),
     url='https://github.com/esa/dSGP4',
-    install_requires=['numpy', 'torch', 'matplotlib'],
-    extras_require={'dev': ['pytest', 'coverage', 'pytest-xdist', 'sgp4>=2.21'],
+    install_requires=['numpy', 'torch'],
+    extras_require={'plot': ['matplotlib'],
+                    'dev': ['pytest', 'coverage', 'pytest-xdist', 'sgp4>=2.21', 'matplotlib'],
                     #the MCP server (`dsgp4-mcp`) requires Python >= 3.10; the SDK is
                     #capped below the next major because it broke its API at 1.x -> 2.x:
                     'mcp': ['mcp>=2,<3']},
