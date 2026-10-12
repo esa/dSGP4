@@ -169,7 +169,7 @@ print(states.shape)  # (2, 2, 3)
 - Time input (`tsince`) is in minutes from the TLE epoch.
 - Output units are km (position) and km/s (velocity).
 - Supported gravity models: `wgs-72`, `wgs-84`, `wgs-72old`.
-- Deep-space propagation is supported.
+- Deep-space propagation is supported, but not batched: if any TLE passed to `initialize_tle` is deep-space (period 2π/n ≥ 225 min), the whole list falls back to per-object initialization and propagation. For large catalogs this is much slower (about 1.75 s per object over 1,441 time steps on a desktop x86 CPU, float64), so split near-Earth and deep-space objects into separate lists.
 - Default torch dtype is set to `float64` when importing `dsgp4`.
 
 ## MCP server (LLM/agent integration, experimental)

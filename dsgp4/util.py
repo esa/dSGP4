@@ -105,6 +105,15 @@ def initialize_tle(tles,
     Returns:
     ----------------
     tle_elements (``torch.tensor``): tensor of TLE parameters (especially useful to retrieve gradients, when `with_grad` is `True`)
+
+    Notes:
+    ----------------
+    Batched initialization (and therefore batched propagation) only supports near-Earth objects.
+    If any TLE in the list is deep-space (orbital period 2*pi/n >= 225 minutes), the whole list
+    falls back to per-TLE initialization and per-object propagation, even if the other objects
+    are near-Earth. For large catalogs this is much slower (on the order of ~1.75 s per object
+    for 1,441 time steps on a desktop x86 CPU in float64), so consider splitting near-Earth and
+    deep-space objects into separate lists.
     """
     from .sgp4init import sgp4init
     from .sgp4init_batch import sgp4init_batch
