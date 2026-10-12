@@ -33,7 +33,11 @@ def get_gravity_constants(gravity_constant_name):
     else:
        raise RuntimeError("Supported gravity constant names: wgs-72, wgs-84, wgs-72old while "+gravity_constant_name+" was provided")
 
-    return torch.tensor(tumin), torch.tensor(mu), torch.tensor(radiusearthkm), torch.tensor(xke), torch.tensor(j2), torch.tensor(j3), torch.tensor(j4), torch.tensor(j3oj2)
+    # Build every constant with the current default dtype. np.sqrt returns a NumPy float64,
+    # which torch.tensor keeps as float64 regardless of the default dtype, so without an
+    # explicit dtype xke/tumin (wgs-72, wgs-84) would stay float64 while the rest follow the default.
+    dtype = torch.get_default_dtype()
+    return tuple(torch.tensor(float(c), dtype=dtype) for c in (tumin, mu, radiusearthkm, xke, j2, j3, j4, j3oj2))
 
 def propagate_batch(tles, tsinces, initialized=True):
     """
