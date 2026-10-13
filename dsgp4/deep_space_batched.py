@@ -95,7 +95,10 @@ def dpper_batched(satellite, t, ep, inclp, nodep, argpp, mp, opsmode):
         nodep_l = torch.where(nodep_l < 0.0, nodep_l + two_pi, nodep_l)
     xls = mp + argpp + pl + pgh + (cosip - pinc * sinip) * nodep_l
     xnoh = nodep_l
-    nodep_l = torch.atan2(alfdp, betdp)
+    # atan2(0, 0) (e.g. an equatorial near-earth member of a mixed batch) has an undefined
+    # gradient; give that unused degenerate case a safe denominator so NaNs cannot leak
+    degenerate = (alfdp == 0.0) & (betdp == 0.0)
+    nodep_l = torch.atan2(alfdp, torch.where(degenerate, torch.ones_like(betdp), betdp))
     if opsmode == 'a':
         nodep_l = torch.where(nodep_l < 0.0, nodep_l + two_pi, nodep_l)
     wrap = torch.abs(xnoh - nodep_l) > np.pi

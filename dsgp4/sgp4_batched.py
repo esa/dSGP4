@@ -196,7 +196,7 @@ def sgp4_batched(satellite_batch, tsince):
     esine = axnl*sineo1 - aynl*coseo1
     el2   = axnl*axnl + aynl*aynl
     pl    = am*(1.0-el2)
-    satellite_batch._error=torch.where(satellite_batch._error==0.,torch.any(pl<0.)*4,1)
+    satellite_batch._error=torch.where(satellite_batch._error==0.,torch.any(pl<0.)*4,satellite_batch._error)
 
     rl     = am * (1.0 - ecose)
     rdotl  = am.sqrt() * esine/rl

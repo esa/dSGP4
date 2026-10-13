@@ -105,6 +105,56 @@ class BatchedDeepSpaceTestCase(unittest.TestCase):
             np.testing.assert_allclose(grads_b[k].numpy(), g_u.numpy(), rtol=1e-6, atol=1e-6)
 
 
+    def test_afspc_opsmode_accepts_per_tle_epochs(self):
+        # opsmode 'a' computes gsto from the epoch; with one epoch per TLE the
+        # normalization of gsto into [0, 2pi) must be element-wise
+        whichconst = dsgp4.util.get_gravity_constants("wgs-84")
+        tles = [dsgp4.tle.TLE(list(p)) for p in DEEP_SPACE_TLES + [LEO_TLE]]
+        xx = torch.stack([torch.tensor([t._bstar, t._ndot, t._nddot, t._ecco, t._argpo,
+                                        t._inclo, t._mo, t._no_kozai, t._nodeo]) for t in tles])
+        epochs = torch.tensor([(t._jdsatepoch + t._jdsatepochF) - 2433281.5 for t in tles])
+        batch = tles[0].copy()
+        dsgp4.sgp4init_batch(
+            whichconst=whichconst, opsmode='a', satn=tles[-1].satellite_catalog_number,
+            epoch=epochs, xbstar=xx[:, 0], xndot=xx[:, 1], xnddot=xx[:, 2], xecco=xx[:, 3],
+            xargpo=xx[:, 4], xinclo=xx[:, 5], xmo=xx[:, 6], xno_kozai=xx[:, 7], xnodeo=xx[:, 8],
+            satellite_batch=batch)
+        ref = [sgp4.io.twoline2rv(l1, l2, whichconst=sgp4.earth_gravity.wgs84, opsmode='a').gsto
+               for l1, l2 in DEEP_SPACE_TLES + [LEO_TLE]]
+        np.testing.assert_allclose(batch._gsto.numpy(), ref, rtol=0.0, atol=1e-12)
+
+    def test_equatorial_near_earth_member_has_finite_gradients(self):
+        # an equatorial near-earth member in a mixed batch hits atan2(0, 0) in the unused
+        # deep-space Lyddane branch; its gradient must not leak NaNs
+        l1, l2 = LEO_TLE
+        equatorial = (l1, l2[:8] + "  0.0000" + l2[16:])
+        tles = [dsgp4.tle.TLE(list(DEEP_SPACE_TLES[1])), dsgp4.tle.TLE(list(equatorial))]
+        elements, batch = dsgp4.initialize_tle(tles, gravity_constant_name="wgs-84", with_grad=True)
+        state = dsgp4.sgp4_batched(batch, torch.tensor([1440.0, 60.0]))
+        self.assertTrue(torch.all(torch.isfinite(state)))
+        grads = torch.autograd.grad(state[:, 0, :].sum(), elements)
+        for g in grads:
+            self.assertTrue(torch.all(torch.isfinite(g)))
+
+    def test_deep_space_eccentricity_error_code_is_preserved(self):
+        # error 3 (perturbed eccentricity out of [0, 1]) must survive the later pl < 0 check
+        import sys
+        sb = sys.modules["dsgp4.sgp4_batched"]
+        original = sb.dpper_batched
+
+        def bad_ep(*args, **kwargs):
+            ep, inclp, nodep, argpp, mp = original(*args, **kwargs)
+            return torch.full_like(ep, -0.1), inclp, nodep, argpp, mp
+
+        tles = [dsgp4.tle.TLE(list(DEEP_SPACE_TLES[1])), dsgp4.tle.TLE(list(LEO_TLE))]
+        _, batch = dsgp4.initialize_tle(tles, gravity_constant_name="wgs-84")
+        sb.dpper_batched = bad_ep
+        try:
+            dsgp4.sgp4_batched(batch, torch.tensor([0.0, 0.0]))
+        finally:
+            sb.dpper_batched = original
+        self.assertEqual(int(batch._error[0]), 3)
+
 class BatchedDeepSpaceFloat32TestCase(unittest.TestCase):
     def setUp(self):
         self.previous_dtype = torch.get_default_dtype()

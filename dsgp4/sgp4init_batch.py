@@ -46,10 +46,10 @@ def initl_batch(
         c1    = torch.tensor(1.72027916940703639e-2);
         thgr70= torch.tensor(1.7321343856509374);
         fk5r  = torch.tensor(5.07551419432269442e-15);
-        c1p2p = c1 + (2*numpy.pi);
-        gsto  = (thgr70 + c1*ds70 + c1p2p*tfrac + ts70*ts70*fk5r) % (2*numpy.pi)
-        if gsto < 0.0:
-            gsto = gsto + (2*numpy.pi);
+        c1p2p = c1 + (2*np.pi);
+        gsto  = (thgr70 + c1*ds70 + c1p2p*tfrac + ts70*ts70*fk5r) % (2*np.pi)
+        # element-wise, so that per-TLE epoch tensors are supported
+        gsto  = torch.where(gsto < 0.0, gsto + (2*np.pi), gsto)
 
     else:
         gsto = gstime(epoch + 2433281.5);
