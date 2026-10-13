@@ -3,6 +3,7 @@
 [![codecov](https://codecov.io/gh/esa/dSGP4/graph/badge.svg?token=K3py7YT8UR)](https://codecov.io/gh/esa/dSGP4)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/dsgp4/badges/latest_release_relative_date.svg)](https://anaconda.org/conda-forge/dsgp4)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/dsgp4/badges/downloads.svg)](https://anaconda.org/conda-forge/dsgp4)
+[![DOI](https://img.shields.io/badge/DOI-10.1016%2Fj.actaastro.2024.10.063-blue)](https://doi.org/10.1016/j.actaastro.2024.10.063)
 
 Differentiable SGP4 in PyTorch.
 
