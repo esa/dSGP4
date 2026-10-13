@@ -2,6 +2,8 @@ import numpy as np
 import torch
 from .sgp4_batched import sgp4_batched
 from .util import gstime
+from .deep_space import dscom
+from .deep_space_batched import dsinit_batched
 
 def initl_batch(
       xke, j2,
@@ -61,6 +63,16 @@ def initl_batch(
       )
 
 
+# deep-space coefficients stored on the batch object (zero for near-earth members)
+_DEEP_KEYS = (
+    "e3", "ee2", "peo", "pgho", "pho", "pinco", "plo",
+    "se2", "se3", "sgh2", "sgh3", "sgh4", "sh2", "sh3", "si2", "si3", "sl2", "sl3", "sl4",
+    "xgh2", "xgh3", "xgh4", "xh2", "xh3", "xi2", "xi3", "xl2", "xl3", "xl4", "zmol", "zmos",
+    "irez", "d2201", "d2211", "d3210", "d3222", "d4410", "d4422", "d5220", "d5232", "d5421", "d5433",
+    "dedt", "didt", "dmdt", "dnodt", "domdt", "del1", "del2", "del3", "xfact", "xlamo",
+)
+
+
 def sgp4init_batch(
       whichconst,   opsmode,  satn, epoch,
       xbstar,   xndot,   xnddot,   xecco,   xargpo,
@@ -75,7 +87,7 @@ def sgp4init_batch(
     whichconst (``tuple``): this contains all the necessary constants (tumin, mu, radiusearthkm, xke, j2, j3, j4, j3oj2)), according to the chosen gravitational model (wgs-72, wgs-84, wgs-72old are three possible choices)
     opsmode (``str``): mode of operation (possibilities: afspc or improved, 'a' and 'i', respectively)
     satn (``str``): satellite catalog number
-    epoch (``torch.float``): TLE days since 1949 December 31 00:00 UT
+    epoch (``torch.float`` or ``torch.tensor``): TLE days since 1949 December 31 00:00 UT (scalar, or one value per TLE; per-TLE epochs are needed for deep-space members)
     xbstar (``torch.float``): drag coefficient (in 1/earth_radii)
     xndot (``torch.float``): first derivative of mean motion (in revs/day**2)
     xnddot (``torch.float``): second derivative mean motion (in revs/day**3)
@@ -238,7 +250,42 @@ def sgp4init_batch(
     satellite_batch._sinmao = satellite_batch._mo.sin()
     satellite_batch._x7thm1 = 7.0 * cosio2 - 1.0
 
-    # Deep-space members are handled by a scalar fallback in util.initialize_tle.
+    #  --------------- deep space initialization (element-wise) -------------
+    deep = 2 * np.pi / satellite_batch._no_unkozai >= 225.0
+    if torch.any(deep):
+        epoch_t = epoch if torch.is_tensor(epoch) else torch.full((batch_size,), float(epoch))
+        satellite_batch._method = ['d' if d else 'n' for d in deep.tolist()]
+        satellite_batch._isimp = torch.where(deep, torch.tensor(1), satellite_batch._isimp)
+        deep_out = dscom(
+            epoch=epoch_t,
+            ep=satellite_batch._ecco,
+            argpp=satellite_batch._argpo,
+            tc=torch.zeros_like(satellite_batch._ecco),
+            inclp=satellite_batch._inclo,
+            nodep=satellite_batch._nodeo,
+            np_in=satellite_batch._no_unkozai,
+        )
+        deep_init = dsinit_batched(
+            satellite=satellite_batch,
+            cosim=deep_out["cosim"], emsq=deep_out["emsq"],
+            s1=deep_out["s1"], s2=deep_out["s2"], s3=deep_out["s3"], s4=deep_out["s4"], s5=deep_out["s5"],
+            sinim=deep_out["sinim"],
+            ss1=deep_out["ss1"], ss2=deep_out["ss2"], ss3=deep_out["ss3"], ss4=deep_out["ss4"], ss5=deep_out["ss5"],
+            sz1=deep_out["sz1"], sz3=deep_out["sz3"], sz11=deep_out["sz11"], sz13=deep_out["sz13"],
+            sz21=deep_out["sz21"], sz23=deep_out["sz23"], sz31=deep_out["sz31"], sz33=deep_out["sz33"],
+            z1=deep_out["z1"], z3=deep_out["z3"], z11=deep_out["z11"], z13=deep_out["z13"],
+            z21=deep_out["z21"], z23=deep_out["z23"], z31=deep_out["z31"], z33=deep_out["z33"],
+            ecco=satellite_batch._ecco, eccsq=eccsq, em=deep_out["em"],
+            inclm=satellite_batch._inclo, nm=deep_out["nm"], xpidot=xpidot,
+        )
+        zero = torch.zeros_like(satellite_batch._ecco)
+        for key, value in list(deep_out.items()) + list(deep_init.items()):
+            if key in _DEEP_KEYS:
+                if key == "irez":
+                    value = torch.where(deep, value, torch.zeros_like(value))
+                else:
+                    value = torch.where(deep, value + zero, zero)
+                setattr(satellite_batch, f"_{key}", value)
 
     isimp_condition = (satellite_batch._isimp != 1)
     if torch.any(isimp_condition):

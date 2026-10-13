@@ -71,15 +71,14 @@ class Float32DefaultDtypeTestCase(unittest.TestCase):
         state = dsgp4.propagate_batch(batch, torch.tensor([10.0, 20.0]))
         self.assertEqual(state.dtype, torch.float32)
 
-    def test_batch_with_deep_space_fallback(self):
+    def test_batch_with_deep_space(self):
         tles = [dsgp4.tle.TLE(DEEP_SPACE_TLE), dsgp4.tle.TLE(LEO_TLES[0])]
-        _, initialized = dsgp4.initialize_tle(tles)
-        self.assertIsInstance(initialized, list)
-        for tle in initialized:
-            self.assertFloat32(tle)
-        state = dsgp4.propagate_batch(initialized, torch.tensor([10.0, 20.0]))
+        _, batch = dsgp4.initialize_tle(tles)
+        self.assertNotIsInstance(batch, list)
+        self.assertEqual(batch._method, ["d", "n"])
+        self.assertFloat32(batch)
+        state = dsgp4.propagate_batch(batch, torch.tensor([10.0, 20.0]))
         self.assertEqual(state.dtype, torch.float32)
-
 
 if __name__ == "__main__":
     unittest.main()
