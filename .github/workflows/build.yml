@@ -103,7 +103,8 @@ jobs:
       - name: Install docs dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install .
+          # the tutorial notebooks are executed at build time and plot with matplotlib
+          pip install .[plot]
           pip install sphinx sphinx-book-theme myst-nb
 
       - name: Build docs and check links

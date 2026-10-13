@@ -1,5 +1,13 @@
-import matplotlib.pyplot as plt
 import numpy as np
+
+
+def _pyplot():
+    """Imports matplotlib.pyplot on first use: matplotlib is an optional dependency (the `plot` extra)."""
+    try:
+        import matplotlib.pyplot as plt
+    except ImportError as e:
+        raise ImportError("plotting requires matplotlib: install it with `pip install dsgp4[plot]` or `pip install matplotlib`") from e
+    return plt
 
 
 def plot_orbit(states, r_earth=6378.137, elevation_azimuth=None, ax=None, *args, **kwargs):
@@ -19,6 +27,7 @@ def plot_orbit(states, r_earth=6378.137, elevation_azimuth=None, ax=None, *args,
     ----------------
     ``matplotlib.axes._subplots.Axes3DSubplot``: 3D axis object
     """
+    plt = _pyplot()
     if ax is None:
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
@@ -83,6 +92,7 @@ def plot_tles(tles,
     ----------------
     ``numpy.array``: array of AxesSubplot objects
     """
+    plt = _pyplot()
     #I collect all the six variables from the TLEs:
     mean_motion, eccentricity, inclination, argument_of_perigee, raan, b_star, mean_anomaly, mean_motion_first_derivative, mean_motion_second_derivative = [], [], [], [], [], [], [], [], []
     for tle in tles:

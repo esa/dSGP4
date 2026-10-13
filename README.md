@@ -34,6 +34,12 @@ From PyPI:
 pip install dsgp4
 ```
 
+The plotting helpers (`dsgp4.plot_orbit`, `dsgp4.plot_tles`) need matplotlib, which is an optional extra:
+
+```bash
+pip install dsgp4[plot]
+```
+
 From conda-forge:
 
 ```bash
