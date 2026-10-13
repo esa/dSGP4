@@ -1,4 +1,5 @@
 import datetime
+import math
 import numpy as np
 import torch
 
@@ -15,7 +16,7 @@ def get_gravity_constants(gravity_constant_name):
     elif gravity_constant_name == 'wgs-72':
        mu     = 398600.8            #  in km3 / s2
        radiusearthkm = 6378.135     #  km
-       xke    = 60.0 / np.sqrt(radiusearthkm*radiusearthkm*radiusearthkm/mu)
+       xke    = 60.0 / math.sqrt(radiusearthkm*radiusearthkm*radiusearthkm/mu)
        tumin  = 1.0 / xke
        j2     =   0.001082616
        j3     =  -0.00000253881
@@ -24,7 +25,7 @@ def get_gravity_constants(gravity_constant_name):
     elif gravity_constant_name=="wgs-84":
        mu     = 398600.5            #  in km3 / s2
        radiusearthkm = 6378.137     #  km
-       xke    = 60.0 / np.sqrt(radiusearthkm*radiusearthkm*radiusearthkm/mu)
+       xke    = 60.0 / math.sqrt(radiusearthkm*radiusearthkm*radiusearthkm/mu)
        tumin  = 1.0 / xke
        j2     =   0.00108262998905
        j3     =  -0.00000253215306

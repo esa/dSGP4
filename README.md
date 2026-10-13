@@ -3,6 +3,7 @@
 [![codecov](https://codecov.io/gh/esa/dSGP4/graph/badge.svg?token=K3py7YT8UR)](https://codecov.io/gh/esa/dSGP4)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/dsgp4/badges/latest_release_relative_date.svg)](https://anaconda.org/conda-forge/dsgp4)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/dsgp4/badges/downloads.svg)](https://anaconda.org/conda-forge/dsgp4)
+[![DOI](https://img.shields.io/badge/DOI-10.1016%2Fj.actaastro.2024.10.063-blue)](https://doi.org/10.1016/j.actaastro.2024.10.063)
 
 Differentiable SGP4 in PyTorch.
 
@@ -170,7 +171,9 @@ print(states.shape)  # (2, 2, 3)
 - Output units are km (position) and km/s (velocity).
 - Supported gravity models: `wgs-72`, `wgs-84`, `wgs-72old`.
 - Deep-space propagation is supported.
-- Default torch dtype is set to `float64` when importing `dsgp4`.
+- Default torch dtype is set to `float64` when importing `dsgp4`. Setting a different default afterwards
+  (e.g. `torch.set_default_dtype(torch.float32)`) is supported end to end: element sets, initialization and
+  propagation then all use that dtype (at the corresponding cost in accuracy).
 
 ## MCP server (LLM/agent integration, experimental)
 
