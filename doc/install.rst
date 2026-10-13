@@ -40,9 +40,12 @@ pip
 
    $ pip install dsgp4
 
-Optional extras: ``pip install dsgp4[mcp]`` (Python >= 3.10) also installs the
-experimental MCP server that exposes the library to LLM clients and agents — see
-:doc:`mcp` for how to connect it.
+Optional extras:
+
+* ``pip install dsgp4[plot]`` also installs matplotlib, needed only by the plotting
+  helpers ``dsgp4.plot_orbit`` and ``dsgp4.plot_tles`` (and by the tutorial notebooks);
+* ``pip install dsgp4[mcp]`` (Python >= 3.10) also installs the experimental MCP server
+  that exposes the library to LLM clients and agents — see :doc:`mcp` for how to connect it.
 
 Installation from source
 ------------------------
