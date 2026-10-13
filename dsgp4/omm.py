@@ -13,6 +13,7 @@ import csv
 import datetime
 import io
 import json
+import math
 import numpy as np
 import os
 import torch
@@ -452,11 +453,11 @@ def load_from_omm(fields, opsmode='i'):
     data['_bstar'] = torch.tensor(float(_field(fields, 'BSTAR', 0.)))
     data['_ndot'] = torch.tensor(float(_field(fields, 'MEAN_MOTION_DOT', 0.))/(xpdotp*1440.0))
     data['_nddot'] = torch.tensor(float(_field(fields, 'MEAN_MOTION_DDOT', 0.))/(xpdotp*1440.0*1440))
-    data['_inclo'] = torch.tensor(np.deg2rad(float(fields['INCLINATION'])))
-    data['_nodeo'] = torch.tensor(np.deg2rad(float(fields['RA_OF_ASC_NODE'])))
+    data['_inclo'] = torch.tensor(math.radians(float(fields['INCLINATION'])))
+    data['_nodeo'] = torch.tensor(math.radians(float(fields['RA_OF_ASC_NODE'])))
     data['_ecco'] = torch.tensor(float(fields['ECCENTRICITY']))
-    data['_argpo'] = torch.tensor(np.deg2rad(float(fields['ARG_OF_PERICENTER'])))
-    data['_mo'] = torch.tensor(np.deg2rad(float(fields['MEAN_ANOMALY'])))
+    data['_argpo'] = torch.tensor(math.radians(float(fields['ARG_OF_PERICENTER'])))
+    data['_mo'] = torch.tensor(math.radians(float(fields['MEAN_ANOMALY'])))
     data['_no_kozai'] = torch.tensor(float(fields['MEAN_MOTION']) / xpdotp);
 
     add_derived_quantities(data, year, epochdays, opsmode)

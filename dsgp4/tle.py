@@ -1,11 +1,12 @@
 import datetime
+import math
 import numpy as np
 import copy
 import torch
 
 from . import util
-_, MU_EARTH, _, _, _, _, _, _=util.get_gravity_constants('wgs-84')
-MU_EARTH = MU_EARTH*1e9
+#as a Python float (m^3/s^2): a tensor built here would be frozen to the dtype in force at import time
+MU_EARTH = float(util.get_gravity_constants('wgs-84')[1])*1e9
 
 # This function is from python-sgp4 released under MIT License, (c) 2012–2016 Brandon Rhodes
 def compute_checksum(line):
@@ -106,7 +107,7 @@ def add_derived_quantities(data, year, epochdays, opsmode):
     data['_jdsatepochF'] = torch.tensor(util.jday(year,mon,day,hr,minute,sec)[1]);
 
     #I also add the semi-major axis:
-    data['semi_major_axis'] = (MU_EARTH/(data['mean_motion']**2))**(1.0/3.0)
+    data['semi_major_axis'] = torch.tensor((MU_EARTH/(data['mean_motion']**2))**(1.0/3.0))
 
     try:
         data['_epoch'] = datetime.datetime(year, mon, day, hr, minute, int(sec_whole),
@@ -242,11 +243,11 @@ def load_from_lines(lines, opsmode='i'):
         data['revolution_number_at_epoch'] = int(line[63:68])
         data['line2'] = line
         #for SGP4:
-        data['_inclo']=torch.tensor(np.deg2rad(float(line[8:16])))
-        data['_nodeo']=torch.tensor(np.deg2rad(float(line[17:25])))
+        data['_inclo']=torch.tensor(math.radians(float(line[8:16])))
+        data['_nodeo']=torch.tensor(math.radians(float(line[17:25])))
         data['_ecco'] =torch.tensor(float('0.'+line[26:33].replace(' ', '0')))
-        data['_argpo']=torch.tensor(np.deg2rad(float(line[34:42])))
-        data['_mo']=torch.tensor(np.deg2rad(float(line[43:51])))
+        data['_argpo']=torch.tensor(math.radians(float(line[34:42])))
+        data['_mo']=torch.tensor(math.radians(float(line[43:51])))
         data['_no_kozai'] =torch.tensor(float(line[52:63]) / xpdotp);
 
     else:
@@ -323,11 +324,11 @@ def load_from_data(data, opsmode='i'):
     line2 = ''.join(line2)
     line2 += str(compute_checksum(line2))
     #for SGP4:
-    data['_inclo']=torch.tensor(np.deg2rad(float(line2[8:16])))
-    data['_nodeo']=torch.tensor(np.deg2rad(float(line2[17:25])))
+    data['_inclo']=torch.tensor(math.radians(float(line2[8:16])))
+    data['_nodeo']=torch.tensor(math.radians(float(line2[17:25])))
     data['_ecco'] =torch.tensor(float('0.'+line2[26:33].replace(' ', '0')))
-    data['_argpo']=torch.tensor(np.deg2rad(float(line2[34:42])))
-    data['_mo']=torch.tensor(np.deg2rad(float(line2[43:51])))
+    data['_argpo']=torch.tensor(math.radians(float(line2[34:42])))
+    data['_mo']=torch.tensor(math.radians(float(line2[43:51])))
     data['_no_kozai'] =torch.tensor(float(line2[52:63]) / xpdotp);
 
     if len(line1) != 69:
