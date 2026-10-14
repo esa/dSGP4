@@ -1,6 +1,7 @@
 # dSGP4 ($\partial\textrm{SGP4}$)
 [![build](https://github.com/esa/dSGP4/actions/workflows/build.yml/badge.svg)](https://github.com/esa/dSGP4/actions/workflows/build.yml)
 [![codecov](https://codecov.io/gh/esa/dSGP4/graph/badge.svg?token=K3py7YT8UR)](https://codecov.io/gh/esa/dSGP4)
+[![PyPI Downloads](https://static.pepy.tech/badge/dsgp4)](https://pepy.tech/projects/dsgp4)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/dsgp4/badges/latest_release_relative_date.svg)](https://anaconda.org/conda-forge/dsgp4)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/dsgp4/badges/downloads.svg)](https://anaconda.org/conda-forge/dsgp4)
 [![DOI](https://img.shields.io/badge/DOI-10.1016%2Fj.actaastro.2024.10.063-blue)](https://doi.org/10.1016/j.actaastro.2024.10.063)
