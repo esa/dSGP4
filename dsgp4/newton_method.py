@@ -7,7 +7,7 @@ from . import util
 
 def _bounded_eccentricity_step(current_eccentricity, proposed_step, epsilon=1e-10):
     """Return a Newton step that keeps eccentricity inside the elliptic SGP4 domain."""
-    current = float(current_eccentricity)
+    current = float(torch.as_tensor(current_eccentricity).detach())
     candidate = current + float(proposed_step)
     lower = epsilon
     upper = 1.0 - epsilon
