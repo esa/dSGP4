@@ -122,10 +122,11 @@ def initialize_tle(tles,
                 tle_elements.append(x)
         xx=torch.stack(tle_elements)
         tles_batch=tles[0].copy()
+        epochs=torch.tensor([(t._jdsatepoch+t._jdsatepochF)-2433281.5 for t in tles])
         sgp4init_batch(whichconst=whichconst,
                         opsmode='i',
-                        satn=tle.satellite_catalog_number,
-                        epoch=(tle._jdsatepoch+tle._jdsatepochF)-2433281.5,
+                        satn=tles[-1].satellite_catalog_number,
+                        epoch=epochs,
                         xbstar=xx[:,0],
                         xndot=xx[:,1],
                         xnddot=xx[:,2],
@@ -137,26 +138,6 @@ def initialize_tle(tles,
                         xnodeo=xx[:,8],
                         satellite_batch=tles_batch,
                         )
-
-        # The batched propagator currently supports near-earth terms only.
-        # Fall back to per-TLE initialized objects when deep-space satellites are present.
-        if torch.any(2 * np.pi / tles_batch._no_unkozai >= 225.0):
-            for idx, tle in enumerate(tles):
-                sgp4init(whichconst=whichconst,
-                         opsmode='i',
-                         satn=tle.satellite_catalog_number,
-                         epoch=(tle._jdsatepoch+tle._jdsatepochF)-2433281.5,
-                         xbstar=tle_elements[idx][0],
-                         xndot=tle_elements[idx][1],
-                         xnddot=tle_elements[idx][2],
-                         xecco=tle_elements[idx][3],
-                         xargpo=tle_elements[idx][4],
-                         xinclo=tle_elements[idx][5],
-                         xmo=tle_elements[idx][6],
-                         xno_kozai=tle_elements[idx][7],
-                         xnodeo=tle_elements[idx][8],
-                         satellite=tle)
-            return tle_elements, tles
 
         return tle_elements, tles_batch
 
