@@ -85,7 +85,7 @@ def register(server):
         input/output correction scales. Use it to recover the `hidden_size` needed by
         the `mldsgp4_propagate` tool when it is not known.
         """
-        state_dict = torch.load(model_path, map_location='cpu')
+        state_dict = torch.load(model_path, map_location='cpu', weights_only=True)
         tensors = {key: list(value.shape) for key, value in state_dict.items()}
         result = {
             'model_path': model_path,
